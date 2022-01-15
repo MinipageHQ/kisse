@@ -1,11 +1,11 @@
 import { resolver, SecurePassword, AuthenticationError } from "blitz"
-import db from "db"
-import { Login } from "../validations"
+import db, { Membership } from "db"
 import { Role } from "types"
+import { Login } from "../validations"
 
 export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
-  const {email, password} = Login.parse({email: rawEmail, password: rawPassword})
-  const user = await db.user.findFirst({ where: { email } })
+  const { email, password } = Login.parse({ email: rawEmail, password: rawPassword })
+  const user = await db.user.findFirst({ where: { email }, include: { memberships: true } })
   if (!user) throw new AuthenticationError()
 
   const result = await SecurePassword.verify(user.hashedPassword, password)
@@ -17,6 +17,7 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
   }
 
   const { hashedPassword, ...rest } = user
+
   return rest
 }
 
@@ -24,7 +25,22 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
 
-  await ctx.session.$create({ userId: user.id, role: user.role as Role })
+  const defaultMembership =
+    user.memberships.length > 0
+      ? (user.memberships[0] as Membership)
+      : { id: undefined, role: undefined }
+
+  const roles: Role[] = [user.role]
+
+  if (defaultMembership.role) {
+    roles.push(defaultMembership.role)
+  }
+
+  await ctx.session.$create({
+    userId: user.id,
+    roles,
+    orgId: defaultMembership.id,
+  })
 
   return user
 })

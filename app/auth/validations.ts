@@ -1,9 +1,13 @@
 import { z } from "zod"
 
+export const organizationName = z.string().transform((str) => str.trim())
+
 export const email = z
   .string()
   .email()
   .transform((str) => str.toLowerCase().trim())
+
+export const inviteCode = z.string().transform((str) => str.toUpperCase().trim())
 
 export const password = z
   .string()
@@ -13,6 +17,13 @@ export const password = z
 
 export const Signup = z.object({
   email,
+  password,
+})
+
+export const SignupForCreators = z.object({
+  name: organizationName,
+  email,
+  inviteCode,
   password,
 })
 
