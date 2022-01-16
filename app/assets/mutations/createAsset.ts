@@ -3,7 +3,15 @@ import db from "db"
 import { z } from "zod"
 
 const CreateAsset = z.object({
-  name: z.string(),
+  organizationId: z.number(),
+  name: z.string().max(255),
+  description: z.string().max(3000),
+  status: z.enum(["DRAFT", "ARCHIVED", "LIVE", "SUSPENDED"]),
+  categoryId: z.number(),
+  assetTypeId: z.number(),
+  quantity: z.number().min(0),
+  price: z.number().min(0),
+  currency: z.string(),
 })
 
 export default resolver.pipe(resolver.zod(CreateAsset), resolver.authorize(), async (input) => {

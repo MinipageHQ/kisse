@@ -1,18 +1,11 @@
-const Link = ({ to, children, ...props }) => (
-  <a href={`${to}`} {...props}>
-    {children}
-  </a>
-)
-import Image from "next/image"
-import OnboardingImage from "../../../../images/onboarding-image.jpg"
-import OnboardingDecoration from "../../../../images/auth-decoration.png"
-import useCurrentUser from "@/hooks/useCurrentUser"
+import OnboardingImage from "public/images/onboarding-image.jpg"
+import OnboardingDecoration from "public/images/auth-decoration.png"
 import _ from "lodash"
-import { SignIn, SignedOut, RedirectToUserProfile, UserButton } from "@clerk/nextjs"
+import { Image, Link, BlitzPage, useMutation, Routes, BlitzLayout } from "blitz"
 
-import { Logo } from "components/Logo"
+import { Logo } from "app/core/components/Logo"
 
-const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) => {
+const OrganizationOnboardingLayout: BlitzLayout<{ title?: string }> = ({ title, children }) => {
   return (
     <main className="bg-white">
       <div className="relative flex">
@@ -24,9 +17,7 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
               <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
                 <Logo />
                 {/* Logo */}
-                <div className="block">
-                  <UserButton />
-                </div>
+                <div className="block">user button</div>
               </div>
 
               {/* Progress bar */}
@@ -105,4 +96,4 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
   )
 }
 
-export default CreatorOnboardingShell
+export default OrganizationOnboardingLayout

@@ -4,18 +4,22 @@
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
+
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "filterJson"]
+
 }
 
 // --------------------------------------
 
 model Organization {
-  id   Int    @id @default(autoincrement())
-  name String
-  slug String
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String?
+  description String?
 
   membership  Membership[]
   Document    Document[]
@@ -25,12 +29,14 @@ model Organization {
   Transaction Transaction[]
   Link        Link[]
 
-  profileMedia Json?
-  metadata     Json?
+  profileMedia  Json?
+  metadata      Json?
+  privateMetada Json?
 
-  defaultDomain   Domain?  @relation(name: "defaultDomainForOrg", fields: [defaultDomainId], references: [id])
-  defaultDomainId Int?
-  Domain          Domain[]
+  defaultDomain    Domain?            @relation(name: "defaultDomainForOrg", fields: [defaultDomainId], references: [id])
+  defaultDomainId  Int?
+  Domain           Domain[]
+  ExternalProfiles ExternalProfiles[]
 }
 
 model Membership {
@@ -148,6 +154,37 @@ model Transaction {
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int
+
+  asset           Asset  @relation(fields: [assetId], references: [id])
+  assetSnapshot   Json
+  assetTypeId     String
+  assetType       Json
+  status          String
+  statusHistory   Json?
+  metadata        Json?
+  privateMetadata Json?
+
+  cancellationReason String
+  ownerId            Int
+  takerId            Int
+  quantity           Int
+  startDate          DateTime
+  endDate            DateTime
+  duration           Json?
+  timeunit           String
+  unitPrice          Float
+  value              Float
+  ownerAmount        Float
+
+  takerAmount    Float
+  platformAmount Float
+  ownerFees      Float
+  takerFees      Float
+  currency       Currency
+  completedAt    DateTime
+  cancelledAt    DateTime
+
+  assetId Int
 }
 
 model Order {
@@ -157,14 +194,84 @@ model Order {
   organization Organization @relation(fields: [organizationId], references: [id])
 
   organizationId Int
+
+
+  lines            Json
+  moves            Json
+  amountDue        Float
+  amountPaid       Float
+  amountRemaining  Float
+  currency         Currency
+  payerId          String
+  paymentAttempted Int
+  metadata         Json?
+  platformMetadata Json?
+}
+
+enum AssetStatus {
+  DRAFT
+  ARCHIVED
+  LIVE
+  SUSPENDED
 }
 
 model Asset {
-  id             Int          @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
+  name           String
+  description    String
+  status         AssetStatus // 'draft' | 'active'
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int
+
+  AssetCategory   AssetCategory? @relation(fields: [assetCategoryId], references: [id])
+  assetCategoryId Int?
+
+  AssetType   AssetType @relation(fields: [assetTypeId], references: [id])
+  assetTypeId Int
+
+
+  price    Float
+  currency Currency
+
+  metadata Json?
+
+  quantity Int
+
+  Transaction Transaction[]
+}
+
+model AssetType {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Asset     Asset[]
+
+  timeBased          Boolean
+  infiniteStock      Boolean
+  name               String
+  pricing            Json
+  timing             Json
+  unavailableWhen    Json
+  transactionProcess Json
+  isDefault          Boolean @default(false)
+  active             Boolean @default(false)
+
+}
+
+model AssetCategory {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  metadata Json?
+
+
+  Asset Asset[]
 }
 
 model Domain {
@@ -181,6 +288,38 @@ model Document {
   id             Int          @id @default(autoincrement())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int
+}
+
+enum Currency {
+  USD
+  EUR
+  TRY
+}
+
+enum ExternalProfileService {
+  TWITTER
+  INSTAGRAM
+  GITHUB
+  TIKTOK
+  MEDIUM
+  NOTION
+}
+
+model ExternalProfiles {
+  id Int @id @default(autoincrement())
+
+  externalId String
+  service    ExternalProfileService
+
+
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  verificationLastCheckedAt DateTime
+  verificationPassed        String
+  verificationEntity        String
+
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int
 }

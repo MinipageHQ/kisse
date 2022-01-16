@@ -10,6 +10,11 @@ export interface FormProps<S extends z.ZodType<any, any>>
   children?: ReactNode
   /** Text to display in the submit button */
   submitText?: string
+  submitTextWhenLoading?: string
+
+  submitOuterProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
+  submitProps?: PropsWithoutRef<JSX.IntrinsicElements["button"]>
+
   schema?: S
   onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
   initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
@@ -18,6 +23,9 @@ export interface FormProps<S extends z.ZodType<any, any>>
 export function Form<S extends z.ZodType<any, any>>({
   children,
   submitText,
+  submitTextWhenLoading,
+  submitProps = {},
+  submitOuterProps = {},
   schema,
   initialValues,
   onSubmit,
@@ -40,15 +48,17 @@ export function Form<S extends z.ZodType<any, any>>({
           )}
 
           {submitText && (
-            <button type="submit" disabled={submitting}>
-              {submitText}
-            </button>
+            <div {...submitOuterProps}>
+              <button type="submit" disabled={submitting} {...submitProps}>
+                {submitting && submitTextWhenLoading ? submitTextWhenLoading : submitText}
+              </button>
+            </div>
           )}
 
           <style global jsx>{`
-            .form > * + * {
-              margin-top: 1rem;
-            }
+            // .form > * + * {
+            //   margin-top: 1rem;
+            // }
           `}</style>
         </form>
       )}
