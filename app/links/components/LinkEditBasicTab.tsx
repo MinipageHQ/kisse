@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { PlusIcon } from "@heroicons/react/outline"
-import useCreatorSpace from "hooks/useCreatorSpace"
+
 import React from "react"
 
 import ContentEditor from "components/ContentEditor/ContentEditor"

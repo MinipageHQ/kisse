@@ -1,6 +1,5 @@
 import { PlusIcon } from "@heroicons/react/outline"
 import CreatorSlugField from "components/Dashboard/Common/Inputs/CreatorPageSlug"
-import useCreatorSpace from "hooks/useCreatorSpace"
 
 import { useFormContext } from "react-hook-form"
 

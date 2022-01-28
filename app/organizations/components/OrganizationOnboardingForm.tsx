@@ -1,5 +1,5 @@
 import { Form, FormProps } from "app/core/components/Form"
-import LabeledMediaField from "app/core/components/LabeledMediaField"
+import LabeledProfileMediaField from "./LabeledProfileMediaField"
 import LabeledTextAreaField from "app/core/components/LabeledTextAreaField"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { z } from "zod"
@@ -22,49 +22,35 @@ export function OrganizationOnboardingForm<S extends z.ZodType<any, any>>(props:
           />
 
           <LabeledTextField
-            name="displayName"
+            name="name"
             label="Display name"
             outerProps={{ className: labelClasses }}
             labelProps={{ className: labelClasses }}
+            helpText="Most creators prefer using the name they are most known with, sdfs You'll be able to select a different display name if you prefer but your real name is used to verify your identity.            "
             className={`
             shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md
           `}
           />
-          <p className="mt-2 text-sm text-gray-500" id="name-description">
-            Most creators prefer using the name they are most known with, sdfs You&apos;ll be able
-            to select a different display name if you prefer but your real name is used to verify
-            your identity.
-          </p>
+
           <LabeledTextAreaField
             name="description"
             label="Short description"
+            helpText="Displayed at the top of your links"
             outerProps={{ className: labelClasses }}
             labelProps={{ className: labelClasses }}
             className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md `}
           />
-          <p className="mt-2 text-sm text-gray-500" id="name-description">
-            Displayed at the top of your links
-          </p>
 
-          <LabeledMediaField
+          <LabeledProfileMediaField
             name="profileMedia"
             label="Profile Media"
             outerProps={{ className: labelClasses }}
             labelProps={{ className: labelClasses }}
             className={`
-            shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md
+            shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md
           `}
           />
         </div>
-      </div>
-      <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-        {/* <FormSubmitButton
-          type="submit"
-          isLoading={updateUserSettings.isLoading}
-          text="Start using Saltana"
-          textWhenLoading="Crafting your profile..."
-          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-        /> */}
       </div>
     </Form>
   )

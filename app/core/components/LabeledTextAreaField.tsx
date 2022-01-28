@@ -9,13 +9,14 @@ export interface LabeledTextAreaFieldProps
   label: string
   /** Field type. Doesn't include radio buttons and checkboxes */
   // type?: "text" | "password" | "email" | "number"
+  helpText?: React.ReactNode
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
   fieldProps?: UseFieldConfig<string>
 }
 
 export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextAreaFieldProps>(
-  ({ name, label, outerProps, fieldProps, labelProps, ...props }, ref) => {
+  ({ name, label, outerProps, fieldProps, labelProps, helpText, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
@@ -34,10 +35,12 @@ export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextA
         </label>
 
         {touched && normalizedError && (
-          <div role="alert" style={{ color: "red" }}>
+          <p role="alert" className="mt-2 text-sm text-red-600">
             {normalizedError}
-          </div>
+          </p>
         )}
+
+        {helpText && <p className="mt-2 text-sm text-gray-500">{helpText}</p>}
       </div>
     )
   }

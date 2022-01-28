@@ -2,6 +2,7 @@ import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import createDomain from "app/domains/mutations/createDomain"
 import { DomainForm, FORM_ERROR } from "app/domains/components/DomainForm"
+import DashboardCreatorSettingsLayout from "app/core/layouts/DashboardCustomizeLayout"
 
 const NewDomainPage: BlitzPage = () => {
   const router = useRouter()
@@ -41,6 +42,11 @@ const NewDomainPage: BlitzPage = () => {
 }
 
 NewDomainPage.authenticate = true
-NewDomainPage.getLayout = (page) => <Layout title={"Create New Domain"}>{page}</Layout>
+
+NewDomainPage.getLayout = (page) => (
+  <DashboardCreatorSettingsLayout title={"Create New Domain"}>
+    {page}
+  </DashboardCreatorSettingsLayout>
+)
 
 export default NewDomainPage

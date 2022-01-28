@@ -1,5 +1,5 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import Layout from "app/core/layouts/DashboardLayout"
 import createLink from "app/links/mutations/createLink"
 import { LinkForm, FORM_ERROR } from "app/links/components/LinkForm"
 

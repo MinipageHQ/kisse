@@ -1,4 +1,3 @@
-import useCreatorSpace from "hooks/useCreatorSpace"
 import { useFormContext } from "react-hook-form"
 import ContentEditor from "components/ContentEditor/ContentEditor"
 import * as React from "react"

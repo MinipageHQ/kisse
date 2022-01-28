@@ -13,7 +13,6 @@ export default resolver.pipe(
   resolver.authorize(),
   setDefaultOrganizationId,
   enforceSuperAdminIfNotCurrentOrganization,
-
   async ({ id }, { session: { orgId } }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const organization = await db.organization.findFirst({ where: { id: id || orgId } })

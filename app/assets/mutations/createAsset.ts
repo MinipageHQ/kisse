@@ -11,7 +11,7 @@ const CreateAsset = z.object({
   assetTypeId: z.number(),
   quantity: z.number().min(0),
   price: z.number().min(0),
-  currency: z.string(),
+  currency: z.enum(["USD", "EUR", "TRY"]),
 })
 
 export default resolver.pipe(resolver.zod(CreateAsset), resolver.authorize(), async (input) => {

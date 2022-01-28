@@ -1,10 +1,9 @@
-import useCreatorSpace from "hooks/useCreatorSpace"
 import { useFormContext, Controller } from "react-hook-form"
 
 import React, { Fragment, useState } from "react"
 import { Dialog, RadioGroup, Transition } from "@headlessui/react"
 import { CheckIcon, QuestionMarkCircleIcon, StarIcon } from "@heroicons/react/solid"
-import classNames from "@/common/classnames"
+import classNames from "app/core/utils/classnames"
 import SaveButton from "../../SaveButton"
 
 const _linkTypes = {

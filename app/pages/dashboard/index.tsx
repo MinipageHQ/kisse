@@ -39,10 +39,6 @@ const DashboardMainPage: BlitzPage = () => {
 }
 
 DashboardMainPage.authenticate = true
-DashboardMainPage.getLayout = (page) => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <DashboardLayout>{page}</DashboardLayout>
-  </Suspense>
-)
+DashboardMainPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
 
 export default DashboardMainPage

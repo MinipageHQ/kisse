@@ -4,7 +4,7 @@ import { z } from "zod"
 
 const UpdateDocument = z.object({
   id: z.number(),
-  name: z.string(),
+  // name: z.string(),
 })
 
 export default resolver.pipe(

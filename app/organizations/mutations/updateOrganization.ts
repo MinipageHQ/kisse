@@ -12,7 +12,7 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const space = await db.space.update({ where: { id }, data })
+    const space = await db.organization.update({ where: { id }, data })
 
     return space
   }

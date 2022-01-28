@@ -67,7 +67,7 @@ export const SignupFormForCreators = (props: SignupFormProps) => {
         }}
       >
         <LabeledTextField name="name" label="Name" placeholder="Name" />
-        <LabeledTextField name="email" label="Email" placeholder="Email" />
+        <LabeledTextField name="email" label="E-mail" placeholder="you@nsa.gov" />
         <LabeledTextField name="inviteCode" label="Invite Code" placeholder="Invite code" />
         <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
       </Form>

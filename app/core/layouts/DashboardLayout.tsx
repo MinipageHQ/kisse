@@ -1,98 +1,90 @@
-import { Head, BlitzLayout, useSession, useRouter, Image } from "blitz"
-
-import { Fragment, useState } from "react"
-import { Dialog, Menu, Transition } from "@headlessui/react"
+import React, { Fragment, Suspense, useState } from "react"
+import { Dialog, Menu, Transition, Popover, Listbox } from "@headlessui/react"
 import {
+  ClockIcon,
+  HomeIcon,
   MenuAlt1Icon,
+  ViewListIcon,
   XIcon,
+  BellIcon,
+  MenuIcon,
   TrendingUpIcon,
   LinkIcon,
   CashIcon,
+  ShareIcon,
   SwitchHorizontalIcon,
   AdjustmentsIcon,
 } from "@heroicons/react/outline"
-import { SearchIcon } from "@heroicons/react/solid"
+import {
+  ChevronRightIcon,
+  DotsVerticalIcon,
+  SearchIcon,
+  SelectorIcon,
+} from "@heroicons/react/solid"
 
 import { Logo } from "app/core/components/Logo"
-
-import classNames from "app/core/utils/classnames"
-import { useCurrentUser } from "../hooks/useCurrentUser"
-import {
-  CreatorDashboardLink,
-  DefaultLink,
-  UserDashboardLink,
-} from "../components/DashboardRouteLinks"
-import container from "postcss/lib/container"
+import { BlitzLayout, useRouter, Image, Link, Head } from "blitz"
+import classNames from "../utils/classnames"
+import ShowForRoleWrapped from "app/auth/components/ShowForRole"
+// import Avatar from 'components/Avatar'
 
 const creatorNavigation = [
   {
     name: "Links",
-    href: "/links",
+    href: "/dashboard/links",
     current: false,
     icon: LinkIcon,
   },
   {
     name: "Assets",
-    href: "/assets",
+    href: "/dashboard/assets",
     current: false,
     icon: CashIcon,
   },
   {
     name: "Orders",
-    href: "/assets/orders",
+    href: "/dashboard/assets/orders",
     current: false,
     icon: CashIcon,
   },
   {
     name: "Analytics",
-    href: "/analytics",
+    href: "/dashboard/analytics",
     current: false,
     icon: TrendingUpIcon,
   },
   {
     name: "Workflows & Integrations",
-    href: "/workflows",
+    href: "/dashboard/workflows",
     current: false,
     icon: SwitchHorizontalIcon,
   },
   {
     name: "Customize",
-    href: "/customize",
+    href: "/dashboard/customize",
     current: false,
     icon: AdjustmentsIcon,
   },
 ]
 
 const userNavigation = [
-  { name: "Purchased Assets", href: "/assets", current: false },
-  { name: "Wallet", href: "/payments", current: false },
-  { name: "Security", href: "/settings/security", current: false },
-  { name: "Settings", href: "/settings", current: false },
+  { name: "Purchased Assets", href: "/my/assets", current: false },
+  { name: "Wallet", href: "/my/payments", current: false },
+  { name: "Security", href: "/my/settings/security", current: false },
+  { name: "Settings", href: "/my/settings", current: false },
   { name: "Help", href: "/help", current: false },
   // { name: 'Logout', href: '/logout' }
 ]
 
-const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) => {
-  const currentUser = useCurrentUser()
-  const session = useSession()
+const DashboardLayout: BlitzLayout<{
+  subHeader?: React.ReactNode
+  container?: boolean
+  title?: string
+}> = ({ subHeader, title, children, container }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
-
-  if (!currentUser) {
-    return null
-  }
-
   const isRegularUserPath = router.pathname.startsWith("/my/")
-  const _userNavigation = userNavigation.map((item) => {
-    return { ...item, current: router.pathname.endsWith(`my${item.href}`) }
-  })
-  const _creatorNavigation = creatorNavigation.map((item) => {
-    return { ...item, current: isRegularUserPath ? false : router.pathname.endsWith(item.href) }
-  })
 
-  const name = currentUser.name
-
-  const showCreatorNavigation = session.roles?.includes("CREATOR")
   return (
     <>
       <Head>
@@ -145,18 +137,16 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                   </div>
                 </Transition.Child>
                 <div className="flex-shrink-0 flex items-center px-4">
-                  <DefaultLink passHref>
-                    <a href="#" className=" w-auto">
-                      <Logo h="8" fill="#00000" />
-                    </a>
-                  </DefaultLink>
+                  <a href="#" className=" w-auto">
+                    <Logo h="8" fill="#00000" />
+                  </a>
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2">
-                    {showCreatorNavigation && (
+                    <ShowForRoleWrapped role="CREATOR">
                       <div className="space-y-1">
-                        {_creatorNavigation.map((item) => (
-                          <CreatorDashboardLink key={item.name} href={item.href}>
+                        {creatorNavigation.map((item) => (
+                          <Link key={item.name} href={item.href}>
                             <a
                               href="#"
                               className={classNames(
@@ -178,10 +168,10 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                               />
                               {item.name}
                             </a>
-                          </CreatorDashboardLink>
+                          </Link>
                         ))}
                       </div>
-                    )}
+                    </ShowForRoleWrapped>
                     <div className="mt-8">
                       <h3
                         className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
@@ -194,15 +184,15 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                         role="group"
                         aria-labelledby="mobile-myaccount-headline"
                       >
-                        {_userNavigation.map((item) => (
-                          <UserDashboardLink key={item.name} href={item.href}>
+                        {userNavigation.map((item) => (
+                          <Link key={item.name} href={item.href}>
                             <a
                               href="#"
                               className="group flex items-center px-3 py-2 text-base leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50"
                             >
                               <span className="truncate">{item.name}</span>
                             </a>
-                          </UserDashboardLink>
+                          </Link>
                         ))}
                         <a
                           onClick={() => console.log("signout")}
@@ -226,50 +216,52 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
         {/* Static sidebar for desktop */}
         <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 lg:pt-5 lg:pb-4 lg:bg-gray-100">
           <div className="flex items-center flex-shrink-0 px-6">
-            <DefaultLink passHref>
-              <a href="#" className="h-8 w-auto">
-                <Logo h="8" fill="#00000" />
-              </a>
-            </DefaultLink>
+            <a href="#" className="h-8 w-auto">
+              <Logo h="8" fill="#00000" />
+            </a>
           </div>
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="mt-6 h-0 flex-1 flex flex-col overflow-y-auto">
             {/* Creator spaces dropdown */}
-            {showCreatorNavigation ? (
-              <div className="px-3 relative inline-block text-left">
-                <a href="https://saltana.com/" target="_blank" rel="noreferrer">
-                  <div className="group w-full rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
-                    <span className="flex w-full justify-between items-center">
-                      <span className="flex min-w-0 items-center justify-between space-x-3">
-                        <span className="flex-1 flex flex-col min-w-0">
-                          <span className="text-gray-900 text-sm font-medium ">
-                            Go to my space -{">"}
+            <ShowForRoleWrapped>
+              {({ roles }) =>
+                roles?.includes("CREATOR") ? (
+                  <div className="px-3 relative inline-block text-left">
+                    <a href="https://saltana.com/" target="_blank" rel="noreferrer">
+                      <div className="group w-full rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
+                        <span className="flex w-full justify-between items-center">
+                          <span className="flex min-w-0 items-center justify-between space-x-3">
+                            <span className="flex-1 flex flex-col min-w-0">
+                              <span className="text-gray-900 text-sm font-medium ">
+                                Go to my space -{">"}
+                              </span>
+                            </span>
                           </span>
                         </span>
-                      </span>
-                    </span>
+                      </div>
+                    </a>
                   </div>
-                </a>
-              </div>
-            ) : (
-              <div className="px-3 relative inline-block text-left">
-                <a href="https://saltana.com/request-invite" target="_blank" rel="noreferrer">
-                  <div className="group w-full bg-yellow-200 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
-                    <span className="flex w-full justify-between items-center">
-                      <span className="flex min-w-0 items-center justify-between space-x-3">
-                        <span className="flex-1 flex flex-col min-w-0">
-                          <span className="text-gray-900 text-sm font-medium ">
-                            Apply for a creator account
+                ) : (
+                  <div className="px-3 relative inline-block text-left">
+                    <a href="https://saltana.com/request-invite" target="_blank" rel="noreferrer">
+                      <div className="group w-full bg-yellow-200 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
+                        <span className="flex w-full justify-between items-center">
+                          <span className="flex min-w-0 items-center justify-between space-x-3">
+                            <span className="flex-1 flex flex-col min-w-0">
+                              <span className="text-gray-900 text-sm font-medium ">
+                                Apply for a creator account
+                              </span>
+                            </span>
                           </span>
                         </span>
-                      </span>
-                    </span>
+                      </div>
+                    </a>
                   </div>
-                </a>
-              </div>
-            )}
+                )
+              }
+            </ShowForRoleWrapped>
             {/* Sidebar Search */}
-            {showCreatorNavigation && (
+            <ShowForRoleWrapped role="CREATOR">
               <div className="px-3 mt-5">
                 <label htmlFor="search" className="sr-only">
                   Search
@@ -290,13 +282,13 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                   />
                 </div>
               </div>
-            )}
+            </ShowForRoleWrapped>
             {/* Navigation */}
             <nav className="px-3 mt-6">
-              {showCreatorNavigation && (
+              <ShowForRoleWrapped role="CREATOR">
                 <div className="space-y-1">
-                  {_creatorNavigation.map((item) => (
-                    <CreatorDashboardLink key={item.name} href={item.href} passHref>
+                  {creatorNavigation.map((item) => (
+                    <Link key={item.name} href={item.href} passHref>
                       <a
                         className={classNames(
                           item.current
@@ -317,10 +309,11 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                         />
                         {item.name}
                       </a>
-                    </CreatorDashboardLink>
+                    </Link>
                   ))}
                 </div>
-              )}
+              </ShowForRoleWrapped>
+
               <div className="mt-8">
                 {/* Secondary navigation */}
                 <h3
@@ -334,8 +327,8 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                   role="group"
                   aria-labelledby="desktop-teams-headline"
                 >
-                  {_userNavigation.map((item) => (
-                    <UserDashboardLink href={item.href} key={item.href} passHref>
+                  {userNavigation.map((item) => (
+                    <Link href={item.href} key={item.href} passHref>
                       <a
                         key={item.name}
                         className={classNames(
@@ -348,7 +341,7 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                       >
                         <span className="truncate">{item.name}</span>
                       </a>
-                    </UserDashboardLink>
+                    </Link>
                   ))}
                   <a
                     onClick={() => console.log("signout")}
@@ -364,10 +357,10 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
 
             <div className="flex-shrink-0 flex border-t border-gray-200 p-4 mt-5">
               <div className="flex items-center">
-                <div>user button</div>
+                <div>serButton</div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                    {name}
+                    name
                   </p>
                 </div>
               </div>
@@ -414,8 +407,10 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
                       <span className="sr-only">Open user menu</span>
                       <Image
                         className="h-8 w-8 rounded-full"
-                        alt="wtf"
                         src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                        height={80}
+                        width={80}
                       />
                     </Menu.Button>
                   </div>
@@ -520,20 +515,13 @@ const DashboardLayout: BlitzLayout<{ title?: string }> = ({ title, children }) =
             </div>
           </div>
 
-          {container === true ? (
-            <>
-              {subHeader}
-              <main className="flex-1">{children}</main>
-            </>
-          ) : (
-            children
-          )}
+          <main className="flex-1">
+            <Suspense fallback="Loading...">{children}</Suspense>
+          </main>
         </div>
       </div>
     </>
   )
 }
-
-DashboardLayout.authenticate = true
 
 export default DashboardLayout

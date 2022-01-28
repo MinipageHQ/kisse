@@ -8,7 +8,8 @@ const getCreatorDashboardLink = (basePath = "") =>
     const user = { username: "batuhan " }
     return (
       <Link
-        href={`/dashboard/${user?.username || user?.id || "me"}${basePath}${href}`}
+        // href={`/dashboard/${user?.username || user?.id || "me"}${basePath}${href}`}
+        href={`/dashboard/${basePath}${href}`}
         {...props}
         passHref
       >

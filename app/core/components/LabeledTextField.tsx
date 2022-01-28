@@ -8,13 +8,16 @@ export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElem
   label: string
   /** Field type. Doesn't include radio buttons and checkboxes */
   type?: "text" | "password" | "email" | "number"
+  /** Field help text */
+  helpText?: React.ReactNode
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
   fieldProps?: UseFieldConfig<string>
 }
+import { ExclamationCircleIcon } from "@heroicons/react/solid"
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({ name, label, outerProps, fieldProps, labelProps, ...props }, ref) => {
+  ({ name, label, outerProps, fieldProps, labelProps, type = "text", helpText, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
@@ -28,36 +31,40 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     })
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
+    const showError = touched && normalizedError
 
     return (
-      <div {...outerProps}>
-        <label {...labelProps}>
+      <div {...outerProps} className={`mt-3 ${outerProps?.className}`}>
+        <label className="block text-sm font-medium text-gray-700" {...labelProps}>
           {label}
-          <input {...input} disabled={submitting} {...props} ref={ref} />
+
+          <div className="mt-1 relative rounded-md shadow-sm">
+            <input
+              title={label}
+              type={type}
+              {...input}
+              disabled={submitting}
+              {...props}
+              className={`block w-full pr-10 focus:outline-none  sm:text-sm rounded-md ${
+                showError &&
+                "border-red-300 text-red-900 placeholder-red-300  focus:ring-red-500 focus:border-red-500 "
+              } `}
+              ref={ref}
+            />
+            {showError && (
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
+            )}
+          </div>
         </label>
 
         {touched && normalizedError && (
-          <div role="alert" style={{ color: "red" }}>
+          <p role="alert" className="mt-2 text-sm text-red-600">
             {normalizedError}
-          </div>
+          </p>
         )}
-
-        <style jsx>{`
-          label {
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            font-size: 1rem;
-          }
-          input {
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            border: 1px solid purple;
-            appearance: none;
-            margin-top: 0.5rem;
-          }
-        `}</style>
+        {helpText && <p className="mt-2 text-sm text-gray-500">{helpText}</p>}
       </div>
     )
   }

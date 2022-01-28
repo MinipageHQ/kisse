@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getDomains from "app/domains/queries/getDomains"
+import DashboardCreatorSettingsLayout from "app/core/layouts/DashboardCustomizeLayout"
 
 const ITEMS_PER_PAGE = 100
 
@@ -62,6 +63,8 @@ const DomainsPage: BlitzPage = () => {
 }
 
 DomainsPage.authenticate = true
-DomainsPage.getLayout = (page) => <Layout>{page}</Layout>
+DomainsPage.getLayout = (page) => (
+  <DashboardCreatorSettingsLayout>{page}</DashboardCreatorSettingsLayout>
+)
 
 export default DomainsPage

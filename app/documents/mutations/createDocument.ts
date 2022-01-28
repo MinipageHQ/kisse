@@ -4,6 +4,8 @@ import { z } from "zod"
 
 const CreateDocument = z.object({
   name: z.string(),
+
+  organization: z.number(),
 })
 
 export default resolver.pipe(resolver.zod(CreateDocument), resolver.authorize(), async (input) => {

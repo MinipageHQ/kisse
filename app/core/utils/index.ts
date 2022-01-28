@@ -10,7 +10,7 @@ export const setDefaultOrganizationId = <T extends Record<any, any>>(
   input: T,
   { session }: Ctx
 ): T & { organizationId: Prisma.IntNullableFilter | number } => {
-  assert(session.orgId, "Missing session.orgId in setDefaultOrganizationId")
+  assert(session.orgId, "This page requires a creator account")
   if (input.organizationId) {
     // Pass through the input
     return input as T & { organizationId: number }
