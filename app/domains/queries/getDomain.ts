@@ -1,17 +1,18 @@
 import { resolver, NotFoundError } from "blitz"
 import db from "db"
 import { z } from "zod"
+import { domain as domainValidation } from "../validations"
 
 const GetDomain = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
+  domain: domainValidation,
 })
 
-export default resolver.pipe(resolver.zod(GetDomain), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetDomain), resolver.authorize(), async ({ domain }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const domain = await db.domain.findFirst({ where: { id } })
+  const domainInDb = await db.domain.findFirst({ where: { domain } })
 
-  if (!domain) throw new NotFoundError()
+  if (!domainInDb) throw new NotFoundError()
 
-  return domain
+  return domainInDb
 })

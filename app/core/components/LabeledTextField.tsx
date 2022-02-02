@@ -26,7 +26,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         props.type === "number"
           ? (Number as any)
           : // Converting `""` to `null` ensures empty values will be set to null in the DB
-            (v) => (v === "" ? null : v),
+          (v) => (v === "" ? null : v),
       ...fieldProps,
     })
 
@@ -45,10 +45,9 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
               {...input}
               disabled={submitting}
               {...props}
-              className={`block w-full pr-10 focus:outline-none  sm:text-sm rounded-md ${
-                showError &&
+              className={`block w-full pr-10 focus:outline-none  sm:text-sm rounded-md ${showError &&
                 "border-red-300 text-red-900 placeholder-red-300  focus:ring-red-500 focus:border-red-500 "
-              } `}
+                } `}
               ref={ref}
             />
             {showError && (

@@ -37,6 +37,8 @@ model Organization {
   defaultDomainId  Int?
   Domain           Domain[]
   ExternalProfiles ExternalProfiles[]
+
+  platformFeatures PlatformFeatures[]
 }
 
 model Membership {
@@ -64,9 +66,22 @@ enum MembershipRole {
 
 // The owners of the SaaS (you) can have a SUPERADMIN role to access all data
 enum GlobalRole {
-  SUPERADMIN
+  SUPERADMIN // Not really superadmin but it's for Saltana employees
   CREATOR
-  USER
+  USER // Basically people that bought something, we might only have an e-mail or phone number and nothing else on these people
+}
+
+enum PlatformFeatures {
+  STRIPE_CONNECT
+  GOOGLE_ANALYTICS
+  WEBHOOKS
+  NOTION_LINKS
+  WORKFLOWS
+  CRYPTOCURRENCIES
+  ASSETS
+  ASSETS_SUBSCRIPTIONS
+  DONATIONS
+  VIDEO_UPLOAD
 }
 
 model InviteCode {
@@ -253,9 +268,9 @@ model AssetType {
   infiniteStock      Boolean
   name               String
   pricing            Json
-  timing             Json
-  unavailableWhen    Json
-  transactionProcess Json
+  timing             Json    @default("{}")
+  unavailableWhen    Json    @default("{}")
+  transactionProcess Json    @default("{}")
   isDefault          Boolean @default(false)
   active             Boolean @default(false)
 
@@ -274,14 +289,25 @@ model AssetCategory {
   Asset Asset[]
 }
 
+enum DomainProvider {
+  NATIVE
+  VERCEL
+}
+
 model Domain {
   id             Int            @id @default(autoincrement())
+  domain         String
+  vercelId       String
+  status         String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   organization   Organization   @relation(fields: [organizationId], references: [id])
   organizationId Int            @unique
   Link           Link[]
   Organization   Organization[] @relation("defaultDomainForOrg")
+
+  provider           DomainProvider @default(NATIVE)
+  vercelDataSnapshot Json           @default("{}")
 }
 
 model Document {

@@ -1,9 +1,9 @@
-import db from "./index"
+import { SecurePassword } from "blitz"
+import db from "db"
 
 const assetTypeDefaults = {
   timeBased: false,
   infiniteStock: true,
-
   pricing: {
     ownerFeesPercent: 10,
     takerFeesPercent: 0,
@@ -74,6 +74,63 @@ const seed = async () => {
     data: [...assetTypes],
     skipDuplicates: true,
   })
+
+  const defaultPassword = "only works in dev"
+  const passwordHasher = (password = defaultPassword) => SecurePassword.hash(password.trim())
+
+  const defaultHashedPassword = await passwordHasher()
+
+  console.log(`default password is ${defaultPassword}`)
+  const createUser = async (user, role, extraOpts = {}) => {
+    await db.user.create({
+      data: {
+        email: `testuser+${user}@saltana.dev`,
+        hashedPassword: defaultHashedPassword,
+        role,
+        ...extraOpts,
+      },
+    })
+
+    console.log(`creating test user ${user} with role ${role}, email: testuser+${user}@saltana.dev`)
+  }
+
+  await Promise.all([
+    // Mighty admin
+    createUser("r00t", "SUPERADMIN"),
+    // Creator
+    createUser("batuhan", "CREATOR", {
+      memberships: {
+        create: {
+          role: "OWNER",
+          organization: {
+            create: {
+              name: "Batuhan Icoz",
+              slug: "batuhan",
+            },
+          },
+        },
+      },
+    }),
+    createUser("fatih", "CREATOR", {
+      memberships: {
+        create: {
+          role: "OWNER",
+          organization: {
+            create: {
+              name: "Fatih Guner",
+              slug: "fatih",
+            },
+          },
+        },
+      },
+    }),
+    // Users
+    createUser("u1", "USER"),
+    createUser("u2", "USER"),
+    createUser("u3", "USER"),
+    createUser("u4", "USER"),
+    createUser("u5", "USER"),
+  ])
 }
 
 export default seed
