@@ -1,4 +1,3 @@
-import { setDefaultOrganizationId, enforceSuperAdminIfNotCurrentOrganization } from "app/core/utils"
 import { paginate, resolver } from "blitz"
 import db, { Prisma } from "db"
 
@@ -8,12 +7,6 @@ interface GetDomainsInput
 export default resolver.pipe(
   resolver.authorize(),
   async ({ where, orderBy, skip = 0, take = 100 }: GetDomainsInput, { session: { orgId } }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-
-    if (where === undefined) {
-      where = {}
-    }
-    where.organizationId = orgId
     const {
       items: domains,
       hasMore,
@@ -23,7 +16,22 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.domain.count({ where }),
-      query: (paginateArgs) => db.domain.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.domain.findMany({
+          ...paginateArgs,
+          where: {
+            OR: [
+              {
+                organizationId: { equals: null },
+              },
+              {
+                organizationId: { equals: orgId },
+              },
+            ],
+            ...where,
+          },
+          orderBy,
+        }),
     })
 
     return {

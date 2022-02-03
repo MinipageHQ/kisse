@@ -13,43 +13,55 @@ generator client {
 
 }
 
+generator zod {
+  provider = "zod-prisma"
+  // (default) the directory where generated zod schemas will be saved
+  output   = "./zod"
+
+  relationModel = true
+
+  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+  // (default) uses prisma's scheme for JSON field nullability
+  prismaJsonNullability = true
+}
+
 // --------------------------------------
 
 model Organization {
-  id          Int     @id @default(autoincrement())
+  id          String  @id @default(cuid())
   name        String
   slug        String?
   description String?
 
-  membership  Membership[]
-  Document    Document[]
-  // domain      Domain[]
-  Asset       Asset[]
-  Order       Order[]
-  Transaction Transaction[]
-  Link        Link[]
+  memberships Membership[]
+  documents   Document[]
 
-  profileMedia  Json?
-  metadata      Json?
-  privateMetada Json?
+  assets       Asset[]
+  orders       Order[]
+  transactions Transaction[]
+  links        Link[]
+
+  profileMedia    Json?
+  metadata        Json?
+  privateMetadata Json?
 
   defaultDomain    Domain?            @relation(name: "defaultDomainForOrg", fields: [defaultDomainId], references: [id])
-  defaultDomainId  Int?
-  Domain           Domain[]
-  ExternalProfiles ExternalProfiles[]
+  defaultDomainId  String?
+  domains          Domain[]
+  externalProfiles ExternalProfiles[]
 
   platformFeatures PlatformFeatures[]
 }
 
 model Membership {
-  id   Int            @id @default(autoincrement())
+  id   String         @id @default(cuid())
   role MembershipRole
 
   organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
+  organizationId String
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 
   // When the user joins, we will clear out the name and email and set the user.
   invitedName  String?
@@ -85,7 +97,7 @@ enum PlatformFeatures {
 }
 
 model InviteCode {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   usedAt    DateTime?
@@ -93,11 +105,11 @@ model InviteCode {
   referrer  String
   code      String    @unique
   usedBy    User?     @relation(fields: [userId], references: [id])
-  userId    Int?
+  userId    String?
 }
 
 model User {
-  id             Int        @id @default(autoincrement())
+  id             String     @id @default(cuid())
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   name           String?
@@ -108,11 +120,11 @@ model User {
   tokens      Token[]
   sessions    Session[]
   memberships Membership[]
-  InviteCode  InviteCode[]
+  inviteCodes InviteCode[]
 }
 
 model Session {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(cuid())
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -122,12 +134,12 @@ model Session {
   publicData         String?
   privateData        String?
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 model Token {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   hashedToken String
@@ -137,8 +149,8 @@ model Token {
   expiresAt   DateTime
   sentTo      String
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   @@unique([hashedToken, type])
 }
@@ -150,25 +162,45 @@ enum TokenType {
   RESET_PASSWORD
 }
 
+enum LinkType {
+  LINK_TYPE_CHECKOUT
+  LINK_TYPE_REDIRECT
+  LINK_TYPE_LINKLIST
+  LINK_TYPE_EMBED
+}
+
+enum LinkProvider {
+  LINK_PROVIDER_NATIVE
+  LINK_PROVIDER_NOTION
+  LINK_PROVIDER_TYPEFORM
+}
+
 model Link {
-  id             Int          @id @default(autoincrement())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  slug           String
-  type           TokenType
-  target         String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
-  domain         Domain?      @relation(fields: [domainId], references: [id])
-  domainId       Int?
+  id     String   @id @default(cuid()) /// @zod.cuid().optional()
+  slug   String
+  type   LinkType
+  target String /// @zod.url({ message: "Target must be a valid URL" })
+
+  provider        LinkProvider?
+  organization    Organization  @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  domain          Domain        @relation(fields: [domainId], references: [id])
+  domainId        String
+  metadata        Json          @default("{}")
+  privateMetadata Json          @default("{}")
+  statsSnapshot   Json          @default("{}")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([domainId, slug])
 }
 
 model Transaction {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(cuid())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
+  organizationId String
 
   asset           Asset  @relation(fields: [assetId], references: [id])
   assetSnapshot   Json
@@ -199,16 +231,16 @@ model Transaction {
   completedAt    DateTime
   cancelledAt    DateTime
 
-  assetId Int
+  assetId String
 }
 
 model Order {
-  id           Int          @id @default(autoincrement())
+  id           String       @id @default(cuid())
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   organization Organization @relation(fields: [organizationId], references: [id])
 
-  organizationId Int
+  organizationId String
 
 
   lines            Json
@@ -231,7 +263,7 @@ enum AssetStatus {
 }
 
 model Asset {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
   name           String
   description    String
@@ -239,13 +271,13 @@ model Asset {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
+  organizationId String
 
-  AssetCategory   AssetCategory? @relation(fields: [assetCategoryId], references: [id])
-  assetCategoryId Int?
+  assetCategory   AssetCategory? @relation(fields: [assetCategoryId], references: [id])
+  assetCategoryId String?
 
-  AssetType   AssetType @relation(fields: [assetTypeId], references: [id])
-  assetTypeId Int
+  assetType   AssetType @relation(fields: [assetTypeId], references: [id])
+  assetTypeId String
 
 
   price    Float
@@ -255,14 +287,14 @@ model Asset {
 
   quantity Int
 
-  Transaction Transaction[]
+  transactions Transaction[]
 }
 
 model AssetType {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Asset     Asset[]
+  assets    Asset[]
 
   timeBased          Boolean
   infiniteStock      Boolean
@@ -277,7 +309,7 @@ model AssetType {
 }
 
 model AssetCategory {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -286,7 +318,7 @@ model AssetCategory {
   metadata Json?
 
 
-  Asset Asset[]
+  assets Asset[]
 }
 
 enum DomainProvider {
@@ -295,27 +327,30 @@ enum DomainProvider {
 }
 
 model Domain {
-  id             Int            @id @default(autoincrement())
-  domain         String
-  vercelId       String
+  id             String         @id @default(cuid())
+  domain         String         @unique
+  vercelId       String?
   status         String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  organization   Organization   @relation(fields: [organizationId], references: [id])
-  organizationId Int            @unique
-  Link           Link[]
-  Organization   Organization[] @relation("defaultDomainForOrg")
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  links          Link[]
+  organizations  Organization[] @relation("defaultDomainForOrg")
 
   provider           DomainProvider @default(NATIVE)
   vercelDataSnapshot Json           @default("{}")
+
+
+
 }
 
 model Document {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(cuid())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
+  organizationId String
 }
 
 enum Currency {
@@ -334,7 +369,7 @@ enum ExternalProfileService {
 }
 
 model ExternalProfiles {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
   externalId String
   service    ExternalProfileService
@@ -347,5 +382,5 @@ model ExternalProfiles {
   verificationEntity        String
 
   organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
+  organizationId String
 }

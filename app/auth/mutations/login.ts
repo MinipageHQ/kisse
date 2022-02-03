@@ -28,7 +28,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const defaultMembership =
     user.memberships.length > 0
       ? (user.memberships[0] as Membership)
-      : { id: undefined, role: undefined }
+      : { organizationId: undefined, role: undefined }
 
   const roles: Role[] = [user.role]
 
@@ -39,7 +39,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   await ctx.session.$create({
     userId: user.id,
     roles,
-    orgId: defaultMembership.id,
+    orgId: defaultMembership.organizationId,
   })
 
   return user

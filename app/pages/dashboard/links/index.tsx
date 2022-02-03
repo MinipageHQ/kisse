@@ -5,6 +5,7 @@ import DashboardLayout from "app/core/layouts/DashboardLayout"
 import DashboardLinksLayout from "app/links/components/DashboardLinksLayout"
 import classNames from "app/core/utils/classnames"
 import { ChevronRightIcon } from "@heroicons/react/outline"
+import DashboardLinksEmpty from "app/links/components/DashboardLinksEmpty"
 
 const ITEMS_PER_PAGE = 100
 
@@ -20,6 +21,9 @@ export const LinksList = () => {
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
   const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
+  if (links?.length === 0) {
+    return (<DashboardLinksEmpty />)
+  }
   return (
     <div>
       <ul>
@@ -98,7 +102,7 @@ export const LinksList = () => {
                       />
                       <a href="#" className="truncate hover:text-gray-600">
                         <span>
-                          {link.title} <span className="text-gray-500 font-normal">in {link.team}</span>
+                          {link.destination} <span className="text-gray-500 font-normal">in {link.team}</span>
                         </span>
                       </a>
                     </div>
@@ -150,12 +154,6 @@ const LinksPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <p>
-          <Link href={Routes.NewLinkPage()}>
-            <a>Create Link</a>
-          </Link>
-        </p>
-
         <Suspense fallback={<div>Loading...</div>}>
           <LinksList />
         </Suspense>

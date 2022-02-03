@@ -3,12 +3,12 @@ import db from "db"
 import { z } from "zod"
 
 const CreateAsset = z.object({
-  organizationId: z.number(),
+  organizationId: z.string().cuid().optional(),
   name: z.string().max(255),
   description: z.string().max(3000),
   status: z.enum(["DRAFT", "ARCHIVED", "LIVE", "SUSPENDED"]),
-  categoryId: z.number(),
-  assetTypeId: z.number(),
+  categoryId: z.string().cuid().optional(),
+  assetTypeId: z.string().cuid().optional(),
   quantity: z.number().min(0),
   price: z.number().min(0),
   currency: z.enum(["USD", "EUR", "TRY"]),

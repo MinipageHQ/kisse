@@ -75,6 +75,18 @@ const seed = async () => {
     skipDuplicates: true,
   })
 
+  await db.domain.createMany({
+    data: [
+      {
+        domain: "saltana.dev",
+        provider: "NATIVE",
+      },
+      {
+        domain: "saltana.com",
+        provider: "NATIVE",
+      },
+    ],
+  })
   const defaultPassword = "only works in dev"
   const passwordHasher = (password = defaultPassword) => SecurePassword.hash(password.trim())
 

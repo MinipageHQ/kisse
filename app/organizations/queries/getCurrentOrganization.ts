@@ -5,7 +5,7 @@ import { z } from "zod"
 
 const GetOrganization = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional(),
+  id: z.string().cuid().optional(),
 })
 
 export default resolver.pipe(
@@ -14,11 +14,28 @@ export default resolver.pipe(
   setDefaultOrganizationId,
   enforceSuperAdminIfNotCurrentOrganization,
   async ({ id }, { session: { orgId } }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const organization = await db.organization.findFirst({ where: { id: id || orgId } })
+    console.log({ orgId, id })
+
+    const [organization, domains] = await Promise.all([
+      db.organization.findFirst({
+        where: { id: id || orgId },
+
+        include: {
+          defaultDomain: true,
+          domains: true,
+          externalProfiles: true,
+        },
+      }),
+      db.domain.findMany({
+        where: { organizationId: { equals: null }, provider: { equals: "NATIVE" } },
+        select: { id: true, domain: true, provider: true },
+      }),
+    ])
 
     if (!organization) throw new NotFoundError()
 
-    return organization
+    const org = { ...organization, domains: [...organization.domains, ...domains] }
+    console.log(org)
+    return org
   }
 )
