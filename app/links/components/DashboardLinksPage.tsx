@@ -1,8 +1,6 @@
 import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
+import { Head, Link, usePaginatedQuery, useRouter, Routes } from "blitz"
 import getLinks from "app/links/queries/getLinks"
-import DashboardLayout from "app/core/layouts/DashboardLayout"
-import DashboardLinksLayout from "app/links/components/DashboardLinksLayout"
 import classNames from "app/core/utils/classnames"
 import { ChevronRightIcon } from "@heroicons/react/outline"
 import DashboardLinksEmpty from "app/links/components/DashboardLinksEmpty"
@@ -26,24 +24,13 @@ export const LinksList = () => {
   }
   return (
     <div>
-      <ul>
-        {links.map((link) => (
-          <li key={link.id}>
-            <Link href={Routes.ShowLinkPage({ linkId: link.id })}>
-              <a>{link.name}</a>
-            </Link>
-          </li>
-        ))}
-      </ul>
 
       <button disabled={page === 0} onClick={goToPreviousPage}>
         Previous
       </button>
-      <button disabled={!hasMore} onClick={goToNextPage}>
+      <button disabled={!hasMore} onClwick={goToNextPage}>
         Next
       </button>
-
-
 
       {/* Projects list (only on smallest breakpoint) */}
       <div className="mt-10 sm:hidden">
@@ -53,20 +40,22 @@ export const LinksList = () => {
         <ul role="list" className="mt-3 border-t border-gray-200 divide-y divide-gray-100">
           {links.map((link) => (
             <li key={link.id}>
-              <Link href={Routes.ShowLinkPage({ linkId: link.id })} className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
-                <span className="flex items-center truncate space-x-3">
-                  <span
-                    className={classNames(link.bgColorClass, 'w-2.5 h-2.5 flex-shrink-0 rounded-full')}
+              <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+                <a className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
+                  <span className="flex items-center truncate space-x-3">
+                    <span
+                      className={classNames(link.bgColorClass, 'w-2.5 h-2.5 flex-shrink-0 rounded-full')}
+                      aria-hidden="true"
+                    />
+                    <span className="font-medium truncate text-sm leading-6">
+                      {link.target} <span className="truncate font-normal text-gray-500">{link.type}</span>
+                    </span>
+                  </span>
+                  <ChevronRightIcon
+                    className="ml-4 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                     aria-hidden="true"
                   />
-                  <span className="font-medium truncate text-sm leading-6">
-                    {link.title} <span className="truncate font-normal text-gray-500">in {link.team}</span>
-                  </span>
-                </span>
-                <ChevronRightIcon
-                  className="ml-4 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                  aria-hidden="true"
-                />
+                </a>
               </Link>
             </li>
           ))}
@@ -80,7 +69,7 @@ export const LinksList = () => {
             <thead>
               <tr className="border-t border-gray-200">
                 <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="lg:pl-2">Project</span>
+                  <span className="lg:pl-2">Link</span>
                 </th>
                 <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Members
@@ -102,7 +91,8 @@ export const LinksList = () => {
                       />
                       <a href="#" className="truncate hover:text-gray-600">
                         <span>
-                          {link.destination} <span className="text-gray-500 font-normal">in {link.team}</span>
+                          {link.slug}
+                          {link.target} <span className="text-gray-500 font-normal">in {link.type}</span>
                         </span>
                       </a>
                     </div>
@@ -110,29 +100,32 @@ export const LinksList = () => {
                   <td className="px-6 py-3 text-sm text-gray-500 font-medium">
                     <div className="flex items-center space-x-2">
                       <div className="flex flex-shrink-0 -space-x-1">
-                        {project.members.map((member) => (
+                        {/* {project.members.map((member) => (
                           <img
                             key={member.handle}
                             className="max-w-none h-6 w-6 rounded-full ring-2 ring-white"
                             src={member.imageUrl}
                             alt={member.name}
                           />
-                        ))}
+                        ))} */}
                       </div>
-                      {project.totalMembers > project.members.length ? (
+                      {/* {project.totalMembers > project.members.length ? (
                         <span className="flex-shrink-0 text-xs leading-5 font-medium">
                           +{project.totalMembers - project.members.length}
                         </span>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </td>
                   <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {project.lastUpdated}
+                    {/* {project.lastUpdated} */}
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
-                    <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                      Edit
-                    </a>
+                    <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+
+                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                        Edit
+                      </a>
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -144,25 +137,12 @@ export const LinksList = () => {
   )
 }
 
-
-
-const LinksPage: BlitzPage = () => {
+const WrappedLinksList = () => {
   return (
-    <>
-      <Head>
-        <title>Links</title>
-      </Head>
-
-      <div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <LinksList />
-        </Suspense>
-      </div>
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      <LinksList />
+    </Suspense>
   )
 }
 
-LinksPage.authenticate = true
-LinksPage.getLayout = (page) => <DashboardLinksLayout>{page}</DashboardLinksLayout>
-
-export default LinksPage
+export default WrappedLinksList

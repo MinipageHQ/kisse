@@ -9,10 +9,10 @@ const literalSchema = z.union([z.string(), z.number(), z.boolean()])
 const jsonSchema: z.ZodSchema<Json> = z.lazy(() => z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)]))
 
 export const LinkModel = z.object({
-  id: z.string(),
+  id: z.string().cuid().optional(),
   slug: z.string(),
   type: z.nativeEnum(LinkType),
-  target: z.string(),
+  target: z.string().url({ message: "Target must be a valid URL" }),
   provider: z.nativeEnum(LinkProvider).nullish(),
   organizationId: z.string(),
   domainId: z.string(),

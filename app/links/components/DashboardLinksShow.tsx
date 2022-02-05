@@ -1,29 +1,24 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/DashboardLayout"
-import getLink from "app/links/queries/getLink"
-import deleteLink from "app/links/mutations/deleteLink"
+import Layout from "app/core/layouts/Layout"
+import getLink from "../queries/getLink"
+import deleteLink from "../mutations/deleteLink"
 
-export const LinkPage = () => {
+export const LinkShow = ({ linkId }) => {
   const router = useRouter()
-  const linkId = useParam("linkId", "number")
-  const creatorId = useParam("creatorId", "number")
+  // const assetId = useParam("assetId", "number")
   const [deleteLinkMutation] = useMutation(deleteLink)
   const [link] = useQuery(getLink, { id: linkId })
 
   return (
     <>
       <Head>
-        <title>Link {link.id}</title>
+        <title>link {link.id}</title>
       </Head>
 
       <div>
-        <h1>Link {link.id}</h1>
+        <h1>link {link.id}</h1>
         <pre>{JSON.stringify(link, null, 2)}</pre>
-
-        <Link href={Routes.EditLinkPage({ linkId: link.id })}>
-          <a>Edit</a>
-        </Link>
 
         <button
           type="button"
@@ -42,17 +37,11 @@ export const LinkPage = () => {
   )
 }
 
-const ShowLinkPage: BlitzPage = () => {
+const ShowLinkPage: BlitzPage = ({ linkId }) => {
   return (
     <div>
-      <p>
-        <Link href={Routes.LinksPage()}>
-          <a>Links</a>
-        </Link>
-      </p>
-
       <Suspense fallback={<div>Loading...</div>}>
-        <LinkPage />
+        <LinkShow linkId={linkId} />
       </Suspense>
     </div>
   )

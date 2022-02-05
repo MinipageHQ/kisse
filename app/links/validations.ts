@@ -7,4 +7,4 @@ export const CreateLinkInput = LinkModel.pick({
   provider: true,
   metadata: true,
   domainId: true,
-})
+}).partial({ metadata: true })

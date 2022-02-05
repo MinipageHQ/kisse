@@ -64,7 +64,7 @@ export const LabeledLinkSlugField = forwardRef<
             {...domainIdField.input}
             className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-3 pr-12 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
           >
-            {domains.map((domain) => <option key={domain.id} value={domain.id}>{domain.domain}/</option>)}
+            {domains.map((domain, index) => <option key={domain.id} value={domain.id} selected={index === 0}>{domain.domain}/</option>)}
           </select>
         </div>
         <input

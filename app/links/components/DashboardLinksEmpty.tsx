@@ -26,7 +26,7 @@ export default function DashboardLinksEmpty() {
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-900">
-                  <Link href={Routes.NewLinkPage({ type: item.type })}>
+                  <Link href={Routes.LinksPage({ linkQueries: ['new', item.type] })} passHref>
                     <a href="#" className="focus:outline-none">
                       <span className="absolute inset-0" aria-hidden="true" />
                       {item.name}

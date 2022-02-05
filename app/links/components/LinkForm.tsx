@@ -21,28 +21,25 @@ export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
     [type],
   )
   return (
-    <Form<S> {...props}>
+    <Form<S> {...props} initialValues={{ type }}>
 
 
-      <div>
-        <h1 className="text-lg leading-6 font-medium text-gray-900">
-          {typeData.createTitle}
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Let’s get started by filling in the information below to create
-          your new link.
-        </p>
 
+      <h1 className="texzt-lg leading-6 font-medium text-gray-900">
+        {typeData?.createTitle}
+      </h1>
+      <p className="mt-1 text-sm text-gray-500">
+        Let’s get started by filling in the information below to create
+        your new link.
+      </p>
 
-        <pre>{JSON.stringify(currentOrganization)}</pre>
-        <p className="mt-1 text-sm text-gray-500">
+      <pre className=" text-ellipsis">{JSON.stringify(currentOrganization)}</pre>
 
-        </p>
-      </div>
+      <p className="mt-1 text-sm text-gray-500">
 
-      {typeData.createFields.includes('destination') && (
-        <LabeledTextField name="destination" label="Destination" placeholder="destination" type="url" />
-
+      </p>
+      {typeData?.createFields.includes('target') && (
+        <LabeledTextField name="target" label="Target" placeholder="target" type="url" />
       )}
       {/*
           {type === 'checkout' && (
@@ -79,8 +76,8 @@ export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
 
             </>
           )} */}
-      {typeData.createFields.includes('slug') && (
-        <LabeledLinkSlugField label={"Slug"} domains={currentOrganization.domains} />
+      {typeData?.createFields.includes('slug') && (
+        <LabeledLinkSlugField label={"Slug"} domains={currentOrganization.domains} outerProps={{ className: "mt-6" }} />
       )}
 
 

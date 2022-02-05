@@ -163,16 +163,16 @@ enum TokenType {
 }
 
 enum LinkType {
-  LINK_TYPE_CHECKOUT
-  LINK_TYPE_REDIRECT
-  LINK_TYPE_LINKLIST
-  LINK_TYPE_EMBED
+  checkout
+  redirect
+  linklist
+  embed
 }
 
 enum LinkProvider {
-  LINK_PROVIDER_NATIVE
-  LINK_PROVIDER_NOTION
-  LINK_PROVIDER_TYPEFORM
+  native
+  notion
+  typeform
 }
 
 model Link {
