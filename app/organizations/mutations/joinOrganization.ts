@@ -1,10 +1,14 @@
 import { resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
-import { OnboardedOrganizationSchema } from "../validations"
+
+const UpdateOrganization = z.object({
+  id: z.number(),
+  name: z.string(),
+})
 
 export default resolver.pipe(
-  resolver.zod(OnboardedOrganizationSchema),
+  resolver.zod(UpdateOrganization),
   resolver.authorize(),
   async ({ id, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant

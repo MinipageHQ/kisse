@@ -25,11 +25,6 @@ export const Dashboard = () => {
 const DashboardMainPage: BlitzPage = () => {
   return (
     <div>
-      <p>
-        <Link href={Routes.SpacesPage()}>
-          <a>Spaces</a>
-        </Link>
-      </p>
 
       <Suspense fallback={<div>Loading...</div>}>
         <Dashboard />

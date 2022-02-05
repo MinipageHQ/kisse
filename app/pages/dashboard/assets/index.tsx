@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getAssets from "app/assets/queries/getAssets"
+import DashboardAssetsLayout from "app/assets/components/DashboardAssetsLayout"
 
 const ITEMS_PER_PAGE = 100
 
@@ -62,6 +63,6 @@ const AssetsPage: BlitzPage = () => {
 }
 
 AssetsPage.authenticate = true
-AssetsPage.getLayout = (page) => <Layout>{page}</Layout>
+AssetsPage.getLayout = (page) => <DashboardAssetsLayout>{page}</DashboardAssetsLayout>
 
 export default AssetsPage

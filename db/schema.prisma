@@ -51,6 +51,9 @@ model Organization {
   externalProfiles ExternalProfiles[]
 
   platformFeatures PlatformFeatures[]
+  ApiKey           ApiKey[]           @relation("organizationApiKey")
+  AuditLog         AuditLog[]         @relation("organizationAuditLog")
+  Webhook          Webhook[]          @relation("organizationWebhook")
 }
 
 model Membership {
@@ -109,18 +112,47 @@ model InviteCode {
 }
 
 model User {
-  id             String     @id @default(cuid())
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  name           String?
-  email          String     @unique
-  hashedPassword String?
-  role           GlobalRole
+  id                String            @id @default(cuid())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  name              String?
+  hashedPassword    String?
+  prefersEmailId    String?
+  prefersEmail      Email?            @relation("userPrefersEmail", fields: [prefersEmailId], references: [id])
+  emails            Email[]           @relation("userEmail")
+  notificationEmail NotificationEmail @default(ACCOUNT)
 
+  countryCode String @default("us")
+  timezone    String @default("America/Los_Angeles")
+
+  roles       GlobalRole[]
   tokens      Token[]
   sessions    Session[]
   memberships Membership[]
   inviteCodes InviteCode[]
+
+  active Boolean @default(true)
+
+
+  metadata        Json       @default("{}")
+  privateMetadata Json       @default("{}")
+  ApiKey          ApiKey[]   @relation("userApiKey")
+  AuditLog        AuditLog[] @relation("userAuditLog")
+  @@index([prefersEmailId], name: "prefersEmailId")
+}
+
+model Email {
+  createdAt  DateTime @default(now())
+  email      String   @unique
+  emailSafe  String   @unique
+  id         String   @id @default(cuid())
+  isVerified Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation("userEmail", fields: [userId], references: [id])
+  users      User[]   @relation("userPrefersEmail")
+
+  @@index([userId], name: "userId")
 }
 
 model Session {
@@ -262,6 +294,22 @@ enum AssetStatus {
   SUSPENDED
 }
 
+model Webhook {
+  contentType    String       @default("application/json")
+  createdAt      DateTime     @default(now())
+  event          String
+  id             String       @id @default(cuid())
+  isActive       Boolean      @default(false)
+  lastFiredAt    DateTime?
+  organizationId String
+  secret         String?
+  updatedAt      DateTime     @updatedAt
+  url            String
+  organization   Organization @relation("organizationWebhook", fields: [organizationId], references: [id])
+
+  // @@index([organizationId], name: "organizationId")
+}
+
 model Asset {
   id String @id @default(cuid())
 
@@ -340,9 +388,11 @@ model Domain {
 
   provider           DomainProvider @default(NATIVE)
   vercelDataSnapshot Json           @default("{}")
+  isVerified         Boolean        @default(false)
 
+  verificationCode String?
 
-
+  // @@index([organizationId], name: "organizationId")
 }
 
 model Document {
@@ -351,6 +401,58 @@ model Document {
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
+
+  content         Json?
+  metadata        Json?
+  privateMetadata Json?
+
+}
+
+model ApiKey {
+  id                   String        @id @default(cuid())
+  createdAt            DateTime      @default(now())
+  description          String?
+  ipRestrictions       Json?
+  apiKey               String        @unique
+  name                 String?
+  organizationId       String?
+  referrerRestrictions Json?
+  scopes               Json?
+  updatedAt            DateTime      @updatedAt
+  userId               String?
+  auditLogs            AuditLog[]    @relation("apiKeyAuditLog")
+  organization         Organization? @relation("organizationApiKey", fields: [organizationId], references: [id])
+  user                 User?         @relation("userApiKey", fields: [userId], references: [id])
+
+  // @@index([organizationId], name: "organizationId")
+  // @@index([userId], name: "userId")
+}
+
+model AuditLog {
+  createdAt       DateTime      @default(now())
+  event           String
+  rawEvent        String
+  id              String        @id @default(cuid())
+  organizationId  String?
+  updatedAt       DateTime      @updatedAt
+  userId          String?
+  apiKeyId        String?
+  ipAddress       String?
+  userAgent       String?
+  city            String?
+  region          String?
+  timezone        String?
+  countryCode     String?
+  browser         String?
+  operatingSystem String?
+  organization    Organization? @relation("organizationAuditLog", fields: [organizationId], references: [id])
+  user            User?         @relation("userAuditLog", fields: [userId], references: [id])
+  apiKey          ApiKey?       @relation("apiKeyAuditLog", fields: [apiKeyId], references: [id])
+
+  // Organization Organization? @relation("groupAuditLog", fields: [organizationId], references: [id])
+  // @@index([userId], name: "userId")
+  @@index([apiKeyId], name: "apiKeyId")
+  @@index([organizationId], name: "organizationId")
 }
 
 enum Currency {
@@ -383,4 +485,10 @@ model ExternalProfiles {
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
+}
+
+enum NotificationEmail {
+  ACCOUNT
+  UPDATES
+  PROMOTIONS
 }

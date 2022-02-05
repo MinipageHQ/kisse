@@ -22,9 +22,6 @@ export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   )
   return (
     <Form<S> {...props} initialValues={{ type }}>
-
-
-
       <h1 className="texzt-lg leading-6 font-medium text-gray-900">
         {typeData?.createTitle}
       </h1>

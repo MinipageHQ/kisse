@@ -1,6 +1,6 @@
 import * as z from "zod"
 import { PlatformFeatures } from "@prisma/client"
-import { CompleteMembership, RelatedMembershipModel, CompleteDocument, RelatedDocumentModel, CompleteAsset, RelatedAssetModel, CompleteOrder, RelatedOrderModel, CompleteTransaction, RelatedTransactionModel, CompleteLink, RelatedLinkModel, CompleteDomain, RelatedDomainModel, CompleteExternalProfiles, RelatedExternalProfilesModel } from "./index"
+import { CompleteMembership, RelatedMembershipModel, CompleteDocument, RelatedDocumentModel, CompleteAsset, RelatedAssetModel, CompleteOrder, RelatedOrderModel, CompleteTransaction, RelatedTransactionModel, CompleteLink, RelatedLinkModel, CompleteDomain, RelatedDomainModel, CompleteExternalProfiles, RelatedExternalProfilesModel, CompleteApiKey, RelatedApiKeyModel, CompleteAuditLog, RelatedAuditLogModel, CompleteWebhook, RelatedWebhookModel } from "./index"
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string
@@ -30,6 +30,9 @@ export interface CompleteOrganization extends z.infer<typeof OrganizationModel> 
   defaultDomain?: CompleteDomain | null
   domains: CompleteDomain[]
   externalProfiles: CompleteExternalProfiles[]
+  ApiKey: CompleteApiKey[]
+  AuditLog: CompleteAuditLog[]
+  Webhook: CompleteWebhook[]
 }
 
 /**
@@ -47,4 +50,7 @@ export const RelatedOrganizationModel: z.ZodSchema<CompleteOrganization> = z.laz
   defaultDomain: RelatedDomainModel.nullish(),
   domains: RelatedDomainModel.array(),
   externalProfiles: RelatedExternalProfilesModel.array(),
+  ApiKey: RelatedApiKeyModel.array(),
+  AuditLog: RelatedAuditLogModel.array(),
+  Webhook: RelatedWebhookModel.array(),
 }))

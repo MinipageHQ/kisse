@@ -1,8 +1,35 @@
+import safeEmail from "app/auth/utils/safeEmail"
+import { isPasswordSafe } from "./../utils/checkPassword"
 import { resolver, SecurePassword } from "blitz"
 import db, { Membership } from "db"
 import { Signup, SignupForCreators } from "app/auth/validations"
-import { Role } from "types"
 
+async function securePassword(password: string) {
+  const normalizedPassword = password.trim()
+
+  if (await isPasswordSafe(normalizedPassword)) {
+    throw new Error("UNSAFE_PASSWORD")
+  }
+
+  const hashedPassword = await SecurePassword.hash(normalizedPassword)
+  return hashedPassword
+}
+
+// validates, normalizes and checks email
+async function checkEmail(email: string) {
+  const emailSafe = safeEmail(email)
+
+  const existigEmail = await db.email.findFirst({
+    where: { emailSafe },
+    select: { id: true },
+  })
+
+  if (existigEmail) {
+    throw new Error("EMAIL_IN_USE")
+  }
+
+  return { email, emailSafe }
+}
 export default resolver.pipe(
   resolver.zod(SignupForCreators),
   async ({ email, name, inviteCode, password }, ctx) => {
@@ -14,12 +41,19 @@ export default resolver.pipe(
       throw new Error("INVALID_CODE")
     }
 
-    const hashedPassword = await SecurePassword.hash(password.trim())
+    const hashedPassword = await securePassword(password)
+    const { emailSafe } = await checkEmail(email)
+
     const user = await db.user.create({
       data: {
-        email: email.toLowerCase().trim(),
+        emails: {
+          create: {
+            email,
+            emailSafe,
+          },
+        },
         hashedPassword,
-        role: "CREATOR",
+        roles: ["CREATOR"],
         memberships: {
           create: {
             role: "OWNER",
@@ -44,8 +78,8 @@ export default resolver.pipe(
       }),
       ctx.session.$create({
         userId: user.id,
-        roles: [user.role, createdMembership.role],
-        orgId: createdMembership.id,
+        roles: [...user.roles, createdMembership.role],
+        orgId: createdMembership.organizationId,
       }),
     ])
     return user

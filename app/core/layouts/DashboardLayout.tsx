@@ -26,6 +26,7 @@ import { Logo } from "app/core/components/Logo"
 import { BlitzLayout, useRouter, Image, Link, Head } from "blitz"
 import classNames from "../utils/classnames"
 import ShowForRoleWrapped from "app/auth/components/ShowForRole"
+import RedirectToOnboarding from "app/organizations/components/RedirectToOnboarding"
 // import Avatar from 'components/Avatar'
 
 const creatorNavigation = [
@@ -91,6 +92,11 @@ const DashboardLayout: BlitzLayout<{
         <title>{title || "saltana"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <ShowForRoleWrapped role="CREATOR">
+        <RedirectToOnboarding />
+      </ShowForRoleWrapped>
+
 
       <div className="min-h-full">
         <Transition.Root show={sidebarOpen} as={Fragment}>

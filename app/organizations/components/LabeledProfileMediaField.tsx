@@ -40,18 +40,13 @@ const defOpts = {
 
 const transloadItKey = process.env.NEXT_PUBLIC_TRANSLOADIT_AUTH_KEY as string
 
-export const LabeledMediaField = forwardRef<HTMLInputElement, LabeledProfileMediaFieldProps>(
+export const LabeledProfileMediaField = forwardRef<HTMLInputElement, LabeledProfileMediaFieldProps>(
   ({ name, label, outerProps, fieldProps, labelProps, ...props }, ref) => {
     const {
       input,
 
       meta: { touched, error, submitError, submitting },
     } = useField(name, {
-      parse:
-        props.type === "number"
-          ? (Number as any)
-          : // Converting `""` to `null` ensures empty values will be set to null in the DB
-            (v) => (v === "" ? null : v),
       ...fieldProps,
     })
 
@@ -96,7 +91,7 @@ export const LabeledMediaField = forwardRef<HTMLInputElement, LabeledProfileMedi
           .use(ImageEditor, {})
           .on("complete", (result) => {
             const uploadedMedia = result.successful[0]
-            console.log("uploadedMedia", uploadedMedia)
+            console.log("uploadedMedia", result, uploadedMedia)
           })
           .on("transloadit:result", (stepName, result) => {
             console.log("transloadit:result", result, uppy.getFile(result.localId as string))
@@ -126,7 +121,7 @@ export const LabeledMediaField = forwardRef<HTMLInputElement, LabeledProfileMedi
           autoOpenFileEditor={true}
           closeAfterFinish={false}
           plugins={["Webcam", "Instagram", "DragDrop", "Url", "ImageEditor"]}
-          // {...props}
+        // {...props}
         />
         {touched && normalizedError && (
           <div role="alert" style={{ color: "red" }}>
@@ -138,4 +133,4 @@ export const LabeledMediaField = forwardRef<HTMLInputElement, LabeledProfileMedi
   }
 )
 
-export default LabeledMediaField
+export default LabeledProfileMediaField

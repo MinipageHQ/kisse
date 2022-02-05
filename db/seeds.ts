@@ -1,5 +1,6 @@
 import { SecurePassword } from "blitz"
-import db from "db"
+import safeEmail from "app/auth/utils/safeEmail"
+import db, { GlobalRole } from "./index"
 
 const assetTypeDefaults = {
   timeBased: false,
@@ -93,15 +94,35 @@ const seed = async () => {
   const defaultHashedPassword = await passwordHasher()
 
   console.log(`default password is ${defaultPassword}`)
-  const createUser = async (user, role, extraOpts = {}) => {
-    await db.user.create({
+  const createUser = async (user: string, role: GlobalRole, extraOpts = {}) => {
+    const email = `testuser${user}@saltana.dev`
+    const emailSafe = safeEmail(email)
+    const createdUser = await db.user.create({
       data: {
-        email: `testuser+${user}@saltana.dev`,
+        emails: {
+          create: {
+            email,
+            emailSafe,
+          },
+        },
         hashedPassword: defaultHashedPassword,
-        role,
+        roles: [role],
         ...extraOpts,
       },
+      select: {
+        emails: true,
+      },
     })
+    const prefersEmail = createdUser.emails[0]
+
+    if (prefersEmail) {
+      await db.user.update({
+        where: { id: prefersEmail.userId },
+        data: {
+          prefersEmailId: prefersEmail.id,
+        },
+      })
+    }
 
     console.log(`creating test user ${user} with role ${role}, email: testuser+${user}@saltana.dev`)
   }

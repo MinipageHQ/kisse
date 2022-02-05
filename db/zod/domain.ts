@@ -18,6 +18,8 @@ export const DomainModel = z.object({
   organizationId: z.string().nullish(),
   provider: z.nativeEnum(DomainProvider),
   vercelDataSnapshot: jsonSchema,
+  isVerified: z.boolean(),
+  verificationCode: z.string().nullish(),
 })
 
 export interface CompleteDomain extends z.infer<typeof DomainModel> {

@@ -1,5 +1,6 @@
 import { z } from "zod"
 import blockedUsernames from "data/blocked-usernames.json"
+import { OrganizationModel } from "db/zod"
 
 export const username = z
   .string()
@@ -21,5 +22,18 @@ export const Organization = z.object({
   slug: username,
   description: z.string().min(10).max(240).optional(),
   profileMedia: ProfileMedia.optional(),
-  defaultDomainId: z.number().optional(),
+  defaultDomainId: z.string().cuid().optional(),
 })
+
+export const OnboardedOrganizationSchema = OrganizationModel.pick({
+  name: true,
+  description: true,
+  profileMedia: true,
+  defaultDomainId: true,
+})
+  .extend({
+    slug: username,
+  })
+  .partial({
+    profileMedia: true,
+  })
