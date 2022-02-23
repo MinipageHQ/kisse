@@ -11,10 +11,10 @@ import { FORM_ERROR } from "final-form"
 
 const ITEMS_PER_PAGE = 100
 
-const DomainCard = ({ domain: domainData, domains }) => {
+const DomainCard = ({ domain: domainData, domains }: { domain: any, domains: any[] }) => {
   const [domain] = useQuery(
     getDomain,
-    { domain: domainData.domain, },
+    { id: domainData.domain, },
     { refetchInterval: 5000, initialData: domainData }
   );
   const [recordType, setRecordType] = useState("CNAME");

@@ -21,7 +21,7 @@ const NewTransactionPage: BlitzPage = () => {
         onSubmit={async (values) => {
           try {
             const transaction = await createTransactionMutation(values)
-            router.push(Routes.ShowTransactionPage({ transactionId: transaction.id }))
+            // router.push(Routes.ShowTransactionPage({ transactionId: transaction.id }))
           } catch (error: any) {
             console.error(error)
             return {

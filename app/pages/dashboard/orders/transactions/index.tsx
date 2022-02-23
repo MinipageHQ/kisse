@@ -23,7 +23,7 @@ export const TransactionsList = () => {
         {transactions.map((transaction) => (
           <li key={transaction.id}>
             <Link href={Routes.ShowTransactionPage({ transactionId: transaction.id })}>
-              <a>{transaction.name}</a>
+              <a>{transaction.id}</a>
             </Link>
           </li>
         ))}

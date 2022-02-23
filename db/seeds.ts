@@ -18,24 +18,24 @@ const assetTypes = [
     name: "DIGITAL_ASSET",
     metadata: {
       label: "Digital Asset (One-time payment)",
-      description: "Sell files, access, databases, and more with a one-time payment"
+      description: "Sell files, access, databases, and more with a one-time payment",
     },
     privateMetadata: {
       requiredFeatures: ["ASSETS"],
       description: "Single Payment - Assets with Deliverables",
     },
-    isDefault: true
+    isDefault: true,
   },
   {
     ...assetTypeDefaults,
     name: "DIGITAL_ASSET_SUBSCRIPTION",
     metadata: {
       label: "Digital Asset (Subscription)",
-      description: "Sell files, access, databases, and more with a subscription"
+      description: "Sell files, access, databases, and more with a subscription",
     },
     privateMetadata: {
       requiredFeatures: ["ASSETS_SUBSCRIPTIONS"],
-      description: "Subscription/Recurring Payment - Assets with Deliverables"
+      description: "Subscription/Recurring Payment - Assets with Deliverables",
     },
   },
   {
@@ -43,26 +43,26 @@ const assetTypes = [
     name: "SHOPIFY",
     metadata: {
       label: "Shopify Product",
-      description: "Sell with Shopify on your Saltana space"
+      description: "Sell with Shopify on your Saltana space",
     },
     privateMetadata: {
       description: "Product - Managed with Shopify",
-      requiredFeatures: ["SHOPIFY"]
+      requiredFeatures: ["SHOPIFY"],
     },
-    isDefault: false
+    isDefault: false,
   },
   {
     ...assetTypeDefaults,
     name: "NFT",
     metadata: {
       label: "NFT",
-      description: "Sell non-fungible tokens with multiple payment options"
+      description: "Sell non-fungible tokens with multiple payment options",
     },
     privateMetadata: {
       description: "NFT - Managed with Saltana",
-      requiredFeatures: ["CRYPTOCURRENCIES_NFT"]
+      requiredFeatures: ["CRYPTOCURRENCIES_NFT"],
     },
-    isDefault: false
+    isDefault: false,
   },
   // {
   //   ...assetTypeDefaults,
@@ -80,11 +80,11 @@ const assetTypes = [
     name: "TIME_BASED",
     metadata: {
       label: "Time-based services",
-      description: "Sell limited time access to a resource, file or even your calendar"
+      description: "Sell limited time access to a resource, file or even your calendar",
     },
     privateMetadata: {
       description: "Single Payment - Time Based",
-      requiredFeatures: ["ASSETS_TIME_BASED"]
+      requiredFeatures: ["ASSETS_TIME_BASED"],
     },
     isDefault: false,
     timeBased: true,
@@ -99,15 +99,14 @@ const assetTypes = [
     name: "DONATIONS",
     metadata: {
       label: "Donations",
-      description: "Accep donations on your Saltana space"
+      description: "Accep donations on your Saltana space",
     },
     privateMetadata: {
       description: "Single Payment - Donation",
-      requiredFeatures: ["ASSETS_DONATIONS"]
+      requiredFeatures: ["ASSETS_DONATIONS"],
     },
     isDefault: false,
   },
-
 ]
 
 const categories = [
@@ -122,7 +121,8 @@ const categories = [
   },
   {
     name: "Dataset",
-  },,
+  },
+  ,
   {
     name: "Other",
   },
@@ -149,7 +149,7 @@ const seed = async () => {
 
   console.log("seeding asset categories")
   await db.assetCategory.createMany({
-    data: [...categories],
+    data: [...(categories as any)],
     skipDuplicates: true,
   })
   console.log("seeding asset types")

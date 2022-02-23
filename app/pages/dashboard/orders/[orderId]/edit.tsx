@@ -41,8 +41,8 @@ export const EditOrder = () => {
                 id: order.id,
                 ...values,
               })
-              await setQueryData(updated)
-              router.push(Routes.ShowOrderPage({ orderId: updated.id }))
+              // await setQueryData(updated)
+              // router.push(Routes.ShowOrderPage({ orderId: updated.id }))
             } catch (error: any) {
               console.error(error)
               return {

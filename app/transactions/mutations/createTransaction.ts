@@ -11,8 +11,7 @@ export default resolver.pipe(
   resolver.authorize(),
   async (input) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const transaction = await db.transaction.create({ data: input })
-
-    return transaction
+    // const transaction = await db.transaction.create({ data: input })
+    // return transaction
   }
 )

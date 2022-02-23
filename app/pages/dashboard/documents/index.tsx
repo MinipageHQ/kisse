@@ -23,7 +23,7 @@ export const DocumentsList = () => {
         {documents.map((document) => (
           <li key={document.id}>
             <Link href={Routes.ShowDocumentPage({ documentId: document.id })}>
-              <a>{document.name}</a>
+              <a>{document.id}</a>
             </Link>
           </li>
         ))}

@@ -21,7 +21,7 @@ const NewOrderPage: BlitzPage = () => {
         onSubmit={async (values) => {
           try {
             const order = await createOrderMutation(values)
-            router.push(Routes.ShowOrderPage({ orderId: order.id }))
+            // router.push(Routes.ShowOrderPage({ orderId: order.id }))
           } catch (error: any) {
             console.error(error)
             return {

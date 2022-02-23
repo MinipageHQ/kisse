@@ -41,8 +41,8 @@ export const EditTransaction = () => {
                 id: transaction.id,
                 ...values,
               })
-              await setQueryData(updated)
-              router.push(Routes.ShowTransactionPage({ transactionId: updated.id }))
+              // await setQueryData(updated)
+              // router.push(Routes.ShowTransactionPage({ transactionId: updated.id }))
             } catch (error: any) {
               console.error(error)
               return {

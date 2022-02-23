@@ -7,11 +7,12 @@ import { DomainForm, FORM_ERROR } from "app/domains/components/DomainForm"
 
 export const EditDomain = () => {
   const router = useRouter()
-  const domainId = useParam("domainnId", "string")
+  const domainId = useParam("domainId", "string")
   const [domain, { setQueryData }] = useQuery(
     getDomain,
-    { id: domainId },
+    { id: domainId! },
     {
+      enabled: !!domainId,
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     }
@@ -21,11 +22,11 @@ export const EditDomain = () => {
   return (
     <>
       <Head>
-        <title>Edit Domain {domain.id}</title>
+        <title>Edit Domain {domain?.id}</title>
       </Head>
 
       <div>
-        <h1>Edit Domain {domain.id}</h1>
+        <h1>Edit Domain {domain?.id}</h1>
         <pre>{JSON.stringify(domain, null, 2)}</pre>
 
         <DomainForm
@@ -38,7 +39,7 @@ export const EditDomain = () => {
           onSubmit={async (values) => {
             try {
               const updated = await updateDomainMutation({
-                id: domain.id,
+                id: domain?.id,
                 ...values,
               })
               await setQueryData(updated)

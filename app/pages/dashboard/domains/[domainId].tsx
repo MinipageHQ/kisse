@@ -8,7 +8,7 @@ export const Domain = () => {
   const router = useRouter()
   const domainId = useParam("domainnId", "string")
   const [deleteDomainMutation] = useMutation(deleteDomain)
-  const [domain] = useQuery(getDomain, { id: domainId })
+  const [domain] = useQuery(getDomain, { id: domainId! })
 
   return (
     <>

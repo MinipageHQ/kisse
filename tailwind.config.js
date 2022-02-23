@@ -13,7 +13,7 @@ module.exports = {
         xl: '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.01)',
       },
       colors: {
-        gray: colors.blueGray,
+        gray: colors.slate,
         'light-blue': colors.sky,
         red: colors.rose,
       },

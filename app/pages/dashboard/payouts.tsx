@@ -1,10 +1,10 @@
 import DashboardLayout from "app/core/layouts/DashboardLayout"
-import { BlitzPage, getSession } from "blitz"
+import { BlitzPage, GetServerSideProps, getSession } from "blitz"
 import db from "db"
 import stripe from "integrations/stripe"
 
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession(req, res)
 
   const returnUrl = `${process.env.NEXT_PUBLIC_PLATFORM_BASE}/dashboard`
@@ -29,8 +29,8 @@ export const getServerSideProps = async ({ req, res }) => {
             permanent: false,
           },
         }
-      } catch (error) {
-        if (error.type === "StripeInvalidRequestError") {
+      } catch (error: any) {
+        if (error && error.type === "StripeInvalidRequestError") {
           const rawMessage = error.raw.message
           if (
             rawMessage ===

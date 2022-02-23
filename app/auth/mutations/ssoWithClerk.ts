@@ -5,20 +5,22 @@ import { invokeWithMiddleware, Middleware, PublicData, resolver, SecurePassword 
 import db, { Membership } from "db"
 import { Signup, SsoWithClerkInput } from "app/auth/validations"
 import { sessions } from "@clerk/nextjs/api"
-import createUser from "app/users/mutations/createUser"
 import syncWithClerk from "./syncWithClerk"
 import { Role } from "types"
 
-export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId }, ctx,) => {
+export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId }, ctx) => {
   if (!ctx.clerkSessionToken) {
     throw new Error("You need a Clerk session token for this action.")
   }
 
   const session = await sessions.verifySession(sessionId, ctx.clerkSessionToken)
 
-  const user = await syncWithClerk({
-    clerkUserId: session.userId as string
-  }, ctx)
+  const user = await syncWithClerk(
+    {
+      clerkUserId: session.userId as string,
+    },
+    ctx
+  )
 
   const roles: Role[] = [...user.roles]
 
@@ -40,6 +42,4 @@ export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId
     platformFeatures: defaultOrganization?.platformFeatures,
     defaultOrgId: defaultOrganization ? defaultOrganization.id : undefined,
   })
-
-
 })
