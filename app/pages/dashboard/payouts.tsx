@@ -3,7 +3,6 @@ import { BlitzPage, GetServerSideProps, getSession } from "blitz"
 import db from "db"
 import stripe from "integrations/stripe"
 
-
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession(req, res)
 
@@ -21,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     if (organization && organization.stripeSellerId) {
       try {
         const links = await stripe.accounts.createLoginLink(organization.stripeSellerId, {
-          redirect_url: returnUrl
+          redirect_url: returnUrl,
         })
         return {
           redirect: {
@@ -60,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 }
 
 const DashboardPayoutsPage: BlitzPage = () => {
-  return <div>Something went wrong and we can't connect you to our payment provider.</div>
+  return <div>Something went wrong and we can&apos;t connect you to our payment provider.</div>
 }
 
 DashboardPayoutsPage.authenticate = true
