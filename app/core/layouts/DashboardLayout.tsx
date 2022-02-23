@@ -66,6 +66,12 @@ const creatorNavigation = [
     current: false,
     icon: AdjustmentsIcon,
   },
+  {
+    name: "Payouts",
+    href: "/dashboard/payouts",
+    current: false,
+    icon: CashIcon,
+  },
 ]
 
 const userNavigation = [

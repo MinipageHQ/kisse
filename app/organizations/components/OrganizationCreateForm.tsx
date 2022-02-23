@@ -10,10 +10,9 @@ export { FORM_ERROR } from "app/core/components/Form"
 const labelClasses = "block text-sm font-medium text-gray-700"
 export default function OrganizationCreateForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (
-    <Form<S> {...props}>        <Paper padding="md" shadow="xs">
+    <Form<S> {...props}>
 
       <Group position="center" direction="column" grow>
-
         <LabeledDefaultDomainField
           outerProps={{ className: labelClasses }}
           labelProps={{ className: labelClasses }}
@@ -22,7 +21,6 @@ export default function OrganizationCreateForm<S extends z.ZodType<any, any>>(pr
           helpText="You can change this later."
           className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"
         />
-
 
         <LabeledTextField
           name="name"
@@ -35,9 +33,13 @@ export default function OrganizationCreateForm<S extends z.ZodType<any, any>>(pr
           `}
         />
 
-        <LabeledTextField name="inviteCode" label="Invite Code" placeholder="Invite code" helpText="We only accept a limited number of creators at the moment" />
+        <LabeledTextField
+          name="inviteCode"
+          label="Invite Code"
+          placeholder="Invite code"
+          helpText="We only accept a limited number of creators at the moment"
+        />
       </Group>
-    </Paper>
     </Form>
   )
 }

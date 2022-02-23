@@ -2,11 +2,12 @@
 import { resolver } from "blitz"
 import db, { Membership } from "db"
 import {  CreateOrganizationWithInviteCodeSchema } from "app/organizations/validations"
+import organizationCreated from "app/api/_/jobs/organization-created"
 
 
 export default resolver.pipe(
   resolver.zod(CreateOrganizationWithInviteCodeSchema),
-  async ({ inviteCode }, ctx) => {
+  async ({ inviteCode , name, slug, defaultDomainId}, ctx) => {
     const isValidInviteCode = await db.inviteCode.findFirst({
       where: { code: inviteCode, userId: null },
     })
@@ -26,7 +27,9 @@ export default resolver.pipe(
             role: "OWNER",
             organization: {
               create: {
-                name: 'a new creator',
+                name: name || 'a new creator',
+                slug,
+                defaultDomainId
               },
             },
           },
@@ -39,8 +42,6 @@ export default resolver.pipe(
     const createdMembership = user.memberships[0] as Membership
 
     await Promise.all([
-
-
       db.inviteCode.update({
         where: { id: isValidInviteCode.id },
         data: { userId: user.id, usedAt: new Date() },
@@ -49,6 +50,9 @@ export default resolver.pipe(
         roles: [...user.roles, createdMembership.role],
         defaultOrgId: createdMembership.organizationId,
       }),
+      organizationCreated.enqueue({
+        organizationId: createdMembership.organizationId
+      })
     ])
     return user
   }

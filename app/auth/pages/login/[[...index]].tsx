@@ -4,6 +4,7 @@ import { LoginForm } from "app/auth/components/LoginForm"
 import AppLayout from "app/core/layouts/AppLayout"
 import { SignedIn, SignedOut, SignIn, useSession } from "@clerk/nextjs"
 import { useEffect } from "react"
+import WrappedAuthProvider from "app/auth/components/AuthProvider"
 
 const RedirectToSSO = () => {
   const router = useRouter()
@@ -33,7 +34,8 @@ const LoginPage: BlitzPage = () => {
 LoginPage.redirectAuthenticatedTo = "/"
 LoginPage.getLayout = (page) => (
   <AppLayout title="Log In" showUserBox={false}>
-    {page}
+    <WrappedAuthProvider>  {page}</WrappedAuthProvider>
+
   </AppLayout>
 )
 

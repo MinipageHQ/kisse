@@ -3,7 +3,7 @@ import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from "blitz"
 if (!process.env.NEXT_PUBLIC_PLAFORM_DOMAINS) {
   throw new Error("NEXT_PUBLIC_PLAFORM_DOMAINS is required")
 }
-const domains = process.env.NEXT_PUBLIC_PLAFORM_DOMAINS.split(',')
+const domains = process.env.NEXT_PUBLIC_PLAFORM_DOMAINS.split(",")
 
 const config: BlitzConfig = {
   middleware: [
@@ -40,6 +40,11 @@ const config: BlitzConfig = {
           destination: "/api/robots.txt",
           // has: [{ type: "query", key: "overrideMe" }],
         },
+        // {
+        //   source: "/dashboard/payouts",
+        //   destination: "/api/organization-redirect-to-stripe-dashboard",
+        //   // has: [{ type: "query", key: "overrideMe" }],
+        // },
       ],
       afterFiles: [
         // These rewrites are checked after pages/public files
@@ -52,10 +57,10 @@ const config: BlitzConfig = {
       fallback: [
         // These rewrites are checked after both pages/public files
         // and dynamic routes are checked
-        {
-          source: "/:path*",
-          destination: `https://my-old-site.com/:path*`,
-        },
+        // {
+        //   source: "/:path*",
+        //   destination: `https://my-old-site.com/:path*`,
+        // },
       ],
     }
     return [

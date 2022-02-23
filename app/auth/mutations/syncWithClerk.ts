@@ -8,6 +8,7 @@ import { z } from "zod"
 import { sessions } from "@clerk/nextjs/api"
 import clerk, { User } from "@clerk/clerk-sdk-node"
 import { defaultUserSelect } from "../defaults"
+import userCreated from "app/api/_/jobs/user-created"
 
 function getClerkUser(userId: string) {
   return clerk.users.getUser(userId)
@@ -81,10 +82,19 @@ function convertClerkUserObjectToInternalUserObject(
   }
 }
 
-//@TODO: should only be called from internal services
+//@TODO: check if the request comes from an internal service
 export default resolver.pipe(resolver.zod(SyncWithClerkInput), async ({ clerkUserId }, ctx) => {
-  const clerkUser = await getClerkUser(clerkUserId)
-  const upserArgs = await convertClerkUserObjectToInternalUserObject(clerkUser)
+
+  const [clerkUser, doesExists] = await Promise.all([
+    getClerkUser(clerkUserId),
+    db.user.count({
+      where: {
+        clerkId: clerkUserId
+      }
+    }).then((count) => count !== 0)
+  ])
+
+  const upserArgs = convertClerkUserObjectToInternalUserObject(clerkUser)
 
   const user = await db.user.upsert({
     ...upserArgs,
@@ -92,6 +102,12 @@ export default resolver.pipe(resolver.zod(SyncWithClerkInput), async ({ clerkUse
       ...defaultUserSelect
     },
   })
+
+  if (doesExists === false) { // it's a new user
+    await userCreated.enqueue({
+      userId: user.id
+    })
+  }
 
   return user
 })

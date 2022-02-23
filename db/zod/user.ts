@@ -24,6 +24,7 @@ export const UserModel = z.object({
   privateMetadata: jsonSchema,
   clerkId: z.string().nullish(),
   clerkDataSnapshot: jsonSchema,
+  stripeCustomerId: z.string().nullish(),
 })
 
 export interface CompleteUser extends z.infer<typeof UserModel> {

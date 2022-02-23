@@ -1,10 +1,13 @@
+import { ClerkLoaded, useClerk, useSession } from "@clerk/clerk-react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useMutation, Link, Routes } from "blitz"
 import { Suspense } from "react"
 import logout from "../mutations/logout"
+import WrappedAuthProvider from "./AuthProvider"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
+  const clerk = useClerk()
   const [logoutMutation] = useMutation(logout)
 
   if (currentUser) {
@@ -13,7 +16,7 @@ const UserInfo = () => {
         <button
           className="button small"
           onClick={async () => {
-            await logoutMutation()
+            await Promise.all([clerk.signOut(), logoutMutation()])
           }}
         >
           Logout
@@ -45,7 +48,11 @@ const UserInfo = () => {
 
 export const UserInfoWrapped = () => (
   <Suspense fallback="Loading...">
-    <UserInfo />
+    <WrappedAuthProvider>
+      <ClerkLoaded>
+        <UserInfo />
+      </ClerkLoaded>
+    </WrappedAuthProvider>
   </Suspense>
 )
-export default UserInfo
+export default UserInfoWrapped

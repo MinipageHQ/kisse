@@ -26,7 +26,8 @@ export const LabeledDefaultDomainField = forwardRef<
   LabeledDefaultDomainFieldProps
 >(({ name, label, outerProps, fieldProps, labelProps, helpText, ...props }, ref) => {
   const [{ domains }] = useQuery(getDomains, { only: 'platform' }, {
-    initialData: { domains: [] }
+    initialData: { domains: [] },
+    cacheTime: 100
   })
 
   const {
@@ -41,7 +42,7 @@ export const LabeledDefaultDomainField = forwardRef<
     ...fieldProps,
   })
 
-  const domainKeyInput = useField('domainKey', {
+  const domainKeyInput = useField('defaultDomainId', {
     defaultValue: domains.length > 0 && domains[0].id ? domains[0].id : null
   })
   const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError

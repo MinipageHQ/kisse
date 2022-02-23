@@ -3,6 +3,8 @@ import {
   DocumentContext
 } from "blitz"
 import { createGetInitialProps } from '@mantine/next';
+import { IntercomProvider, useIntercom } from 'react-use-intercom';
+const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID
 
 const getInitialProps = createGetInitialProps();
 class MyDocument extends Document {

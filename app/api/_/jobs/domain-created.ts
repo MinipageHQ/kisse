@@ -7,10 +7,13 @@ export interface OrganizationCreated {
 }
 
 export default Queue(
-  "api/_/jobs/organization-create-stripe-connect", // the path of this API route
+  "api/_/jobs/domain-created", // the path of this API route
   async ({ organizationId }: OrganizationCreated) => {
+    const promises = [
+    ]
 
 
-    // organizationId
+    /// send to vercel
+    await Promise.all(promises)
   }
 )

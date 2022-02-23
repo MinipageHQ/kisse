@@ -5,6 +5,7 @@ export const defaultUserSelect = {
     select: {
       email: true,
       id: true,
+      clerkEmailId: true
     },
   },
   roles: true,

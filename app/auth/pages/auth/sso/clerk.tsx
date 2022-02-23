@@ -5,13 +5,13 @@ import AppLayout from "app/core/layouts/AppLayout"
 import { ClerkLoaded, SignedIn, SignIn, useClerk, useSession } from "@clerk/nextjs"
 import ssoWithClerk from "app/auth/mutations/ssoWithClerk"
 import { useEffect } from "react"
+import WrappedAuthProvider from "app/auth/components/AuthProvider"
 
 const LoginSSOClerkPage: BlitzPage = () => {
-
   const clerk = useClerk()
   const blitzSession = useBlitzSession()
   const [ssoWithClerkMutation, meta] = useMutation(ssoWithClerk, {
-    retry: false
+    retry: false,
   })
 
   const hasBlitzSession = blitzSession.isLoading === false && blitzSession.userId !== null
@@ -19,21 +19,23 @@ const LoginSSOClerkPage: BlitzPage = () => {
     clerk.session !== null && clerk.session !== undefined ? clerk.session.id : null
   const isLoading = blitzSession.isLoading === true || meta.isLoading === true
 
-  const shouldRunMutation = isLoading === false && clerkSessionId !== null && hasBlitzSession === false && meta.isIdle === true
+  const shouldRunMutation =
+    isLoading === false &&
+    clerkSessionId !== null &&
+    hasBlitzSession === false &&
+    meta.isIdle === true
   useEffect(() => {
     console.log("clerk", clerk.session)
     console.log("blitzSession", blitzSession)
   }, [clerk, blitzSession])
 
   useEffect(() => {
-
     console.log(shouldRunMutation)
     if (shouldRunMutation === true) {
       ssoWithClerkMutation({
         sessionId: clerkSessionId as string,
       })
     }
-
   }, [shouldRunMutation, clerkSessionId, ssoWithClerkMutation])
   return (
     <div>
@@ -46,7 +48,11 @@ const LoginSSOClerkPage: BlitzPage = () => {
 LoginSSOClerkPage.redirectAuthenticatedTo = "/"
 LoginSSOClerkPage.getLayout = (page) => (
   <AppLayout title="Logging you in..." showUserBox={false}>
-    <ClerkLoaded><SignedIn>{page}</SignedIn></ClerkLoaded>
+    <WrappedAuthProvider>
+      <ClerkLoaded>
+        <SignedIn>{page}</SignedIn>
+      </ClerkLoaded>
+    </WrappedAuthProvider>
   </AppLayout>
 )
 

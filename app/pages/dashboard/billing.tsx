@@ -22,7 +22,7 @@ export const Dashboard = () => {
   )
 }
 
-const DashboardNotificationsPage: BlitzPage = () => {
+const DashboardBillingPage: BlitzPage = () => {
   return (
     <div>
 
@@ -33,7 +33,7 @@ const DashboardNotificationsPage: BlitzPage = () => {
   )
 }
 
-DashboardNotificationsPage.authenticate = true
-DashboardNotificationsPage.getLayout = (page) => <DashboardCreatorSettingsLayout>{page}</DashboardCreatorSettingsLayout>
+DashboardBillingPage.authenticate = true
+DashboardBillingPage.getLayout = (page) => <DashboardCreatorSettingsLayout>{page}</DashboardCreatorSettingsLayout>
 
-export default DashboardNotificationsPage
+export default DashboardBillingPage
