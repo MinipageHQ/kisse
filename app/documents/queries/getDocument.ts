@@ -4,7 +4,7 @@ import { z } from "zod"
 
 const GetDocument = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.string().cuid().optional().refine(Boolean, "Required"),
 })
 
 export default resolver.pipe(resolver.zod(GetDocument), resolver.authorize(), async ({ id }) => {

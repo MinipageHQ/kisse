@@ -12,8 +12,7 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const order = await db.order.update({ where: { id }, data })
-
-    return order
+    // const order = await db.order.update({ where: { id }, data })
+    // return order
   }
 )

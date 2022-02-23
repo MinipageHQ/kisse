@@ -1,11 +1,7 @@
-import { UserModel } from "db/zod"
-import safeEmail from "app/auth/utils/safeEmail"
-import { isPasswordSafe } from "../utils/checkPassword"
 import { Middleware, resolver, SecurePassword } from "blitz"
 import db, { Membership, Prisma } from "db"
-import { Signup, SignupForCreators, SyncWithClerkInput } from "app/auth/validations"
+import { Signup, SyncWithClerkInput } from "app/auth/validations"
 import { z } from "zod"
-import { sessions } from "@clerk/nextjs/api"
 import clerk, { User } from "@clerk/clerk-sdk-node"
 import { defaultUserSelect } from "../defaults"
 import userCreated from "app/api/_/jobs/user-created"
@@ -76,7 +72,7 @@ function convertClerkUserObjectToInternalUserObject(
     create: {
       clerkId: clerkUser.id,
       ...commonData,
-      roles: ['USER']
+      roles: ["USER"],
     },
     update: { ...commonData },
   }
@@ -84,14 +80,15 @@ function convertClerkUserObjectToInternalUserObject(
 
 //@TODO: check if the request comes from an internal service
 export default resolver.pipe(resolver.zod(SyncWithClerkInput), async ({ clerkUserId }, ctx) => {
-
   const [clerkUser, doesExists] = await Promise.all([
     getClerkUser(clerkUserId),
-    db.user.count({
-      where: {
-        clerkId: clerkUserId
-      }
-    }).then((count) => count !== 0)
+    db.user
+      .count({
+        where: {
+          clerkId: clerkUserId,
+        },
+      })
+      .then((count) => count !== 0),
   ])
 
   const upserArgs = convertClerkUserObjectToInternalUserObject(clerkUser)
@@ -99,13 +96,14 @@ export default resolver.pipe(resolver.zod(SyncWithClerkInput), async ({ clerkUse
   const user = await db.user.upsert({
     ...upserArgs,
     select: {
-      ...defaultUserSelect
+      ...defaultUserSelect,
     },
   })
 
-  if (doesExists === false) { // it's a new user
+  if (doesExists === false) {
+    // it's a new user
     await userCreated.enqueue({
-      userId: user.id
+      userId: user.id,
     })
   }
 

@@ -7,7 +7,7 @@ import { OrderForm, FORM_ERROR } from "app/orders/components/OrderForm"
 
 export const EditOrder = () => {
   const router = useRouter()
-  const orderId = useParam("orderId", "number")
+  const orderId = useParam("ordernId", "string")
   const [order, { setQueryData }] = useQuery(
     getOrder,
     { id: orderId },

@@ -9,10 +9,10 @@ export default resolver.pipe(
   resolver.authorize(),
   setDefaultOrganizationId,
   enforceSuperAdminIfNotCurrentOrganization,
-  async (input, { session: { orgId } }) => {
+  async (input, { session: { defaultOrgId } }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const domain = await db.domain.create({
-      data: { ...input, vercelId: "000", organizationId: orgId as number },
+      data: { ...input, vercelId: "000", organizationId: defaultOrgId },
     })
 
     console.log(domain)

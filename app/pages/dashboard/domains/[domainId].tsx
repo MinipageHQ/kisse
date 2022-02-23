@@ -6,7 +6,7 @@ import deleteDomain from "app/domains/mutations/deleteDomain"
 
 export const Domain = () => {
   const router = useRouter()
-  const domainId = useParam("domainId", "number")
+  const domainId = useParam("domainnId", "string")
   const [deleteDomainMutation] = useMutation(deleteDomain)
   const [domain] = useQuery(getDomain, { id: domainId })
 

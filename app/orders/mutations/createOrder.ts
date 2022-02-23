@@ -8,7 +8,6 @@ const CreateOrder = z.object({
 
 export default resolver.pipe(resolver.zod(CreateOrder), resolver.authorize(), async (input) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const order = await db.order.create({ data: input })
-
-  return order
+  // const order = await db.order.create({ data: input })
+  // return order
 })

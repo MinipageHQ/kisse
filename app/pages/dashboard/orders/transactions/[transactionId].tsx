@@ -6,7 +6,7 @@ import deleteTransaction from "app/transactions/mutations/deleteTransaction"
 
 export const Transaction = () => {
   const router = useRouter()
-  const transactionId = useParam("transactionId", "number")
+  const transactionId = useParam("transactionnId", "string")
   const [deleteTransactionMutation] = useMutation(deleteTransaction)
   const [transaction] = useQuery(getTransaction, { id: transactionId })
 

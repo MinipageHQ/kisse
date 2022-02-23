@@ -40,10 +40,12 @@ export const LabeledDefaultDomainField = forwardRef<
         : // Converting `""` to `null` ensures empty values will be set to null in the DB
         (v) => (v === "" ? null : v),
     ...fieldProps,
+    type: 'select'
   })
 
+  const [firstDomain = {}] = domains as { id?: string }[]
   const domainKeyInput = useField('defaultDomainId', {
-    defaultValue: domains.length > 0 && domains[0].id ? domains[0].id : null
+    defaultValue: domains.length > 0 && firstDomain.id ? firstDomain.id : null
   })
   const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
@@ -74,6 +76,7 @@ export const LabeledDefaultDomainField = forwardRef<
           id="domainKey"
           title="domainKey"
           {...domainKeyInput.input}
+          value={domainKeyInput.input.value as string}
           className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
         >
           {domains.map(({ domain, id }, i) => <option key={id} value={id}>{domain}</option>)}

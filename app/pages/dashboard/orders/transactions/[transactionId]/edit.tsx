@@ -7,7 +7,7 @@ import { TransactionForm, FORM_ERROR } from "app/transactions/components/Transac
 
 export const EditTransaction = () => {
   const router = useRouter()
-  const transactionId = useParam("transactionId", "number")
+  const transactionId = useParam("transactionnId", "string")
   const [transaction, { setQueryData }] = useQuery(
     getTransaction,
     { id: transactionId },

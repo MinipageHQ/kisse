@@ -2,18 +2,26 @@ import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import getLink from "../queries/getLink"
 import deleteLink from "../mutations/deleteLink"
+import { Skeleton } from "@mantine/core"
 
-export const ShowLinkPage = ({ linkId }: { linkId: string }) => {
+const ShowLinkPage = ({ linkId }: { linkId: string }) => {
   const router = useRouter()
-  // const assetId = useParam("assetId", "number")
+  // const assetId = useParam("assetnId", "string")
   const [deleteLinkMutation] = useMutation(deleteLink)
-  const [link] = useQuery(
+  const [link, { isFetched }] = useQuery(
     getLink,
     { id: linkId },
     {
-      enabled: linkId && linkId.length > 0,
+      enabled: linkId && linkId.length && linkId.length > 0 ? true : false,
+      initialData: {
+        id: ''
+      }
     }
   )
+
+  if (!link) {
+    return (<Skeleton />)
+  }
 
   return (
     <>
@@ -30,7 +38,7 @@ export const ShowLinkPage = ({ linkId }: { linkId: string }) => {
           onClick={async () => {
             if (window.confirm("This will be deleted")) {
               await deleteLinkMutation({ id: link.id })
-              router.push(Routes.LinksPage())
+              router.push(Routes.LinksPage({}))
             }
           }}
           style={{ marginLeft: "0.5rem" }}

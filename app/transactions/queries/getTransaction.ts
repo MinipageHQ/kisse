@@ -4,7 +4,7 @@ import { z } from "zod"
 
 const GetTransaction = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.string().cuid().optional().refine(Boolean, "Required"),
 })
 
 export default resolver.pipe(resolver.zod(GetTransaction), resolver.authorize(), async ({ id }) => {

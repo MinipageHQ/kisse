@@ -7,7 +7,7 @@ import { DomainForm, FORM_ERROR } from "app/domains/components/DomainForm"
 
 export const EditDomain = () => {
   const router = useRouter()
-  const domainId = useParam("domainId", "number")
+  const domainId = useParam("domainnId", "string")
   const [domain, { setQueryData }] = useQuery(
     getDomain,
     { id: domainId },

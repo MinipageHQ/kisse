@@ -44,7 +44,7 @@ export const LinksList = () => {
                 <a className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
                   <span className="flex items-center truncate space-x-3">
                     <span
-                      className={classNames(link.bgColorClass, 'w-2.5 h-2.5 flex-shrink-0 rounded-full')}
+                      className={classNames('w-2.5 h-2.5 flex-shrink-0 rounded-full')}
                       aria-hidden="true"
                     />
                     <span className="font-medium truncate text-sm leading-6">
@@ -86,7 +86,7 @@ export const LinksList = () => {
                   <td className="px-6 py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex items-center space-x-3 lg:pl-2">
                       <div
-                        className={classNames(link.bgColorClass, 'flex-shrink-0 w-2.5 h-2.5 rounded-full')}
+                        className={classNames('flex-shrink-0 w-2.5 h-2.5 rounded-full')}
                         aria-hidden="true"
                       />
                       <a href="#" className="truncate hover:text-gray-600">

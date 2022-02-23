@@ -7,7 +7,7 @@ export default function WrappedAuthProvider({
   children,
 }: {
   children: React.ReactNode
-}): React.ReactNode {
+}) {
   return (
     <ClerkProvider>
       {children}

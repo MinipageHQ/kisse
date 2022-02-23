@@ -7,7 +7,7 @@ import { DocumentForm, FORM_ERROR } from "app/documents/components/DocumentForm"
 
 export const EditDocument = () => {
   const router = useRouter()
-  const documentId = useParam("documentId", "number")
+  const documentId = useParam("documentId", "string")
   const [document, { setQueryData }] = useQuery(
     getDocument,
     { id: documentId },

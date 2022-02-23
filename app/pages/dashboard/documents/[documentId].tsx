@@ -6,7 +6,7 @@ import deleteDocument from "app/documents/mutations/deleteDocument"
 
 export const Document = () => {
   const router = useRouter()
-  const documentId = useParam("documentId", "number")
+  const documentId = useParam("documentId", "string")
   const [deleteDocumentMutation] = useMutation(deleteDocument)
   const [document] = useQuery(getDocument, { id: documentId })
 

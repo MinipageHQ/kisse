@@ -10,7 +10,7 @@ interface AssetShowProps {
 }
 export const AssetShow = ({ assetId, setModalTitle }: AssetShowProps) => {
   const router = useRouter()
-  // const assetId = useParam("assetId", "number")
+  // const assetId = useParam("assetnId", "string")
   const [deleteAssetMutation] = useMutation(deleteAsset)
   const [asset, meta] = useQuery(
     getAsset,

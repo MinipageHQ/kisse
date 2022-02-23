@@ -6,7 +6,7 @@ import deleteOrder from "app/orders/mutations/deleteOrder"
 
 export const Order = () => {
   const router = useRouter()
-  const orderId = useParam("orderId", "number")
+  const orderId = useParam("ordernId", "string")
   const [deleteOrderMutation] = useMutation(deleteOrder)
   const [order] = useQuery(getOrder, { id: orderId })
 

@@ -24,7 +24,7 @@ const DashboardLinksNew = ({ linkType }: { linkType: string }) => {
                   'flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-lg'
                 )}
               >
-                <item.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                {/* <item.icon className="h-6 w-6 text-white" aria-hidden="true" /> */}
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-900">

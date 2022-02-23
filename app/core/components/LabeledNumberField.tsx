@@ -28,16 +28,20 @@ export const LabeledNumberField = forwardRef<HTMLTextAreaElement, LabeledNumberF
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
-    return (<NumberInput
-      label={label}
-
-      required
-      error={touched && normalizedError}
-      description={helpText}
-      stepHoldDelay={500}
-      stepHoldInterval={100}
-      {...input} id={name} disabled={submitting}
-    />)
+    return (
+      <NumberInput
+        label={label}
+        required
+        error={touched && normalizedError}
+        description={helpText}
+        stepHoldDelay={500}
+        stepHoldInterval={100}
+        {...input}
+        type="number"
+        id={name}
+        disabled={submitting}
+      />
+    )
     return (
       <div {...outerProps}>
         <label {...labelProps}>
