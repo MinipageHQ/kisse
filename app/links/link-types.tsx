@@ -11,7 +11,7 @@ import { ReactChild } from "react"
 import { z } from "zod";
 
 // new link page is dynamic and the fields appear if they are selected
-export const LinkCreateField = z.enum(["linkList", "slug", "asset", "target"]);
+export const LinkCreateField = z.enum(["linkList", "slug", "asset", "target", "name"]);
 export type LinkCreateField = z.infer<typeof LinkCreateField>;
 
 export type LinkTypeData = {
@@ -59,6 +59,15 @@ const linkTypes: LinkTypeData[] = [
     name: "Redirection",
     description: "Create a link you can track and modify to share on social media",
     createTitle: "Create a new redirection",
+    type: LinkType.redirect,
+    icon: ({ className }) => <ViewBoardsIcon className={className} />,
+    createFields: ["target", "slug"],
+    background: "bg-purple-500",
+  },
+  {
+    name: "NFT Gallery",
+    description: "Create a link where you can list your NFTs across platfomrms",
+    createTitle: "Create a new NFT gallery",
     type: LinkType.redirect,
     icon: ({ className }) => <ViewBoardsIcon className={className} />,
     createFields: ["target", "slug"],

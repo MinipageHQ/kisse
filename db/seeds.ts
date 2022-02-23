@@ -66,6 +66,7 @@ const seed = async () => {
   for (let i = 0; i < 5; i++) {
     await db.inviteCode.create({ data: { code: "TESTCODE" + i, referrer: "dev" } })
   }
+
   await db.assetCategory.createMany({
     data: [...categories],
     skipDuplicates: true,

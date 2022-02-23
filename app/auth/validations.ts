@@ -11,7 +11,7 @@ export const inviteCode = z.string().transform((str) => str.toUpperCase().trim()
 
 export const password = z
   .string()
-  .min(10)
+  .min(8)
   .max(100)
   .transform((str) => str.trim())
 
@@ -20,16 +20,18 @@ export const Signup = z.object({
   password,
 })
 
-export const SignupForCreators = z.object({
-  name: organizationName,
-  email,
-  inviteCode,
-  password,
+
+export const SsoWithClerkInput = z.object({
+  sessionId: z.string(),
+})
+
+export const SyncWithClerkInput = z.object({
+  clerkUserId: z.string(),
 })
 
 export const Login = z.object({
   email,
-  password: z.string(),
+  password,
 })
 
 export const ForgotPassword = z.object({

@@ -1,17 +1,18 @@
 import { Switch } from "@headlessui/react"
 import DashboardCustomizeLayout from "app/core/layouts/DashboardCustomizeLayout"
 import classNames from "app/core/utils/classnames"
+import { useCurrentOrganization } from "app/organizations/hooks/useCurrentOrganization"
 import { BlitzPage, Image } from "blitz"
 import { useState } from "react"
 
 const DashboardSettingsProfilePage: BlitzPage = () => {
   const [automaticTimezoneEnabled, setAutomaticTimezoneEnabled] = useState(true)
   const [autoUpdateApplicantDataEnabled, setAutoUpdateApplicantDataEnabled] = useState(false)
-
+  const organization = useCurrentOrganization()
   return (
     <>
       {/* Description list with inline editing */}
-      <div className="mt-10 divide-y divide-gray-200">
+      <div>
         <div className="space-y-1">
           <h3 className="text-lg leading-6 font-medium text-gray-900">Profile</h3>
           <p className="max-w-2xl text-sm text-gray-500">
@@ -23,7 +24,7 @@ const DashboardSettingsProfilePage: BlitzPage = () => {
             <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-gray-500">Name</dt>
               <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                <span className="flex-grow">Chelsea Hagon</span>
+                <span className="flex-grow">{organization?.name || "not set yet"}</span>
                 <span className="ml-4 flex-shrink-0">
                   <button
                     type="button"

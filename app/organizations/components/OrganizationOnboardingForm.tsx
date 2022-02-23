@@ -7,7 +7,7 @@ import LabeledDefaultDomainField from "./LabeledDefaultDomainField"
 export { FORM_ERROR } from "app/core/components/Form"
 
 const labelClasses = "block text-sm font-medium text-gray-700"
-export function OrganizationOnboardingForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
+export function OrganizationCreateForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (
     <Form<S> {...props}>
       <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">

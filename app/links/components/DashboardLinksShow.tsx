@@ -8,7 +8,9 @@ export const LinkShow = ({ linkId }) => {
   const router = useRouter()
   // const assetId = useParam("assetId", "number")
   const [deleteLinkMutation] = useMutation(deleteLink)
-  const [link] = useQuery(getLink, { id: linkId })
+  const [link] = useQuery(getLink, { id: linkId }, {
+    enabled: linkId && linkId.length > 0
+  })
 
   return (
     <>

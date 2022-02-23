@@ -2,6 +2,7 @@ import { ReactNode, PropsWithoutRef } from "react"
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
 import { z } from "zod"
 import { validateZodSchema } from "blitz"
+import { Button, LoadingOverlay } from "@mantine/core"
 export { FORM_ERROR } from "final-form"
 
 export interface FormProps<S extends z.ZodType<any, any>>
@@ -38,6 +39,8 @@ export function Form<S extends z.ZodType<any, any>>({
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, submitError }) => (
         <form onSubmit={handleSubmit} className="form" {...props}>
+          <LoadingOverlay visible={submitting} />
+
           {/* Form fields supplied as children are rendered here */}
           {children}
 
@@ -60,11 +63,6 @@ export function Form<S extends z.ZodType<any, any>>({
             </div>
           )}
 
-          <style global jsx>{`
-            // .form > * + * {
-            //   margin-top: 1rem;
-            // }
-          `}</style>
         </form>
       )}
     />

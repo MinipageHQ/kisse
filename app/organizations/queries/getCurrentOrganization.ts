@@ -13,12 +13,11 @@ export default resolver.pipe(
   resolver.authorize(),
   setDefaultOrganizationId,
   enforceSuperAdminIfNotCurrentOrganization,
-  async ({ id }, { session: { orgId } }) => {
-    console.log({ orgId, id })
+  async ({ id }, { session: { defaultOrgId } }) => {
 
     const [organization, domains] = await Promise.all([
       db.organization.findFirst({
-        where: { id: id || orgId },
+        where: { id: id || defaultOrgId },
 
         include: {
           defaultDomain: true,

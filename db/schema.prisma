@@ -45,6 +45,7 @@ model Organization {
   metadata        Json?
   privateMetadata Json?
 
+  stripeSellerId   String?
   defaultDomain    Domain?            @relation(name: "defaultDomainForOrg", fields: [defaultDomainId], references: [id])
   defaultDomainId  String?
   domains          Domain[]
@@ -125,26 +126,27 @@ model User {
   countryCode String @default("us")
   timezone    String @default("America/Los_Angeles")
 
-  roles       GlobalRole[]
-  tokens      Token[]
-  sessions    Session[]
-  memberships Membership[]
-  inviteCodes InviteCode[]
+  roles             GlobalRole[]
+  tokens            Token[]
+  sessions          Session[]
+  memberships       Membership[]
+  inviteCodes       InviteCode[]
+  active            Boolean      @default(true)
+  metadata          Json         @default("{}")
+  privateMetadata   Json         @default("{}")
+  clerkId           String?      @unique
+  clerkDataSnapshot Json         @default("{}")
+  ApiKey            ApiKey[]     @relation("userApiKey")
+  AuditLog          AuditLog[]   @relation("userAuditLog")
 
-  active Boolean @default(true)
-
-
-  metadata        Json       @default("{}")
-  privateMetadata Json       @default("{}")
-  ApiKey          ApiKey[]   @relation("userApiKey")
-  AuditLog        AuditLog[] @relation("userAuditLog")
+  stripeCustomerId String?
   @@index([prefersEmailId], name: "prefersEmailId")
 }
 
 model Email {
   createdAt  DateTime @default(now())
-  email      String   @unique
-  emailSafe  String   @unique
+  email      String //as long as we use clerk we dont need this: @unique
+  emailSafe  String //as long as we use clerk we dont need this: @unique
   id         String   @id @default(cuid())
   isVerified Boolean  @default(false)
   updatedAt  DateTime @updatedAt
@@ -152,6 +154,7 @@ model Email {
   user       User     @relation("userEmail", fields: [userId], references: [id])
   users      User[]   @relation("userPrefersEmail")
 
+  clerkEmailId String? @unique
   @@index([userId], name: "userId")
 }
 

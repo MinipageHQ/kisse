@@ -1,23 +1,19 @@
 
 
 import { Queue } from "quirrel/blitz"
+import organizationCreateStripeConnect from "./organization-create-stripe-connect"
 
-export interface SendEmail {
-  template: string
-  message: string
+export interface OrganizationCreated {
+  organizationId: string
 }
 
 export default Queue(
   "api/_/jobs/organization-created", // the path of this API route
-  async ({ to, message }: Greetings) => {
+  async ({ organizationId }: OrganizationCreated) => {
+    const promises = [
+      organizationCreateStripeConnect.enqueue({ organizationId })
+    ]
 
-
-
-    // create stripe account
-    await greetingsQueue.enqueue({
-      to: "Sandy Cheeks",
-      message: "Howdy!",
-    })
-    console.log(`Greetings, ${to}! Thy ears shall hear: "${message}"`)
+    await Promise.all(promises)
   }
 )

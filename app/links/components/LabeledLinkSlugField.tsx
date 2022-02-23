@@ -2,6 +2,8 @@ import { ExclamationCircleIcon } from "@heroicons/react/solid"
 import { Domain } from "@prisma/client"
 import Uppy from "@uppy/core"
 import { useUppy } from "@uppy/react"
+import getDomains from "app/domains/queries/getDomains"
+import { useQuery } from "blitz"
 import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from "react"
 import { useField, UseFieldConfig } from "react-final-form"
 import { PLATFORM_DOMAINS } from "../utils"
@@ -25,14 +27,17 @@ export interface LabeledLinkSlugFieldProps
 export const LabeledLinkSlugField = forwardRef<
   HTMLInputElement,
   LabeledLinkSlugFieldProps
->(({ domainIdFieldName = "domainId", slugFieldName = "slug", label, domains = [], outerProps, fieldProps, labelProps, ...props }, ref) => {
-
+>(({ domainIdFieldName = "domainId", slugFieldName = "slug", label, outerProps, fieldProps, labelProps, ...props }, ref) => {
+  const [{ domains }] = useQuery(getDomains, {}, {
+    initialData: { domains: [] }
+  })
   // Since domain ID field is selected from a select box it's not possible
   // to have a validation problem with it under normal circumtences
   // API method will have the correct validations and if a user tries something funny
   // inside the browser they won't get a proper error displayed but their trick won't work
   const domainIdField = useField(domainIdFieldName, {
     ...fieldProps,
+    initialValue: domains[0] && domains[0]['id'] && domains[0]['id'] || undefined
   })
 
   const {

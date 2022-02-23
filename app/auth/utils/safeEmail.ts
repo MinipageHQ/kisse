@@ -5,7 +5,8 @@ import normalize from "normalize-email"
  * @param email - Valid email address
  */
 const safeEmail = (input: string) => {
-  return normalize(input.toLowerCase().trim())
+  // return normalize(input.toLowerCase().trim()) // this is hostile, wtf was i thinking
+  return input.toLowerCase().trim()
 }
 
 export default safeEmail

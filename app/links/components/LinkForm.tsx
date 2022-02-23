@@ -5,33 +5,33 @@ export { FORM_ERROR } from "app/core/components/Form"
 import linkTypes from 'app/links/link-types'
 
 import { useMemo } from "react"
-import { useRouter, useQuery } from "blitz"
+import { useRouter, useQuery, useRouterQuery } from "blitz"
 import getCurrentOrganization from "app/organizations/queries/getCurrentOrganization"
 import LabeledLinkSlugField from "app/links/components/LabeledLinkSlugField"
+import { Container } from "@mantine/core"
 
 export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   const [currentOrganization] = useQuery(getCurrentOrganization, {})
+  const query = useRouterQuery()
 
   const {
-    query: { type = "redirect" },
+    query: { linkQueries },
     push,
   } = useRouter()
-  const typeData = useMemo(
-    () => linkTypes.find((linkType) => linkType.type === type),
-    [type],
-  )
+
+  const type = linkQueries && linkQueries[1] || 'redirect'
+
+  const typeData = linkTypes.find((linkType) => linkType.type === type)
   return (
     <Form<S> {...props} initialValues={{ type }}>
-      <h1 className="texzt-lg leading-6 font-medium text-gray-900">
-        {typeData?.createTitle}
-      </h1>
       <p className="mt-1 text-sm text-gray-500">
         Let’s get started by filling in the information below to create
         your new link.
       </p>
 
-      <pre className=" text-ellipsis">{JSON.stringify(currentOrganization)}</pre>
-
+      <Container >
+        <pre className=" text-ellipsis">{JSON.stringify(currentOrganization)}</pre>
+      </Container>
       <p className="mt-1 text-sm text-gray-500">
 
       </p>
@@ -77,7 +77,9 @@ export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
         <LabeledLinkSlugField label={"Slug"} domains={currentOrganization.domains} outerProps={{ className: "mt-6" }} />
       )}
 
-
+      {typeData?.createFields.includes('name') && (
+        <LabeledLinkSlugField label={"Slug"} domains={currentOrganization.domains} outerProps={{ className: "mt-6" }} />
+      )}
       <div className="flex justify-end bg-black">
         {/* <button
                 type="submit"

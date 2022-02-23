@@ -10,7 +10,7 @@ export const setDefaultOrganizationId = <T extends Record<any, any>>(
   input: T,
   { session }: Ctx
 ): T & { organizationId: Prisma.StringNullableFilter | string } => {
-  assert(session.orgId, "This page requires a creator account")
+  assert(session.defaultOrgId, "This page requires a creator account")
   if (input.organizationId) {
     // Pass through the input
     return input as T & { organizationId: string }
@@ -18,8 +18,8 @@ export const setDefaultOrganizationId = <T extends Record<any, any>>(
     // Allow viewing any organization
     return { ...input, organizationId: { not: null } }
   } else {
-    // Set organizationId to session.orgId
-    return { ...input, organizationId: session.orgId }
+    // Set organizationId to session.defaultOrgId
+    return { ...input, organizationId: session.defaultOrgId }
   }
 }
 
@@ -27,10 +27,10 @@ export const enforceSuperAdminIfNotCurrentOrganization = <T extends Record<any, 
   input: T,
   ctx: Ctx
 ): T => {
-  assert(ctx.session.orgId, "missing session.orgId")
+  assert(ctx.session.defaultOrgId, "missing session.defaultOrgId")
   assert(input.organizationId, "missing input.organizationId")
 
-  if (input.organizationId !== ctx.session.orgId) {
+  if (input.organizationId !== ctx.session.defaultOrgId) {
     ctx.session.$authorize(GlobalRole.SUPERADMIN)
   }
   return input

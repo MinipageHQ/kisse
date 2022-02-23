@@ -9,17 +9,31 @@ import {
 } from "blitz"
 import LoginForm from "app/auth/components/LoginForm"
 
+import { MantineProvider, NormalizeCSS, GlobalStyles } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
+
 import "app/core/styles/index.css"
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
+
     <ErrorBoundary
       FallbackComponent={RootErrorFallback}
       onReset={useQueryErrorResetBoundary().reset}
     >
-      {getLayout(<Component {...pageProps} />)}
+      <MantineProvider
+        theme={{
+          // colorScheme: 'dark',
+        }}
+      >
+        <NormalizeCSS />
+        <GlobalStyles />
+        <NotificationsProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </NotificationsProvider>
+      </MantineProvider>
     </ErrorBoundary>
   )
 }

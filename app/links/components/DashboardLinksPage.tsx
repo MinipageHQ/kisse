@@ -28,7 +28,7 @@ export const LinksList = () => {
       <button disabled={page === 0} onClick={goToPreviousPage}>
         Previous
       </button>
-      <button disabled={!hasMore} onClwick={goToNextPage}>
+      <button disabled={!hasMore} onClick={goToNextPage}>
         Next
       </button>
 

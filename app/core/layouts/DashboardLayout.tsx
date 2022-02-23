@@ -71,13 +71,225 @@ const creatorNavigation = [
 const userNavigation = [
   { name: "Purchased Assets", href: "/my/assets", current: false },
   { name: "Wallet", href: "/my/payments", current: false },
-  { name: "Security", href: "/my/settings/security", current: false },
+  { name: "Security", href: "/my/security", current: false },
   { name: "Settings", href: "/my/settings", current: false },
   { name: "Help", href: "/help", current: false },
   // { name: 'Logout', href: '/logout' }
 ]
+import { AppShell, Burger, Header, MediaQuery, Navbar, ScrollArea, Text, useMantineTheme } from '@mantine/core';
 
 const DashboardLayout: BlitzLayout<{
+  subHeader?: React.ReactNode
+  container?: boolean
+  title?: string
+}> = ({ subHeader, title, children, container }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const router = useRouter()
+  const isRegularUserPath = router.pathname.startsWith("/my/")
+
+  const [opened, setOpened] = useState(false);
+  const theme = useMantineTheme();
+
+  return (<>
+    <Head>
+      <title>{title || "saltana"}</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+
+    {/* <ShowForRoleWrapped role="CREATOR">
+        <RedirectToOnboarding />
+      </ShowForRoleWrapped> */}
+
+    <AppShell
+      // navbarOffsetBreakpoint controls when navbar should no longer be offset with padding-left
+      navbarOffsetBreakpoint="sm"
+      // fixed prop on AppShell will be automatically added to Header and Navbar
+      fixed
+      navbar={
+        <Navbar
+          padding="md"
+          // Breakpoint at which navbar will be hidden if hidden prop is true
+          hiddenBreakpoint="sm"
+          // Hides navbar when viewport size is less than value specified in hiddenBreakpoint
+          hidden={!opened}
+          // when viewport size is less than theme.breakpoints.sm navbar width is 100%
+          // viewport size > theme.breakpoints.sm – width is 300px
+          // viewport size > theme.breakpoints.lg – width is 400px
+          width={{ sm: 300, lg: 400 }}
+        >
+
+
+
+          <Navbar.Section
+            grow
+            component={ScrollArea}
+            ml={-10}
+            mr={-10}
+            sx={{ paddingLeft: 10, paddingRight: 10 }}
+          >
+            {/* Creator spaces dropdown */}
+            <ShowForRoleWrapped>
+              {({ roles }) =>
+                roles?.includes("CREATOR") ? (
+                  <div className="px-3 relative inline-block text-left">
+                    <a href="https://saltana.com/" target="_blank" rel="noreferrer">
+                      <div className="group w-full rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
+                        <span className="flex w-full justify-between items-center">
+                          <span className="flex min-w-0 items-center justify-between space-x-3">
+                            <span className="flex-1 flex flex-col min-w-0">
+                              <span className="text-gray-900 text-sm font-medium ">
+                                Go to my space -{">"}
+                              </span>
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                    </a>
+                  </div>
+                ) : (
+                  <div className="px-3 relative inline-block text-left">
+                    <a href="https://saltana.com/request-invite" target="_blank" rel="noreferrer">
+                      <div className="group w-full bg-yellow-200 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
+                        <span className="flex w-full justify-between items-center">
+                          <span className="flex min-w-0 items-center justify-between space-x-3">
+                            <span className="flex-1 flex flex-col min-w-0">
+                              <span className="text-gray-900 text-sm font-medium ">
+                                Apply for a creator account
+                              </span>
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                    </a>
+                  </div>
+                )
+              }
+            </ShowForRoleWrapped>
+            {/* Sidebar Search */}
+            <ShowForRoleWrapped role="CREATOR">
+              <div className="px-3 mt-5">
+                <label htmlFor="search" className="sr-only">
+                  Search
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div
+                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                    aria-hidden="true"
+                  >
+                    <SearchIcon className="mr-3 h-4 w-4 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Search"
+                  />
+                </div>
+              </div>
+            </ShowForRoleWrapped>
+            {/* Navigation */}
+            <nav className="px-3 mt-6">
+              <ShowForRoleWrapped role="CREATOR">
+                <div className="space-y-1">
+                  {creatorNavigation.map((item) => (
+                    <Link key={item.name} href={item.href} passHref>
+                      <a
+                        className={classNames(
+                          item.current
+                            ? "bg-gray-200 text-gray-900"
+                            : "text-gray-700 hover:text-gray-900 hover:bg-gray-50",
+                          "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                        )}
+                        aria-current={item.current ? "page" : undefined}
+                      >
+                        <item.icon
+                          className={classNames(
+                            item.current
+                              ? "text-gray-500"
+                              : "text-gray-400 group-hover:text-gray-500",
+                            "mr-3 flex-shrink-0 h-6 w-6"
+                          )}
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </a>
+                    </Link>
+                  ))}
+                </div>
+              </ShowForRoleWrapped>
+
+              <div className="mt-8">
+                {/* Secondary navigation */}
+                <h3
+                  className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                  id="desktop-myaccount-headline"
+                >
+                  My Account
+                </h3>
+                <div
+                  className="mt-1 space-y-1"
+                  role="group"
+                  aria-labelledby="desktop-teams-headline"
+                >
+                  {userNavigation.map((item) => (
+                    <Link href={item.href} key={item.href} passHref>
+                      <a
+                        key={item.name}
+                        className={classNames(
+                          item.current
+                            ? "bg-gray-200 text-gray-900"
+                            : "text-gray-700  hover:text-gray-900 hover:bg-gray-50",
+                          "group flex items-center px-3 py-2 text-sm font-medium  rounded-md "
+                        )}
+                        aria-current={item.current ? "page" : undefined}
+                      >
+                        <span className="truncate">{item.name}</span>
+                      </a>
+                    </Link>
+                  ))}
+                  <a
+                    onClick={() => console.log("signout")}
+                    href="#"
+                    className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-gray-50"
+                  >
+                    <span className="truncate">Logout</span>
+                  </a>
+                </div>
+              </div>
+            </nav>
+          </Navbar.Section>
+
+          <Navbar.Section>c</Navbar.Section>
+        </Navbar>
+      }
+      header={
+        <Header height={70} padding="md">
+          {/* Handle other responsive styles with MediaQuery component or createStyles function */}
+          <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+            <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+              <Burger
+                opened={opened}
+                onClick={() => setOpened((o) => !o)}
+                size="sm"
+                color={theme.colors.gray[6]}
+                mr="xl"
+              />
+            </MediaQuery>
+
+            <Logo h="8" fill="#00000" />
+          </div>
+        </Header>
+      }
+    >
+
+      {children}
+    </AppShell></>
+  );
+}
+
+
+const DashboardLayout2: BlitzLayout<{
   subHeader?: React.ReactNode
   container?: boolean
   title?: string

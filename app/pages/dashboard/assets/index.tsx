@@ -3,6 +3,7 @@ import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "bli
 import Layout from "app/core/layouts/Layout"
 import getAssets from "app/assets/queries/getAssets"
 import DashboardAssetsLayout from "app/assets/components/DashboardAssetsLayout"
+import { Alert } from "@mantine/core"
 
 const ITEMS_PER_PAGE = 100
 
@@ -53,7 +54,6 @@ const AssetsPage: BlitzPage = () => {
             <a>Create Asset</a>
           </Link>
         </p>
-
         <Suspense fallback={<div>Loading...</div>}>
           <AssetsList />
         </Suspense>

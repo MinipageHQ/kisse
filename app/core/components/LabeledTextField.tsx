@@ -15,6 +15,7 @@ export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElem
   fieldProps?: UseFieldConfig<string>
 }
 import { ExclamationCircleIcon } from "@heroicons/react/solid"
+import { Input, InputWrapper } from "@mantine/core"
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
   ({ name, label, outerProps, fieldProps, labelProps, type = "text", helpText, ...props }, ref) => {
@@ -33,6 +34,18 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
     const showError = touched && normalizedError
 
+    return (
+      <InputWrapper
+        id={name}
+        required
+        label={label}
+        description={helpText}
+        error={touched && normalizedError}
+      >
+        <Input {...input} id={name} disabled={submitting} ref={ref} />
+      </InputWrapper>
+
+    )
     return (
       <div {...outerProps} className={`mt-3 ${outerProps?.className}`}>
         <label className="block text-sm font-medium text-gray-700" {...labelProps}>
@@ -58,11 +71,6 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
           </div>
         </label>
 
-        {touched && normalizedError && (
-          <p role="alert" className="mt-2 text-sm text-red-600">
-            {normalizedError}
-          </p>
-        )}
         {helpText && <p className="mt-2 text-sm text-gray-500">{helpText}</p>}
       </div>
     )

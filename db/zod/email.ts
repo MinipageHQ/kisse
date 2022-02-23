@@ -9,6 +9,7 @@ export const EmailModel = z.object({
   isVerified: z.boolean(),
   updatedAt: z.date(),
   userId: z.string(),
+  clerkEmailId: z.string().nullish(),
 })
 
 export interface CompleteEmail extends z.infer<typeof EmailModel> {

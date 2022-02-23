@@ -1,5 +1,8 @@
+import { InputWrapper, Input } from "@mantine/core"
 import Uppy from "@uppy/core"
 import { useUppy } from "@uppy/react"
+import getDomains from "app/domains/queries/getDomains"
+import { useQuery } from "blitz"
 import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from "react"
 import { useField, UseFieldConfig } from "react-final-form"
 
@@ -11,52 +14,21 @@ export interface LabeledDefaultDomainFieldProps
   label: string
   /** Field type. Doesn't include radio buttons and checkboxes */
   type?: "text" | "password" | "email" | "number"
-  domains: string[]
+  domains?: string[]
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
   fieldProps?: UseFieldConfig<string>
-}
-
-function e() {
-  return (
-    <div>
-      <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-        Price
-      </label>
-      <div className="mt-1 relative rounded-md shadow-sm">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span className="text-gray-500 sm:text-sm">$</span>
-        </div>
-        <input
-          type="text"
-          name="price"
-          id="price"
-          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
-          placeholder="0.00"
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center">
-          <label htmlFor="currency" className="sr-only">
-            Currency
-          </label>
-          <select
-            id="currency"
-            name="currency"
-            className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
-          >
-            <option>USD</option>
-            <option>CAD</option>
-            <option>EUR</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  )
+  helpText?: string
 }
 
 export const LabeledDefaultDomainField = forwardRef<
   HTMLInputElement,
   LabeledDefaultDomainFieldProps
->(({ name, label, domains, outerProps, fieldProps, labelProps, ...props }, ref) => {
+>(({ name, label, outerProps, fieldProps, labelProps, helpText, ...props }, ref) => {
+  const [{ domains }] = useQuery(getDomains, { only: 'platform' }, {
+    initialData: { domains: [] }
+  })
+
   const {
     input,
     meta: { touched, error, submitError, submitting },
@@ -68,48 +40,49 @@ export const LabeledDefaultDomainField = forwardRef<
         (v) => (v === "" ? null : v),
     ...fieldProps,
   })
+
+  const domainKeyInput = useField('domainKey', {
+    defaultValue: domains.length > 0 && domains[0].id ? domains[0].id : null
+  })
   const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
-  return (
-    <div {...outerProps}>
+  return (<InputWrapper
+    id={name}
+    required
+    label={label}
+    description={helpText}
+    error={touched && normalizedError}
+  >
 
-      <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-
-      <div className="mt-1 relative rounded-md shadow-sm">
-        <input
-          type="text"
-          {...input}
-          disabled={submitting}
-          {...props}
-          ref={ref}
-          id="slug"
-          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-111 pr-12 sm:text-sm border-gray-300 rounded-md"
-          placeholder="rickastley"
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center">
-          <label htmlFor="domainKey" className="sr-only">
-            Domain
-          </label>
-          <select
-            id="domainKey"
-            title="domainKey"
-            className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
-          >
-            <option>saltana.com</option>
-          </select>
-        </div>
+    <div className="mt-1 relative rounded-md shadow-sm">
+      <input
+        type="text"
+        {...input}
+        disabled={submitting}
+        {...props}
+        ref={ref}
+        id="slug"
+        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-111 pr-12 sm:text-sm border-gray-300 rounded-md"
+        placeholder="rickastley"
+      />
+      <div className="absolute inset-y-0 right-0 flex items-center">
+        <label htmlFor="domainKey" className="sr-only">
+          Domain
+        </label>
+        <select
+          id="domainKey"
+          title="domainKey"
+          {...domainKeyInput.input}
+          className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
+        >
+          {domains.map(({ domain, id }, i) => <option key={id} value={id}>{domain}</option>)}
+        </select>
       </div>
-
-      {touched && normalizedError && (
-        <div role="alert" style={{ color: "red" }}>
-          {normalizedError}
-        </div>
-      )}
-
     </div>
+
+  </InputWrapper>
   )
+
 })
 
 export default LabeledDefaultDomainField

@@ -6,6 +6,7 @@ export const username = z
   .string()
   .min(3)
   .max(24)
+  .transform((str) => str.toLowerCase().trim())
   .refine((val) => blockedUsernames.includes(val) === false, {
     message: "This username unfortunately is not allowed.",
   })
@@ -25,14 +26,20 @@ export const Organization = z.object({
   defaultDomainId: z.string().cuid().optional(),
 })
 
+export const CreateOrganizationWithInviteCodeSchema = Organization.extend({
+  inviteCode: z.string().min(1).max(24),
+})
+
 export const OnboardedOrganizationSchema = OrganizationModel.pick({
   name: true,
   description: true,
   profileMedia: true,
   defaultDomainId: true,
+
 })
   .extend({
     slug: username,
+    // inviteCode: z.string().min(1).max(24),
   })
   .partial({
     profileMedia: true,

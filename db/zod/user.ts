@@ -22,6 +22,8 @@ export const UserModel = z.object({
   active: z.boolean(),
   metadata: jsonSchema,
   privateMetadata: jsonSchema,
+  clerkId: z.string().nullish(),
+  clerkDataSnapshot: jsonSchema,
 })
 
 export interface CompleteUser extends z.infer<typeof UserModel> {
