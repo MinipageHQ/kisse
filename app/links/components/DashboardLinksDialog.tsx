@@ -26,8 +26,7 @@ export default function DashboardLinksDialog() {
       title={typeData?.createTitle || "Create a new link..."}
     >
       <Suspense fallback={<Skeleton visible />}>
-        {linkId === 'new' ? <DashboardLinksNew linkType={linkType} /> : <DashboardLinksShow linkId={linkId} />}
-
+        {linkId === 'new' ? <DashboardLinksNew linkType={linkType!} /> : <DashboardLinksShow linkId={linkId} />}
       </Suspense>
     </Modal>
   )

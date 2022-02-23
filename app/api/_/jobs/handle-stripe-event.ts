@@ -10,8 +10,6 @@ export interface StripeWebhookEvent {
 export default Queue(
   "api/_/jobs/handle-stripe-event", // the path of this API route
   async ({ data, type }: StripeWebhookEvent) => {
-
-
     ///verify it
     switch (type) {
       case "user.created":

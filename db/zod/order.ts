@@ -6,7 +6,9 @@ import { CompleteOrganization, RelatedOrganizationModel } from "./index"
 type Literal = boolean | number | string
 type Json = Literal | { [key: string]: Json } | Json[]
 const literalSchema = z.union([z.string(), z.number(), z.boolean()])
-const jsonSchema: z.ZodSchema<Json> = z.lazy(() => z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)]))
+const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
+  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])
+)
 
 export const OrderModel = z.object({
   id: z.string(),
@@ -16,7 +18,7 @@ export const OrderModel = z.object({
   lines: jsonSchema,
   moves: jsonSchema,
   amountDue: z.number(),
-  amountPaid: z.number(),
+  amountPaid: z.string().cuid(),
   amountRemaining: z.number(),
   currency: z.nativeEnum(Currency),
   payerId: z.string(),
@@ -34,6 +36,8 @@ export interface CompleteOrder extends z.infer<typeof OrderModel> {
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedOrderModel: z.ZodSchema<CompleteOrder> = z.lazy(() => OrderModel.extend({
-  organization: RelatedOrganizationModel,
-}))
+export const RelatedOrderModel: z.ZodSchema<CompleteOrder> = z.lazy(() =>
+  OrderModel.extend({
+    organization: RelatedOrganizationModel,
+  })
+)

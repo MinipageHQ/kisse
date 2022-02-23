@@ -3,7 +3,7 @@ import db from "db"
 import { z } from "zod"
 
 const UpdateTransaction = z.object({
-  id: z.number(),
+  id: z.string().cuid(),
   name: z.string(),
 })
 

@@ -10,8 +10,8 @@ const jsonSchema: z.ZodSchema<Json> = z.lazy(() => z.union([literalSchema, z.arr
 
 export const AssetModel = z.object({
   id: z.string(),
-  name: z.string(),
-  description: z.string(),
+  name: z.string().nullish(),
+  description: z.string().nullish(),
   status: z.nativeEnum(AssetStatus),
   createdAt: z.date(),
   updatedAt: z.date(),

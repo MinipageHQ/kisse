@@ -46,15 +46,20 @@ model Organization {
   privateMetadata Json?
 
   stripeSellerId   String?
+  stripeCustomerId String?
+
   defaultDomain    Domain?            @relation(name: "defaultDomainForOrg", fields: [defaultDomainId], references: [id])
   defaultDomainId  String?
   domains          Domain[]
   externalProfiles ExternalProfiles[]
 
   platformFeatures PlatformFeatures[]
-  ApiKey           ApiKey[]           @relation("organizationApiKey")
-  AuditLog         AuditLog[]         @relation("organizationAuditLog")
-  Webhook          Webhook[]          @relation("organizationWebhook")
+
+
+  ApiKey        ApiKey[]        @relation("organizationApiKey")
+  AuditLog      AuditLog[]      @relation("organizationAuditLog")
+  Webhook       Webhook[]       @relation("organizationWebhook")
+  AssetCategory AssetCategory[]
 }
 
 model Membership {
@@ -94,9 +99,12 @@ enum PlatformFeatures {
   NOTION_LINKS
   WORKFLOWS
   CRYPTOCURRENCIES
+  CRYPTOCURRENCIES_NFT
   ASSETS
   ASSETS_SUBSCRIPTIONS
-  DONATIONS
+  ASSETS_TIME_BASED
+  ASSETS_DONATIONS
+  SHOPIFY
   VIDEO_UPLOAD
 }
 
@@ -243,8 +251,8 @@ model Transaction {
   assetType       Json
   status          String
   statusHistory   Json?
-  metadata        Json?
-  privateMetadata Json?
+  metadata        Json   @default("{}")
+  privateMetadata Json   @default("{}")
 
   cancellationReason String
   ownerId            Int
@@ -286,8 +294,8 @@ model Order {
   currency         Currency
   payerId          String
   paymentAttempted Int
-  metadata         Json?
-  platformMetadata Json?
+  metadata         Json     @default("{}")
+  platformMetadata Json     @default("{}")
 }
 
 enum AssetStatus {
@@ -316,8 +324,8 @@ model Webhook {
 model Asset {
   id String @id @default(cuid())
 
-  name           String
-  description    String
+  name           String?
+  description    String?
   status         AssetStatus // 'draft' | 'active'
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -331,12 +339,12 @@ model Asset {
   assetTypeId String
 
 
-  price    Float
-  currency Currency
+  price    Float    @default(0)
+  currency Currency @default(USD)
 
   metadata Json?
 
-  quantity Int
+  quantity Int @default(-1) // -1 means unlimited
 
   transactions Transaction[]
 }
@@ -347,9 +355,10 @@ model AssetType {
   updatedAt DateTime @updatedAt
   assets    Asset[]
 
-  timeBased          Boolean
-  infiniteStock      Boolean
-  name               String
+  timeBased     Boolean
+  infiniteStock Boolean
+  name          String  @unique
+
   pricing            Json
   timing             Json    @default("{}")
   unavailableWhen    Json    @default("{}")
@@ -357,6 +366,10 @@ model AssetType {
   isDefault          Boolean @default(false)
   active             Boolean @default(false)
 
+  requiredFeatures PlatformFeatures[]
+
+  metadata        Json @default("{}")
+  privateMetadata Json @default("{}")
 }
 
 model AssetCategory {
@@ -366,10 +379,12 @@ model AssetCategory {
 
   name String
 
-  metadata Json?
+  metadata        Json @default("{}")
+  privateMetadata Json @default("{}")
 
-
-  assets Asset[]
+  assets         Asset[]
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 }
 
 enum DomainProvider {

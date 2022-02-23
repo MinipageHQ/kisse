@@ -4,7 +4,7 @@ import { z } from "zod"
 
 const GetAsset = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.string().cuid()
 })
 
 export default resolver.pipe(resolver.zod(GetAsset), resolver.authorize(), async ({ id }) => {

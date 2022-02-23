@@ -2,8 +2,7 @@ import DashboardLayout from "app/core/layouts/DashboardLayout"
 import { BlitzPage, getSession } from "blitz"
 import db from "db"
 import stripe from "integrations/stripe"
-import { Suspense } from "react"
-import { OnboardingWhatsNext } from "./welcome"
+
 
 export const getServerSideProps = async ({ req, res }) => {
   const session = await getSession(req, res)
@@ -55,7 +54,6 @@ export const getServerSideProps = async ({ req, res }) => {
         }
       }
     }
-    // stripe.accounts.createLoginLink()
   }
 
   return { props: {} }

@@ -1,8 +1,8 @@
-import { InputWrapper, Input, Textarea } from "@mantine/core"
+import { InputWrapper, Input, Textarea, NumberInput } from "@mantine/core"
 import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from "react"
 import { useField, UseFieldConfig } from "react-final-form"
 
-export interface LabeledTextAreaFieldProps
+export interface LabeledNumberFieldProps
   extends PropsWithoutRef<JSX.IntrinsicElements["textarea"]> {
   /** Field name. */
   name: string
@@ -16,7 +16,7 @@ export interface LabeledTextAreaFieldProps
   fieldProps?: UseFieldConfig<string>
 }
 
-export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextAreaFieldProps>(
+export const LabeledNumberField = forwardRef<HTMLTextAreaElement, LabeledNumberFieldProps>(
   ({ name, label, outerProps, fieldProps, labelProps, helpText, ...props }, ref) => {
     const {
       input,
@@ -28,15 +28,16 @@ export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextA
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
-    return (<InputWrapper
-      id={name}
-      required
+    return (<NumberInput
       label={label}
-      description={helpText}
+
+      required
       error={touched && normalizedError}
-    >
-      <Textarea {...input} id={name} disabled={submitting} ref={ref} />
-    </InputWrapper>)
+      description={helpText}
+      stepHoldDelay={500}
+      stepHoldInterval={100}
+      {...input} id={name} disabled={submitting}
+    />)
     return (
       <div {...outerProps}>
         <label {...labelProps}>
@@ -56,4 +57,4 @@ export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextA
   }
 )
 
-export default LabeledTextAreaField
+export default LabeledNumberField

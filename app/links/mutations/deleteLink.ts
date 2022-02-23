@@ -3,7 +3,7 @@ import db from "db"
 import { z } from "zod"
 
 const DeleteLink = z.object({
-  id: z.number(),
+  id: z.string().cuid(),
 })
 
 export default resolver.pipe(resolver.zod(DeleteLink), resolver.authorize(), async ({ id }) => {

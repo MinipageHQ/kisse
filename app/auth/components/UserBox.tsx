@@ -24,7 +24,7 @@ const UserInfo = () => {
         <div>
           User id: <code>{currentUser.id}</code>
           <br />
-          User role: <code>{currentUser.role}</code>
+          User role: <code>{currentUser.roles.join(', ')}</code>
         </div>
       </>
     )
@@ -36,7 +36,7 @@ const UserInfo = () => {
             <strong>Sign Up</strong>
           </a>
         </Link>
-        <Link href={Routes.LoginPage()}>
+        <Link href={Routes.LoginPage({})}>
           <a className="button small">
             <strong>Login</strong>
           </a>

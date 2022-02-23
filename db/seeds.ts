@@ -15,22 +15,78 @@ const assetTypeDefaults = {
 const assetTypes = [
   {
     ...assetTypeDefaults,
-    name: "Single Payment - Assets with Deliverables",
+    name: "DIGITAL_ASSET",
+    metadata: {
+      label: "Digital Asset (One-time payment)",
+      description: "Sell files, access, databases, and more with a one-time payment"
+    },
+    privateMetadata: {
+      requiredFeatures: ["ASSETS"],
+      description: "Single Payment - Assets with Deliverables",
+    },
+    isDefault: true
   },
   {
     ...assetTypeDefaults,
-    name: "Single Payment - Assets with Deliverables (Limited Availability)",
-    timeBased: false,
-    infiniteStock: true,
+    name: "DIGITAL_ASSET_SUBSCRIPTION",
+    metadata: {
+      label: "Digital Asset (Subscription)",
+      description: "Sell files, access, databases, and more with a subscription"
+    },
+    privateMetadata: {
+      requiredFeatures: ["ASSETS_SUBSCRIPTIONS"],
+      description: "Subscription/Recurring Payment - Assets with Deliverables"
+    },
   },
   {
     ...assetTypeDefaults,
-    name: "Subscription - Generic",
-    timeBased: true,
+    name: "SHOPIFY",
+    metadata: {
+      label: "Shopify Product",
+      description: "Sell with Shopify on your Saltana space"
+    },
+    privateMetadata: {
+      description: "Product - Managed with Shopify",
+      requiredFeatures: ["SHOPIFY"]
+    },
+    isDefault: false
   },
   {
     ...assetTypeDefaults,
-    name: "Single Payment - Time-based Services",
+    name: "NFT",
+    metadata: {
+      label: "NFT",
+      description: "Sell non-fungible tokens with multiple payment options"
+    },
+    privateMetadata: {
+      description: "NFT - Managed with Saltana",
+      requiredFeatures: ["CRYPTOCURRENCIES_NFT"]
+    },
+    isDefault: false
+  },
+  // {
+  //   ...assetTypeDefaults,
+  //   name: "Single Payment - Assets with Deliverables (Limited Availability)",
+  //   timeBased: false,
+  //   infiniteStock: true,
+  // },
+  // {
+  //   ...assetTypeDefaults,
+  //   name: "Subscription - Generic",
+  //   timeBased: true,
+  // },
+  {
+    ...assetTypeDefaults,
+    name: "TIME_BASED",
+    metadata: {
+      label: "Time-based services",
+      description: "Sell limited time access to a resource, file or even your calendar"
+    },
+    privateMetadata: {
+      description: "Single Payment - Time Based",
+      requiredFeatures: ["ASSETS_TIME_BASED"]
+    },
+    isDefault: false,
     timeBased: true,
     timing: {
       timeUnit: "m",
@@ -38,6 +94,20 @@ const assetTypes = [
       minDuration: { m: 15 },
     },
   },
+  {
+    ...assetTypeDefaults,
+    name: "DONATIONS",
+    metadata: {
+      label: "Donations",
+      description: "Accep donations on your Saltana space"
+    },
+    privateMetadata: {
+      description: "Single Payment - Donation",
+      requiredFeatures: ["ASSETS_DONATIONS"]
+    },
+    isDefault: false,
+  },
+
 ]
 
 const categories = [
@@ -52,6 +122,9 @@ const categories = [
   },
   {
     name: "Dataset",
+  },,
+  {
+    name: "Other",
   },
 ]
 
@@ -63,19 +136,30 @@ const categories = [
  * realistic data.
  */
 const seed = async () => {
-  for (let i = 0; i < 5; i++) {
-    await db.inviteCode.create({ data: { code: "TESTCODE" + i, referrer: "dev" } })
+  console.log("seeding 10 invite codes")
+  for (let i = 0; i < 10; i++) {
+    const code = "TESTCODE" + i
+    const referrer = "dev"
+    await db.inviteCode.upsert({
+      where: { code },
+      update: { code, referrer },
+      create: { code, referrer },
+    })
   }
 
+  console.log("seeding asset categories")
   await db.assetCategory.createMany({
     data: [...categories],
     skipDuplicates: true,
   })
+  console.log("seeding asset types")
 
   await db.assetType.createMany({
     data: [...assetTypes],
     skipDuplicates: true,
   })
+
+  console.log("seeding native domains")
 
   await db.domain.createMany({
     data: [
@@ -89,6 +173,7 @@ const seed = async () => {
       },
     ],
   })
+  /*
   const defaultPassword = "only works in dev"
   const passwordHasher = (password = defaultPassword) => SecurePassword.hash(password.trim())
 
@@ -165,6 +250,7 @@ const seed = async () => {
     createUser("u4", "USER"),
     createUser("u5", "USER"),
   ])
+  */
 }
 
 export default seed

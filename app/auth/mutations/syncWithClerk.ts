@@ -60,14 +60,14 @@ function convertClerkUserObjectToInternalUserObject(
 
   const commonData = {
     name,
-    clerkDataSnapshot: JSON.stringify({
+    clerkDataSnapshot: {
       publicMetadata: clerkUser.publicMetadata,
       privateMetadata: clerkUser.privateMetadata,
       unsafeMetadata: clerkUser.unsafeMetadata,
       gender: clerkUser.gender,
       birthday: clerkUser.birthday,
       profileImageUrl: clerkUser.profileImageUrl,
-    }),
+    } as any,
     emails,
   }
 

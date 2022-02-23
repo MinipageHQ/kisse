@@ -1,16 +1,19 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
 import getLink from "../queries/getLink"
 import deleteLink from "../mutations/deleteLink"
 
-export const LinkShow = ({ linkId }) => {
+export const ShowLinkPage = ({ linkId }: { linkId: string }) => {
   const router = useRouter()
   // const assetId = useParam("assetId", "number")
   const [deleteLinkMutation] = useMutation(deleteLink)
-  const [link] = useQuery(getLink, { id: linkId }, {
-    enabled: linkId && linkId.length > 0
-  })
+  const [link] = useQuery(
+    getLink,
+    { id: linkId },
+    {
+      enabled: linkId && linkId.length > 0,
+    }
+  )
 
   return (
     <>
@@ -38,18 +41,5 @@ export const LinkShow = ({ linkId }) => {
     </>
   )
 }
-
-const ShowLinkPage: BlitzPage = ({ linkId }) => {
-  return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <LinkShow linkId={linkId} />
-      </Suspense>
-    </div>
-  )
-}
-
-ShowLinkPage.authenticate = true
-ShowLinkPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default ShowLinkPage

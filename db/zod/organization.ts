@@ -17,6 +17,7 @@ export const OrganizationModel = z.object({
   metadata: jsonSchema,
   privateMetadata: jsonSchema,
   stripeSellerId: z.string().nullish(),
+  stripeCustomerId: z.string().nullish(),
   defaultDomainId: z.string().nullish(),
   platformFeatures: z.nativeEnum(PlatformFeatures).array(),
 })
