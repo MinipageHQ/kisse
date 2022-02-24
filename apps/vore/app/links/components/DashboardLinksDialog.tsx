@@ -19,6 +19,7 @@ export default function DashboardLinksDialog() {
   if (!linkId) {
     return null
   }
+
   return (
     <Modal
       opened={typeof linkId === 'string'}
