@@ -66,3 +66,5 @@ public/.vitrodist
 
 # turbo
 .turbo
+
+.next
