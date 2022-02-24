@@ -1,0 +1,512 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "filterJson"]
+
+}
+
+generator zod {
+  provider = "zod-prisma"
+  // (default) the directory where generated zod schemas will be saved
+  output   = "../../apps/vore/db/zod"
+
+  relationModel = true
+
+  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+  // (default) uses prisma's scheme for JSON field nullability
+  prismaJsonNullability = true
+}
+
+// --------------------------------------
+
+model Organization {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String?
+  description String?
+
+  memberships Membership[]
+  documents   Document[]
+
+  assets       Asset[]
+  orders       Order[]
+  transactions Transaction[]
+  links        Link[]
+
+  profileMedia    Json?
+  metadata        Json?
+  privateMetadata Json?
+
+  stripeSellerId   String?
+  stripeCustomerId String?
+
+  defaultDomain    Domain?            @relation(name: "defaultDomainForOrg", fields: [defaultDomainId], references: [id])
+  defaultDomainId  String?
+  domains          Domain[]
+  externalProfiles ExternalProfiles[]
+
+  platformFeatures PlatformFeatures[]
+
+
+  ApiKey        ApiKey[]        @relation("organizationApiKey")
+  AuditLog      AuditLog[]      @relation("organizationAuditLog")
+  Webhook       Webhook[]       @relation("organizationWebhook")
+  AssetCategory AssetCategory[]
+}
+
+model Membership {
+  id   String         @id @default(cuid())
+  role MembershipRole
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  // When the user joins, we will clear out the name and email and set the user.
+  invitedName  String?
+  invitedEmail String?
+
+  @@unique([organizationId, invitedEmail])
+}
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  USER
+}
+
+// The owners of the SaaS (you) can have a SUPERADMIN role to access all data
+enum GlobalRole {
+  SUPERADMIN // Not really superadmin but it's for Saltana employees
+  CREATOR
+  USER // Basically people that bought something, we might only have an e-mail or phone number and nothing else on these people
+}
+
+enum PlatformFeatures {
+  STRIPE_CONNECT
+  GOOGLE_ANALYTICS
+  WEBHOOKS
+  NOTION_LINKS
+  WORKFLOWS
+  CRYPTOCURRENCIES
+  CRYPTOCURRENCIES_NFT
+  ASSETS
+  ASSETS_SUBSCRIPTIONS
+  ASSETS_TIME_BASED
+  ASSETS_DONATIONS
+  SHOPIFY
+  VIDEO_UPLOAD
+}
+
+model InviteCode {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  usedAt    DateTime?
+  name      String?
+  referrer  String
+  code      String    @unique
+  usedBy    User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model User {
+  id                String            @id @default(cuid())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  name              String?
+  hashedPassword    String?
+  prefersEmailId    String?
+  prefersEmail      Email?            @relation("userPrefersEmail", fields: [prefersEmailId], references: [id])
+  emails            Email[]           @relation("userEmail")
+  notificationEmail NotificationEmail @default(ACCOUNT)
+
+  countryCode String @default("us")
+  timezone    String @default("America/Los_Angeles")
+
+  roles             GlobalRole[]
+  tokens            Token[]
+  sessions          Session[]
+  memberships       Membership[]
+  inviteCodes       InviteCode[]
+  active            Boolean      @default(true)
+  metadata          Json         @default("{}")
+  privateMetadata   Json         @default("{}")
+  clerkId           String?      @unique
+  clerkDataSnapshot Json         @default("{}")
+  ApiKey            ApiKey[]     @relation("userApiKey")
+  AuditLog          AuditLog[]   @relation("userAuditLog")
+
+  stripeCustomerId String?
+  @@index([prefersEmailId], name: "prefersEmailId")
+}
+
+model Email {
+  createdAt  DateTime @default(now())
+  email      String //as long as we use clerk we dont need this: @unique
+  emailSafe  String //as long as we use clerk we dont need this: @unique
+  id         String   @id @default(cuid())
+  isVerified Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation("userEmail", fields: [userId], references: [id])
+  users      User[]   @relation("userPrefersEmail")
+
+  clerkEmailId String? @unique
+  @@index([userId], name: "userId")
+}
+
+model Session {
+  id                 String    @id @default(cuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expiresAt          DateTime?
+  handle             String    @unique
+  hashedSessionToken String?
+  antiCSRFToken      String?
+  publicData         String?
+  privateData        String?
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model Token {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  hashedToken String
+  type        String
+  // See note below about TokenType enum
+  // type        TokenType
+  expiresAt   DateTime
+  sentTo      String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([hashedToken, type])
+}
+
+// NOTE: It's highly recommended to use an enum for the token type
+//       but enums only work in Postgres.
+//       See: https://blitzjs.com/docs/database-overview#switch-to-postgre-sql
+enum TokenType {
+  RESET_PASSWORD
+}
+
+enum LinkType {
+  checkout
+  redirect
+  linklist
+  embed
+}
+
+enum LinkProvider {
+  native
+  notion
+  typeform
+}
+
+model Link {
+  id     String   @id @default(cuid()) /// @zod.cuid().optional()
+  slug   String
+  type   LinkType
+  target String /// @zod.url({ message: "Target must be a valid URL" })
+
+  provider        LinkProvider?
+  organization    Organization  @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  domain          Domain        @relation(fields: [domainId], references: [id])
+  domainId        String
+  metadata        Json          @default("{}")
+  privateMetadata Json          @default("{}")
+  statsSnapshot   Json          @default("{}")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([domainId, slug])
+}
+
+model Transaction {
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  asset           Asset  @relation(fields: [assetId], references: [id])
+  assetSnapshot   Json
+  assetTypeId     String
+  assetType       Json
+  status          String
+  statusHistory   Json?
+  metadata        Json   @default("{}")
+  privateMetadata Json   @default("{}")
+
+  cancellationReason String
+  ownerId            Int
+  takerId            Int
+  quantity           Int
+  startDate          DateTime
+  endDate            DateTime
+  duration           Json?
+  timeunit           String
+  unitPrice          Float
+  value              Float
+  ownerAmount        Float
+
+  takerAmount    Float
+  platformAmount Float
+  ownerFees      Float
+  takerFees      Float
+  currency       Currency
+  completedAt    DateTime
+  cancelledAt    DateTime
+
+  assetId String
+}
+
+model Order {
+  id           String       @id @default(cuid())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  organizationId String
+
+
+  lines            Json
+  moves            Json
+  amountDue        Float
+  amountPaid       Float
+  amountRemaining  Float
+  currency         Currency
+  payerId          String
+  paymentAttempted Int
+  metadata         Json     @default("{}")
+  platformMetadata Json     @default("{}")
+}
+
+enum AssetStatus {
+  DRAFT
+  ARCHIVED
+  LIVE
+  SUSPENDED
+}
+
+model Webhook {
+  contentType    String       @default("application/json")
+  createdAt      DateTime     @default(now())
+  event          String
+  id             String       @id @default(cuid())
+  isActive       Boolean      @default(false)
+  lastFiredAt    DateTime?
+  organizationId String
+  secret         String?
+  updatedAt      DateTime     @updatedAt
+  url            String
+  organization   Organization @relation("organizationWebhook", fields: [organizationId], references: [id])
+
+  // @@index([organizationId], name: "organizationId")
+}
+
+model Asset {
+  id String @id @default(cuid())
+
+  name           String?
+  description    String?
+  status         AssetStatus // 'draft' | 'active'
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  assetCategory   AssetCategory? @relation(fields: [assetCategoryId], references: [id])
+  assetCategoryId String?
+
+  assetType   AssetType @relation(fields: [assetTypeId], references: [id])
+  assetTypeId String
+
+
+  price    Float    @default(0)
+  currency Currency @default(USD)
+
+  metadata Json?
+
+  quantity Int @default(-1) // -1 means unlimited
+
+  transactions Transaction[]
+}
+
+model AssetType {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  assets    Asset[]
+
+  timeBased     Boolean
+  infiniteStock Boolean
+  name          String  @unique
+
+  pricing            Json
+  timing             Json    @default("{}")
+  unavailableWhen    Json    @default("{}")
+  transactionProcess Json    @default("{}")
+  isDefault          Boolean @default(false)
+  active             Boolean @default(false)
+
+  requiredFeatures PlatformFeatures[]
+
+  metadata        Json @default("{}")
+  privateMetadata Json @default("{}")
+}
+
+model AssetCategory {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  metadata        Json @default("{}")
+  privateMetadata Json @default("{}")
+
+  assets         Asset[]
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+}
+
+enum DomainProvider {
+  NATIVE
+  VERCEL
+}
+
+model Domain {
+  id             String         @id @default(cuid())
+  domain         String         @unique
+  vercelId       String?
+  status         String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  links          Link[]
+  organizations  Organization[] @relation("defaultDomainForOrg")
+
+  provider           DomainProvider @default(NATIVE)
+  vercelDataSnapshot Json           @default("{}")
+  isVerified         Boolean        @default(false)
+
+  verificationCode String?
+
+  // @@index([organizationId], name: "organizationId")
+}
+
+model Document {
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  content         Json?
+  metadata        Json?
+  privateMetadata Json?
+
+}
+
+model ApiKey {
+  id                   String        @id @default(cuid())
+  createdAt            DateTime      @default(now())
+  description          String?
+  ipRestrictions       Json?
+  apiKey               String        @unique
+  name                 String?
+  organizationId       String?
+  referrerRestrictions Json?
+  scopes               Json?
+  updatedAt            DateTime      @updatedAt
+  userId               String?
+  auditLogs            AuditLog[]    @relation("apiKeyAuditLog")
+  organization         Organization? @relation("organizationApiKey", fields: [organizationId], references: [id])
+  user                 User?         @relation("userApiKey", fields: [userId], references: [id])
+
+  // @@index([organizationId], name: "organizationId")
+  // @@index([userId], name: "userId")
+}
+
+model AuditLog {
+  createdAt       DateTime      @default(now())
+  event           String
+  rawEvent        String
+  id              String        @id @default(cuid())
+  organizationId  String?
+  updatedAt       DateTime      @updatedAt
+  userId          String?
+  apiKeyId        String?
+  ipAddress       String?
+  userAgent       String?
+  city            String?
+  region          String?
+  timezone        String?
+  countryCode     String?
+  browser         String?
+  operatingSystem String?
+  organization    Organization? @relation("organizationAuditLog", fields: [organizationId], references: [id])
+  user            User?         @relation("userAuditLog", fields: [userId], references: [id])
+  apiKey          ApiKey?       @relation("apiKeyAuditLog", fields: [apiKeyId], references: [id])
+
+  // Organization Organization? @relation("groupAuditLog", fields: [organizationId], references: [id])
+  // @@index([userId], name: "userId")
+  @@index([apiKeyId], name: "apiKeyId")
+  @@index([organizationId], name: "organizationId")
+}
+
+enum Currency {
+  USD
+  EUR
+  TRY
+}
+
+enum ExternalProfileService {
+  TWITTER
+  INSTAGRAM
+  GITHUB
+  TIKTOK
+  MEDIUM
+  NOTION
+}
+
+model ExternalProfiles {
+  id String @id @default(cuid())
+
+  externalId String
+  service    ExternalProfileService
+
+
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  verificationLastCheckedAt DateTime
+  verificationPassed        String
+  verificationEntity        String
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+}
+
+enum NotificationEmail {
+  ACCOUNT
+  UPDATES
+  PROMOTIONS
+}

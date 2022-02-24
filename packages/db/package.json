@@ -1,0 +1,8 @@
+{
+  "name": "@saltana/db",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "schema.prisma"
+  ]
+}
