@@ -1,4 +1,4 @@
-import { Organization } from "@prisma/client"
+import { Organization } from "db"
 
 /**
  * Checks if an organization has finished onboarding

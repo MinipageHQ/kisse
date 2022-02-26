@@ -13,14 +13,16 @@ const RedirectToSSO = () => {
     router.push("/auth/sso/clerk")
   }, [router])
   return null
-
 }
 const LoginPage: BlitzPage = () => {
-
   return (
     <div>
-      <SignedOut><SignIn /></SignedOut>
-      <SignedIn><RedirectToSSO /></SignedIn>
+      <SignedOut>
+        <SignIn />
+      </SignedOut>
+      <SignedIn>
+        <RedirectToSSO />
+      </SignedIn>
       {/* <LoginForm
         onSuccess={(_user) => {
           const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
@@ -34,8 +36,7 @@ const LoginPage: BlitzPage = () => {
 LoginPage.redirectAuthenticatedTo = "/"
 LoginPage.getLayout = (page) => (
   <AppLayout title="Log In" showUserBox={false}>
-    <WrappedAuthProvider>  {page}</WrappedAuthProvider>
-
+    <WrappedAuthProvider> {page}</WrappedAuthProvider>
   </AppLayout>
 )
 

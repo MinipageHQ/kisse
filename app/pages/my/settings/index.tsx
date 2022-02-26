@@ -6,22 +6,21 @@ import DashboardLayout from "app/core/layouts/DashboardLayout"
 import { UserProfile } from "@clerk/clerk-react"
 import AuthProvider from "app/auth/components/AuthProvider"
 
-const MySettingsSecurityPage: BlitzPage = () => {
+const MySettingsPage: BlitzPage = () => {
   return (
     <div>
-
       <Head>
         <title>Space </title>
       </Head>
 
-
       <AuthProvider>
-        <UserProfile path="/my/security" hideNavigation={true} only={"security"} /></AuthProvider>
+        <UserProfile routing="path" path="/my/settings" hideNavigation={true} only={"account"} />
+      </AuthProvider>
     </div>
   )
 }
 
-MySettingsSecurityPage.authenticate = true
-MySettingsSecurityPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
+MySettingsPage.authenticate = true
+MySettingsPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
 
-export default MySettingsSecurityPage
+export default MySettingsPage

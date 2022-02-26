@@ -1,7 +1,0 @@
-{
-    "node_modules/@vitro/cli/reexports/inspect-mode.css.cssjs": ".bundless/web_modules/inspect-mode.css-SQTK2HFG.js",
-    "node_modules/@vitro/cli/reexports/inspector.css.cssjs": ".bundless/web_modules/inspector.css-UNZF737V.js",
-    "node_modules/@vitro/cli/reexports/ui.js": ".bundless/web_modules/ui-PW77SWMI.js",
-    "node_modules/react/index.js": ".bundless/web_modules/index-35SDKCO5.js",
-    "node_modules/react-dom/index.js": ".bundless/web_modules/index-ZMPPRMYY.js"
-}

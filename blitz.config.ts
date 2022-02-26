@@ -20,12 +20,6 @@ const config: BlitzConfig = {
 
       return next()
     },
-
-    async (req, res, next) => {
-      // const url = req.nextUrl.clone(); // clone the request url
-      // const { pathname } = req.nextUrl; // get pathname of request (e.g. /blog-slug)
-      // const hostname = req.headers.get("host"); // get hostname of request (e.g. demo.vercel.pub)
-    },
   ],
   images: {
     domains: [
