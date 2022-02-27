@@ -1,5 +1,5 @@
 {
-  "name": "@saltana/vore",
+  "name": "@saltanahq/kisse",
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently --raw \"blitz dev\" 'quirrel'",
@@ -19,7 +19,7 @@
     "dev:tunnel": "ssh -R 80:localhost:3000 localhost.run"
   },
   "prisma": {
-    "schema": "db/schema.prisma",
+    "schema": "./node_modules/@saltanahq/database/prisma/schema.prisma",
     "seed": "db/seeds.ts"
   },
   "prettier": {
