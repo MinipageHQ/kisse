@@ -28,6 +28,7 @@ export async function userCreated(job: Job<UserCreatedEvent>) {
 
   console.log("got user", user)
 
+  return userSync(job)
   // // create stripe user
 }
 export async function userSync(job: Job<UserSyncEvent>) {
@@ -82,7 +83,18 @@ export async function userSync(job: Job<UserSyncEvent>) {
     }
 
     console.log("created a stripe customer with object", stripeUserObject)
-    promises.push(stripe.customers.create(stripeUserObject))
+    promises.push(
+      stripe.customers.create(stripeUserObject).then((customer) =>
+        db.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            stripeCustomerId: customer.id,
+          },
+        })
+      )
+    )
   }
 
   await Promise.all(promises)

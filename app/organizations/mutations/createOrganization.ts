@@ -13,7 +13,7 @@ async function isDomainAvailable(requestedDomain: string) {
     where: { domain: requestedDomain },
     select: { domain: true },
   })
-  return domain?.domain ? true : false
+  return domain?.domain ? false : true
 }
 export default resolver.pipe(
   resolver.zod(CreateOrganizationWithInviteCodeSchema),

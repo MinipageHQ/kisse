@@ -61,11 +61,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return { props: {} }
 }
 
-const DashboardBillingPage: BlitzPage = () => {
+const MyPaymentsPage: BlitzPage = () => {
   return <div>Something went wrong and we can&apos;t connect you to our payment provider.</div>
 }
 
-DashboardBillingPage.authenticate = true
-DashboardBillingPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
+MyPaymentsPage.authenticate = true
+MyPaymentsPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
 
-export default DashboardBillingPage
+export default MyPaymentsPage

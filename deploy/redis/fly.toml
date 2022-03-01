@@ -1,0 +1,24 @@
+# fly.toml file generated for saltana-redis on 2022-03-01T20:47:29+03:00
+
+app = "saltana-redis"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  image = "flyio/redis:6.2.6"
+
+[env]
+
+[metrics]
+  port = 9091
+  path = "/metrics"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[mounts]]
+  destination = "/data"
+  source = "redis_server"
