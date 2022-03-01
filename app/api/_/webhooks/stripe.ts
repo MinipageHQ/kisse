@@ -1,8 +1,8 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
-import handleStripeEvent from "../jobs/handle-stripe-event"
+import { stripeWebhooksQueue } from "bull/queues"
 
 const handler = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
-  const { id } = await handleStripeEvent.enqueue(req.body)
+  const { id } = await stripeWebhooksQueue.add(req.body.type, req.body)
   console.log(`Queued a Stripe event: ${JSON.stringify({ id }, null, 2)}`)
   res.statusCode = 200
   res.setHeader("Content-Type", "application/json")

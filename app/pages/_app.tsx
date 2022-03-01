@@ -9,30 +9,30 @@ import {
 } from "blitz"
 import LoginForm from "app/auth/components/LoginForm"
 
-import { MantineProvider, NormalizeCSS, GlobalStyles } from '@mantine/core';
-import { NotificationsProvider } from '@mantine/notifications';
+import { MantineProvider, NormalizeCSS, GlobalStyles } from "@mantine/core"
+import { NotificationsProvider } from "@mantine/notifications"
 
 import "app/core/styles/index.css"
+import AuthErrorPage from "app/auth/components/AuthErrorPage"
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-
     <ErrorBoundary
       FallbackComponent={RootErrorFallback}
       onReset={useQueryErrorResetBoundary().reset}
     >
       <MantineProvider
-        theme={{
-          // colorScheme: 'dark',
-        }}
+        theme={
+          {
+            // colorScheme: 'dark',
+          }
+        }
       >
         <NormalizeCSS />
         <GlobalStyles />
-        <NotificationsProvider>
-          {getLayout(<Component {...pageProps} />)}
-        </NotificationsProvider>
+        <NotificationsProvider>{getLayout(<Component {...pageProps} />)}</NotificationsProvider>
       </MantineProvider>
     </ErrorBoundary>
   )
@@ -40,7 +40,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
 function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
-    return <LoginForm onSuccess={resetErrorBoundary} />
+    // return <AuthErrorPage onSuccess={resetErrorBoundary} />
+    return <AuthErrorPage />
   } else if (error instanceof AuthorizationError) {
     return (
       <ErrorComponent

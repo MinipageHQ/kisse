@@ -14,17 +14,12 @@ const CreateAsset = z.object({
 })
 
 export const CreateAssetSchema = AssetModel.pick({
-  organizationId: true,
   name: true,
   description: true,
-})
-  .extend({
-    // inviteCode: z.string().min(1).max(24),
-  })
-  .partial({})
+  assetCategoryId: true,
+  assetTypeId: true,
+  price: true,
+  currency: true,
+}).required()
 
-export const UpdateAssetSchema = AssetModel.pick({})
-  .extend({
-    // inviteCode: z.string().min(1).max(24),
-  })
-  .partial({})
+export const UpdateAssetSchema = AssetModel.pick({}).extend({}).partial({})

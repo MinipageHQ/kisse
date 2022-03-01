@@ -1,4 +1,4 @@
-import assert from "app/core/utils"
+import { assert } from "app/core/utils"
 
 export const PLATFORM_DOMAINS = (process.env.NEXT_PUBLIC_PLAFORM_DOMAINS as string).split(",")
 

@@ -23,7 +23,7 @@ export const Organization = z.object({
   slug: username,
   description: z.string().min(10).max(240).optional(),
   profileMedia: ProfileMedia.optional(),
-  defaultDomainId: z.string().cuid().optional(),
+  defaultDomainId: z.string().cuid(),
 })
 
 export const CreateOrganizationWithInviteCodeSchema = Organization.extend({
@@ -35,7 +35,6 @@ export const OnboardedOrganizationSchema = OrganizationModel.pick({
   description: true,
   profileMedia: true,
   defaultDomainId: true,
-
 })
   .extend({
     slug: username,

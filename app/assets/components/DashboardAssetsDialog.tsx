@@ -22,6 +22,7 @@ export default function DashboardAssetsDialog() {
       opened={typeof assetId === "string"}
       onClose={() => push("/dashboard/assets")}
       title={modalTitle}
+      size={assetId === "new" ? "md" : "xl"}
     >
       <Suspense fallback={<Skeleton visible />}>
         {assetId === "new" ? (

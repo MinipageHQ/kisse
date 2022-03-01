@@ -1,6 +1,5 @@
-import { SecurePassword } from "blitz"
-import safeEmail from "app/auth/utils/safeEmail"
-import db, { GlobalRole } from "./index"
+import db from "./index"
+import getEnv from "app/core/utils/getEnv"
 
 const assetTypeDefaults = {
   timeBased: false,
@@ -136,43 +135,71 @@ const categories = [
  * realistic data.
  */
 const seed = async () => {
+  const promises = []
   console.log("seeding 10 invite codes")
   for (let i = 0; i < 10; i++) {
     const code = "TESTCODE" + i
     const referrer = "dev"
-    await db.inviteCode.upsert({
-      where: { code },
-      update: { code, referrer },
-      create: { code, referrer },
-    })
+    promises.push(
+      db.inviteCode.upsert({
+        where: { code },
+        update: { code, referrer },
+        create: { code, referrer },
+      })
+    )
   }
 
   console.log("seeding asset categories")
+
+  // promises.push(
+  //   ...categories.map((category) => {
+  //     return db.assetCategory.upsert({
+  //       where: { name: category.name },
+  //       update: { code, referrer },
+  //       create: { code, referrer },
+  //     })
+  //   })
+  // )
+  // await db.assetCategory.upsert({
+  //   data: [...(categories as any)],
+  //   skipDuplicates: true,
+  // })
   await db.assetCategory.createMany({
     data: [...(categories as any)],
     skipDuplicates: true,
   })
   console.log("seeding asset types")
 
-  await db.assetType.createMany({
-    data: [...assetTypes],
-    skipDuplicates: true,
-  })
+  promises.push(
+    ...assetTypes.map((assetType) =>
+      db.assetType.upsert({
+        where: { name: assetType.name },
+        create: { ...assetType },
+        update: { ...assetType },
+      })
+    )
+  )
 
-  console.log("seeding native domains")
+  const platformDomains = getEnv("NEXT_PUBLIC_PLAFORM_DOMAINS").split(",")
+  console.log("seeding native domains, which are:", platformDomains)
 
-  await db.domain.createMany({
-    data: [
-      {
-        domain: "saltana.dev",
-        provider: "NATIVE",
-      },
-      {
-        domain: "saltana.com",
-        provider: "NATIVE",
-      },
-    ],
-  })
+  const domains: { domain: string; provider: "NATIVE" }[] = platformDomains.map((domain) => ({
+    domain,
+    provider: "NATIVE",
+  }))
+
+  promises.push(
+    ...domains.map((domain) =>
+      db.domain.upsert({
+        where: { domain: domain.domain },
+        update: { ...domain },
+        create: { ...domain },
+      })
+    )
+  )
+
+  await Promise.all(promises)
+  // Users are created via Clerk. It would take too much time and effot to support both internal auth and Clerk and test it when we can just rely on Clerk
   /*
   const defaultPassword = "only works in dev"
   const passwordHasher = (password = defaultPassword) => SecurePassword.hash(password.trim())

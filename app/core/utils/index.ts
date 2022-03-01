@@ -2,7 +2,7 @@
 import { Ctx } from "blitz"
 import { Prisma, GlobalRole } from "db"
 
-export default function assert(condition: any, message: string): asserts condition {
+export function assert(condition: any, message: string): asserts condition {
   if (!condition) throw new Error(message)
 }
 

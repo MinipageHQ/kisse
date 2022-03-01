@@ -1,8 +1,8 @@
 import { Group, Avatar, Text, Select } from "@mantine/core"
-import { ErrorComponent, useQuery } from "blitz"
+import { useQuery } from "blitz"
 import { forwardRef } from "react"
 import { useField } from "react-final-form"
-import getAssetTypes from "../queries/getAssetTypes"
+import getAssetCategories from "../queries/getAssetCategories"
 
 // !important: Forwarding ref is required
 const SelectItem = forwardRef(
@@ -26,7 +26,7 @@ const SelectItem = forwardRef(
 )
 
 export default function AssetTypeSelector({ name }: { name: string }) {
-  const [{ assetTypes }] = useQuery(getAssetTypes, {})
+  const [{ assetCategories }] = useQuery(getAssetCategories, {})
   const {
     input,
     meta: { touched, error, submitError, submitting },
@@ -37,20 +37,20 @@ export default function AssetTypeSelector({ name }: { name: string }) {
 
   const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
-  const data = assetTypes.map((assetType) => {
-    const metadata = assetType.metadata as any
+  const data = assetCategories.map((assetCategory) => {
+    const metadata = assetCategory.metadata as any
     return {
-      label: metadata.label || assetType.name,
+      label: metadata.label || assetCategory.name,
       description: metadata.description,
-      key: assetType.id,
-      value: assetType.id,
+      key: assetCategory.id,
+      value: assetCategory.id,
     }
   })
   return (
     <Select
-      label="Type"
-      placeholder="Pick one"
+      label="Category"
       error={normalizedError}
+      placeholder="Pick one"
       itemComponent={SelectItem}
       data={data as any}
       searchable

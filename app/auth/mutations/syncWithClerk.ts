@@ -4,7 +4,8 @@ import { Signup, SyncWithClerkInput } from "app/auth/validations"
 import { z } from "zod"
 import clerk, { User } from "@clerk/clerk-sdk-node"
 import { defaultUserSelect } from "../defaults"
-import userCreated from "app/api/_/jobs/user-created"
+import { useReducer } from "react"
+import { userCreatedQueue, userSyncQueue } from "bull/queues"
 
 function getClerkUser(userId: string) {
   return clerk.users.getUser(userId)
@@ -102,7 +103,11 @@ export default resolver.pipe(resolver.zod(SyncWithClerkInput), async ({ clerkUse
 
   if (doesExists === false) {
     // it's a new user
-    await userCreated.enqueue({
+    await userCreatedQueue.add(`user-created-${user.id}`, {
+      userId: user.id,
+    })
+  } else {
+    await userSyncQueue.add(`user-sync-${user.id}`, {
       userId: user.id,
     })
   }

@@ -1,5 +1,5 @@
 import { enhancePrisma } from "blitz"
-import { PrismaClient } from "@saltanahq/database"
+import { PrismaClient } from "@prisma/client"
 
 const EnhancedPrisma = enhancePrisma(PrismaClient)
 

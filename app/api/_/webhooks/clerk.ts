@@ -1,8 +1,8 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
-import handleClerkEventQueue from "../jobs/handle-clerk-event"
+import { clerkWebhooksQueue } from "bull/queues"
 
 const handler = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
-  const { id } = await handleClerkEventQueue.enqueue(req.body)
+  const { id } = await clerkWebhooksQueue.add(req.body.type, req.body)
   console.log(`Queued a Clerk event: ${JSON.stringify({ id }, null, 2)}`)
   res.statusCode = 200
   res.setHeader("Content-Type", "application/json")

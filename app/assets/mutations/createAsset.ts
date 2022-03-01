@@ -4,15 +4,24 @@ import { z } from "zod"
 import { CreateAssetSchema } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(CreateAssetSchema),
   resolver.authorize(),
-  async ({ name }, { session: { defaultOrgId } }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    // const asset = await db.asset.create({ data: { name, organizationId: defaultOrgId as string } })
-    // return asset
-
-    return {
-      id: "test",
-    }
+  resolver.zod(CreateAssetSchema),
+  async (
+    { name, price, description, currency, assetTypeId, assetCategoryId },
+    { session: { defaultOrgId } }
+  ) => {
+    const asset = await db.asset.create({
+      data: {
+        name,
+        price,
+        description,
+        currency,
+        assetTypeId,
+        assetCategoryId,
+        status: "DRAFT",
+        organizationId: defaultOrgId as string,
+      },
+    })
+    return asset
   }
 )

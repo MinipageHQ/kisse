@@ -29,6 +29,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
     const showError = touched && normalizedError
 
+    console.log("normalizedError labeled text field", name, error)
     return (
       <InputWrapper
         id={name}
@@ -39,7 +40,6 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       >
         <Input {...input} id={name} disabled={submitting} ref={ref} />
       </InputWrapper>
-
     )
     return (
       <div {...outerProps} className={`mt-3 ${outerProps?.className}`}>
@@ -53,9 +53,10 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
               {...input}
               disabled={submitting}
               {...props}
-              className={`block w-full pr-10 focus:outline-none  sm:text-sm rounded-md ${showError &&
+              className={`block w-full pr-10 focus:outline-none  sm:text-sm rounded-md ${
+                showError &&
                 "border-red-300 text-red-900 placeholder-red-300  focus:ring-red-500 focus:border-red-500 "
-                } `}
+              } `}
               ref={ref}
             />
             {showError && (
