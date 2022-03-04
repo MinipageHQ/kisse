@@ -33,6 +33,8 @@ export default resolver.pipe(
           select: {
             id: true,
             slug: true,
+            target: true,
+            type: true,
             domain: {
               select: {
                 id: true,
