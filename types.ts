@@ -16,6 +16,7 @@ declare module "blitz" {
       roles: Array<Role>
       platformFeatures?: PlatformFeatures[]
       defaultOrgId?: Organization["id"]
+      clerkSessionId?: string
     }
   }
 }

@@ -3,14 +3,115 @@ import DashboardCustomizeLayout from "app/core/layouts/DashboardCustomizeLayout"
 import classNames from "app/core/utils/classnames"
 import { useCurrentOrganization } from "app/organizations/hooks/useCurrentOrganization"
 import { BlitzPage, Image } from "blitz"
+
+import {
+  Popover,
+  Button,
+  Group,
+  TextInput,
+  Avatar,
+  Text,
+  ActionIcon,
+  useMantineTheme,
+  Anchor,
+} from "@mantine/core"
+import { useForm, useMediaQuery } from "@mantine/hooks"
+import { Pencil2Icon } from "@modulz/radix-icons"
 import { useState } from "react"
 
+interface UserEditFormProps {
+  initialValues: { name: string; email: string }
+  onSubmit(values: { name: string; email: string }): void
+  onCancel(): void
+}
+
+function UserEditForm({ initialValues, onSubmit, onCancel }: UserEditFormProps) {
+  const isMobile = useMediaQuery("(max-width: 755px")
+
+  const form = useForm({
+    initialValues,
+    validationRules: {
+      name: (value) => value.trim().length > 2,
+      email: (value) => value.trim().length > 2,
+    },
+  })
+
+  return (
+    <form onSubmit={form.onSubmit(onSubmit)}>
+      <TextInput
+        required
+        label="Name"
+        placeholder="Name"
+        style={{ minWidth: isMobile ? 220 : 300 }}
+        value={form.values.name}
+        onChange={(event) => form.setFieldValue("name", event.currentTarget.value)}
+        error={form.errors.name}
+        variant="default"
+      />
+
+      <TextInput
+        required
+        label="Email"
+        placeholder="Email"
+        style={{ minWidth: isMobile ? 220 : 300, marginTop: 15 }}
+        value={form.values.email}
+        onChange={(event) => form.setFieldValue("email", event.currentTarget.value)}
+        error={form.errors.email}
+        variant="default"
+      />
+
+      <Group position="apart" style={{ marginTop: 15 }}>
+        <Anchor component="button" color="gray" size="sm" onClick={onCancel}>
+          Cancel
+        </Anchor>
+        <Button type="submit" size="sm">
+          Save
+        </Button>
+      </Group>
+    </form>
+  )
+}
+
+function EditUserPopover() {
+  const [values, setValues] = useState({ name: "Bob Handsome", email: "bob@handsome.inc" })
+  const [opened, setOpened] = useState(false)
+  const theme = useMantineTheme()
+
+  return (
+    <Popover
+      opened={opened}
+      onClose={() => setOpened(false)}
+      position="bottom"
+      placement="end"
+      withCloseButton
+      title="Edit user"
+      transition="pop-top-right"
+      target={
+        <ActionIcon
+          variant={theme.colorScheme === "dark" ? "hover" : "light"}
+          onClick={() => setOpened((o) => !o)}
+        >
+          <Pencil2Icon />
+        </ActionIcon>
+      }
+    >
+      <UserEditForm
+        initialValues={values}
+        onCancel={() => setOpened(false)}
+        onSubmit={(data) => {
+          setValues(data)
+          setOpened(false)
+        }}
+      />
+    </Popover>
+  )
+}
 const DashboardSettingsProfilePage: BlitzPage = () => {
   const [automaticTimezoneEnabled, setAutomaticTimezoneEnabled] = useState(true)
   const [autoUpdateApplicantDataEnabled, setAutoUpdateApplicantDataEnabled] = useState(false)
   const organization = useCurrentOrganization()
   return (
-    <>
+    <div className="p-4">
       {/* Description list with inline editing */}
       <div>
         <div className="space-y-1">
@@ -26,12 +127,7 @@ const DashboardSettingsProfilePage: BlitzPage = () => {
               <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <span className="flex-grow">{organization?.name || "not set yet"}</span>
                 <span className="ml-4 flex-shrink-0">
-                  <button
-                    type="button"
-                    className="bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                  >
-                    Update
-                  </button>
+                  <EditUserPopover />
                 </span>
               </dd>
             </div>
@@ -196,7 +292,7 @@ const DashboardSettingsProfilePage: BlitzPage = () => {
           </dl>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

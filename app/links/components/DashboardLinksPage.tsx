@@ -1,14 +1,53 @@
 import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, Routes } from "blitz"
+import { Head, Link, usePaginatedQuery, useRouter, Routes, useQuery } from "blitz"
 import getLinks from "app/links/queries/getLinks"
 import classNames from "app/core/utils/classnames"
 import { ChevronRightIcon } from "@heroicons/react/outline"
 import DashboardLinksEmpty from "app/links/components/DashboardLinksEmpty"
+import { Badge, Group, Menu, Divider, Text } from "@mantine/core"
+import getCurrentOrganization from "app/organizations/queries/getCurrentOrganization"
 
 const ITEMS_PER_PAGE = 100
+import {
+  GearIcon,
+  ChatBubbleIcon,
+  ImageIcon,
+  MagnifyingGlassIcon,
+  TrashIcon,
+  PinRightIcon,
+} from "@modulz/radix-icons"
+
+function ContextMenu() {
+  return (
+    <Menu>
+      <Menu.Label>Application</Menu.Label>
+      <Menu.Item icon={<GearIcon />}>Settings</Menu.Item>
+      <Menu.Item icon={<ChatBubbleIcon />}>Messages</Menu.Item>
+      <Menu.Item icon={<ImageIcon />}>Gallery</Menu.Item>
+      <Menu.Item
+        icon={<MagnifyingGlassIcon />}
+        rightSection={
+          <Text size="xs" color="dimmed">
+            ⌘K
+          </Text>
+        }
+      >
+        Search
+      </Menu.Item>
+      <Divider />
+      <Menu.Label>Danger zone</Menu.Label>
+      <Menu.Item icon={<PinRightIcon />}>Transfer my data</Menu.Item>,
+      <Menu.Item color="red" icon={<TrashIcon />}>
+        Delete my account
+      </Menu.Item>
+    </Menu>
+  )
+}
 
 export const LinksList = () => {
   const router = useRouter()
+
+  const currentOrganization = useQuery(getCurrentOrganization, {})
   const page = Number(router.query.page) || 0
   const [{ links, hasMore }] = usePaginatedQuery(getLinks, {
     orderBy: { id: "asc" },
@@ -19,19 +58,14 @@ export const LinksList = () => {
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
   const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
+  const showPagination = page !== 0 || hasMore
   if (links?.length === 0) {
-    return (<DashboardLinksEmpty />)
+    return <DashboardLinksEmpty />
   }
+
   return (
     <div>
-
-      <button disabled={page === 0} onClick={goToPreviousPage}>
-        Previous
-      </button>
-      <button disabled={!hasMore} onClick={goToNextPage}>
-        Next
-      </button>
-
+      {/* <pre>{JSON.stringify(currentOrganization)}</pre> */}
       {/* Projects list (only on smallest breakpoint) */}
       <div className="mt-10 sm:hidden">
         <div className="px-4 sm:px-6">
@@ -44,11 +78,12 @@ export const LinksList = () => {
                 <a className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
                   <span className="flex items-center truncate space-x-3">
                     <span
-                      className={classNames('w-2.5 h-2.5 flex-shrink-0 rounded-full')}
+                      className={classNames("w-2.5 h-2.5 flex-shrink-0 rounded-full")}
                       aria-hidden="true"
                     />
                     <span className="font-medium truncate text-sm leading-6">
-                      {link.target} <span className="truncate font-normal text-gray-500">{link.type}</span>
+                      {link.target}{" "}
+                      <span className="truncate font-normal text-gray-500">{link.type}</span>
                     </span>
                   </span>
                   <ChevronRightIcon
@@ -74,41 +109,33 @@ export const LinksList = () => {
                 <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Members
                 </th>
-                <th className="hidden md:table-cell px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Last updated
-                </th>
                 <th className="pr-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" />
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {links.map((link) => (
                 <tr key={link.id}>
-                  <td className="px-6 py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className=" py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex items-center space-x-3 lg:pl-2">
                       <div
-                        className={classNames('flex-shrink-0 w-2.5 h-2.5 rounded-full')}
+                        className={classNames("flex-shrink-0 w-2.5 h-2.5 rounded-full")}
                         aria-hidden="true"
                       />
-                      <a href="#" className="truncate hover:text-gray-600">
-                        <span>
+                      <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+                        <a href="#" className="truncate hover:text-gray-600">
+                          <span className="text-gray-500 font-normal">{link.domain.domain}</span>/
+                          {link.slug}
+                          {/* <span>
                           {link.slug}
                           {link.target} <span className="text-gray-500 font-normal">in {link.type}</span>
-                        </span>
-                      </a>
+                        </span> */}
+                        </a>
+                      </Link>
                     </div>
                   </td>
                   <td className="px-6 py-3 text-sm text-gray-500 font-medium">
                     <div className="flex items-center space-x-2">
-                      <div className="flex flex-shrink-0 -space-x-1">
-                        {/* {project.members.map((member) => (
-                          <img
-                            key={member.handle}
-                            className="max-w-none h-6 w-6 rounded-full ring-2 ring-white"
-                            src={member.imageUrl}
-                            alt={member.name}
-                          />
-                        ))} */}
-                      </div>
+                      <div className="flex flex-shrink-0 -space-x-1">dcdcd</div>
                       {/* {project.totalMembers > project.members.length ? (
                         <span className="flex-shrink-0 text-xs leading-5 font-medium">
                           +{project.totalMembers - project.members.length}
@@ -116,16 +143,26 @@ export const LinksList = () => {
                       ) : null} */}
                     </div>
                   </td>
-                  <td className="hidden md:table-cell px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {/* {project.lastUpdated} */}
-                  </td>
                   <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
-                    <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+                    <div className="flex items-center space-x-2">
+                      <div className="flex flex-shrink-0 -space-x-1">
+                        <ContextMenu />
+                        {/* <Group position="center" direction="column" grow>
+                          <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
 
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                        Edit
-                      </a>
-                    </Link>
+                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                              Edit
+                            </a>
+                          </Link>
+                          <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+
+                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                              Edit
+                            </a>
+                          </Link>
+                        </Group> */}
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -133,6 +170,17 @@ export const LinksList = () => {
           </table>
         </div>
       </div>
+
+      {showPagination && (
+        <>
+          <button disabled={page === 0} onClick={goToPreviousPage}>
+            Previous
+          </button>
+          <button disabled={!hasMore} onClick={goToNextPage}>
+            Next
+          </button>
+        </>
+      )}
     </div>
   )
 }

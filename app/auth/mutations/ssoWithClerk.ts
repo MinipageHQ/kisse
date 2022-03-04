@@ -41,5 +41,6 @@ export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId
     roles,
     platformFeatures: defaultOrganization?.platformFeatures,
     defaultOrgId: defaultOrganization ? defaultOrganization.id : undefined,
+    clerkSessionId: sessionId,
   })
 })

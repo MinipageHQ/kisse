@@ -3,10 +3,9 @@ import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Rout
 import Layout from "app/core/layouts/Layout"
 import getCurrentOrganization from "app/organizations/queries/getCurrentOrganization"
 import DashboardLayout from "app/core/layouts/DashboardLayout"
-import { UserProfile } from "@clerk/clerk-react"
 import AuthProvider from "app/auth/components/AuthProvider"
 
-const MyAssetsPAge: BlitzPage = () => {
+const MyAssetsPage: BlitzPage = () => {
   return (
     <div>
       <Head>
@@ -17,7 +16,7 @@ const MyAssetsPAge: BlitzPage = () => {
   )
 }
 
-MyAssetsPAge.authenticate = true
-MyAssetsPAge.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
+MyAssetsPage.authenticate = true
+MyAssetsPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
 
-export default MyAssetsPAge
+export default MyAssetsPage

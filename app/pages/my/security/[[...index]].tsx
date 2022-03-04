@@ -3,10 +3,10 @@ import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Rout
 import Layout from "app/core/layouts/Layout"
 import getCurrentOrganization from "app/organizations/queries/getCurrentOrganization"
 import DashboardLayout from "app/core/layouts/DashboardLayout"
-import { UserProfile } from "@clerk/clerk-react"
 import AuthProvider from "app/auth/components/AuthProvider"
+import { UserProfile } from "@clerk/nextjs"
 
-const MySettingsPage: BlitzPage = () => {
+const MySettingsSecurityPage: BlitzPage = () => {
   return (
     <div>
       <Head>
@@ -14,13 +14,13 @@ const MySettingsPage: BlitzPage = () => {
       </Head>
 
       <AuthProvider>
-        <UserProfile routing="path" path="/my/settings" hideNavigation={true} only={"account"} />
+        <UserProfile routing="path" path="/my/security" hideNavigation={true} only={"security"} />
       </AuthProvider>
     </div>
   )
 }
 
-MySettingsPage.authenticate = true
-MySettingsPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
+MySettingsSecurityPage.authenticate = true
+MySettingsSecurityPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>
 
-export default MySettingsPage
+export default MySettingsSecurityPage

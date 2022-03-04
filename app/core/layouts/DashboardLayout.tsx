@@ -28,6 +28,44 @@ import classNames from "../utils/classnames"
 import ShowForRoleWrapped from "app/auth/components/ShowForRole"
 import RedirectToOnboarding from "app/organizations/components/RedirectToOnboarding"
 // import Avatar from 'components/Avatar'
+import {
+  AppShell,
+  Burger,
+  Header,
+  MediaQuery,
+  Navbar,
+  ScrollArea,
+  Text,
+  useMantineTheme,
+  Avatar,
+} from "@mantine/core"
+
+interface UserProps {
+  name: string
+  email: string
+  className?: string
+}
+
+function User({ name, email, className }: UserProps) {
+  return (
+    <div className={className} style={{ display: "flex" }}>
+      <Avatar style={{ marginRight: 15 }} color="blue">
+        {name
+          .split(" ")
+          .map((part) => part.charAt(0).toUpperCase())
+          .slice(0, 2)
+          .join("")}
+      </Avatar>
+
+      <div>
+        <Text>{name}</Text>
+        <Text size="xs" color="gray">
+          {email}
+        </Text>
+      </div>
+    </div>
+  )
+}
 
 const creatorNavigation = [
   {
@@ -82,16 +120,6 @@ const userNavigation = [
   { name: "Help", href: "/help", current: false },
   // { name: 'Logout', href: '/logout' }
 ]
-import {
-  AppShell,
-  Burger,
-  Header,
-  MediaQuery,
-  Navbar,
-  ScrollArea,
-  Text,
-  useMantineTheme,
-} from "@mantine/core"
 
 const DashboardLayout: BlitzLayout<{
   subHeader?: React.ReactNode
@@ -117,6 +145,7 @@ const DashboardLayout: BlitzLayout<{
       </ShowForRoleWrapped> */}
 
       <AppShell
+        padding={0}
         // navbarOffsetBreakpoint controls when navbar should no longer be offset with padding-left
         navbarOffsetBreakpoint="sm"
         // fixed prop on AppShell will be automatically added to Header and Navbar
@@ -273,7 +302,9 @@ const DashboardLayout: BlitzLayout<{
               </nav>
             </Navbar.Section>
 
-            <Navbar.Section>c</Navbar.Section>
+            <Navbar.Section>
+              <User name="sdfsd" email="sdfds" />
+            </Navbar.Section>
           </Navbar>
         }
         header={
