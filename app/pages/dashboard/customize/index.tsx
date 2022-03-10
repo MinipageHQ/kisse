@@ -249,7 +249,7 @@ const DashboardSettingsProfilePage: BlitzPage = () => {
               <dt className="text-sm font-medium text-gray-500">Location</dt>
               <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <span className="flex-grow">
-                  {(organization?.metadata as any).location || "not yet set"}
+                  {(organization?.metadata as any)?.location || "not yet set"}
                 </span>
                 <span className="ml-4 flex-shrink-0">
                   <EditDisplayNamePopover fields={[CreatorUpdateFields.LOCATION]} />
