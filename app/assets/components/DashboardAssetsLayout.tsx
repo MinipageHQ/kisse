@@ -1,4 +1,4 @@
-import { Alert } from "@mantine/core"
+import { Alert, Container } from "@mantine/core"
 import DashboardLayout from "app/core/layouts/DashboardLayout"
 import { BlitzLayout, Link, Routes } from "blitz"
 
@@ -9,10 +9,15 @@ const DashboardAssetsLayout: BlitzLayout<{
 }> = ({ subHeader, title, children, container }) => {
   return (
     <DashboardLayout title={title}>
-      <Alert title="You need to verify your identity before you can sell items." variant="outline">
-        To comply with regulations, we need to verify your identity and bank information via our
-        partner, Stripe, before you can sell items on Saltana.
-      </Alert>
+      <Container>
+        <Alert
+          title="You need to verify your identity before you can sell items."
+          variant="outline"
+        >
+          To comply with regulations, we need to verify your identity and bank information via our
+          partner, Stripe, before you can sell items on Saltana.
+        </Alert>
+      </Container>
       <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex-1 min-w-0">
           <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">{title}</h1>

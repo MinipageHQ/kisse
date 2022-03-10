@@ -29,7 +29,7 @@ const DashboardLinksNewPage: BlitzPage = (props) => {
         title={typeData?.createTitle || "Create a new link..."}
       >
         <Suspense fallback={<Skeleton visible />}>
-          <DashboardLinksNew linkType={linkType!} />
+          <DashboardLinksNew linkType={linkType! as string} />
         </Suspense>
       </Modal>
     </>

@@ -11,18 +11,16 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline"
 import classNames from "../utils/classnames"
 import AuthProvider from "app/auth/components/AuthProvider"
 
-
-
-import { useState } from 'react';
-import { AppShell, Burger, Header, MediaQuery, Navbar, Text, useMantineTheme } from '@mantine/core';
+import { useState } from "react"
+import { AppShell, Burger, Header, MediaQuery, Navbar, Text, useMantineTheme } from "@mantine/core"
 
 const AppLayout: BlitzLayout<{ showUserBox?: boolean; title?: string }> = ({
   title,
   showUserBox = true,
   children,
 }) => {
-  const [opened, setOpened] = useState(false);
-  const theme = useMantineTheme();
+  const [opened, setOpened] = useState(false)
+  const theme = useMantineTheme()
 
   return (
     <AppShell
@@ -31,11 +29,9 @@ const AppLayout: BlitzLayout<{ showUserBox?: boolean; title?: string }> = ({
       // fixed prop on AppShell will be automatically added to Header and Navbar
       fixed
       header={
-        <Header height={70} padding="md">
+        <Header height={70} p="md">
           {/* Handle other responsive styles with MediaQuery component or createStyles function */}
-          <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-
-
+          <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
             <Text>Saltana</Text>
           </div>
         </Header>
@@ -43,7 +39,7 @@ const AppLayout: BlitzLayout<{ showUserBox?: boolean; title?: string }> = ({
     >
       {children}
     </AppShell>
-  );
+  )
 }
 
 AppLayout.authenticate = true

@@ -30,6 +30,11 @@ export const CreateOrganizationWithInviteCodeSchema = Organization.extend({
   inviteCode: z.string().min(1).max(24),
 })
 
+export const MetadataSchema = z
+  .object({
+    location: z.string(),
+  })
+  .optional()
 export const OnboardedOrganizationSchema = OrganizationModel.pick({
   name: true,
   description: true,
@@ -44,4 +49,6 @@ export const OnboardedOrganizationSchema = OrganizationModel.pick({
     profileMedia: true,
   })
 
-export const OrganizationUpdateSchema = OrganizationModel.partial()
+export const OrganizationUpdateSchema = OrganizationModel.partial().extend({
+  metadata: MetadataSchema,
+})

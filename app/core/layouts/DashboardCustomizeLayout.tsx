@@ -11,7 +11,7 @@ const tabs = [
   { name: "Custom Domains", href: "/dashboard/domains", current: false },
   { name: "Plans & Billing", href: "/dashboard/billing", current: false },
 ]
-import { Tabs } from '@mantine/core';
+import { Tabs } from "@mantine/core"
 
 function CustomizeTabs() {
   const router = useRouter()
@@ -19,7 +19,7 @@ function CustomizeTabs() {
   const tabIndex = tabs.findIndex(({ href }) => href === router.asPath)
   const onChange = (active: number, tabKey: string) => {
     router.push(tabKey)
-  };
+  }
 
   return (
     <Tabs active={tabIndex} onTabChange={onChange}>
@@ -29,7 +29,7 @@ function CustomizeTabs() {
         </Tabs.Tab>
       ))}
     </Tabs>
-  );
+  )
 }
 const DashboardCustomizeLayout: BlitzLayout<{ title?: string }> = ({ title, children }) => {
   const router = useRouter()
@@ -37,16 +37,16 @@ const DashboardCustomizeLayout: BlitzLayout<{ title?: string }> = ({ title, chil
   const tabIndex = tabs.findIndex(({ href }) => href === router.asPath)
   const onChange = (active: number, tabKey: string) => {
     router.push(tabKey)
-  };
+  }
 
   return (
     <DashboardLayout>
-
       <Tabs active={tabIndex} onTabChange={onChange}>
         {tabs.map(({ name, href, current }) => (
           <Tabs.Tab label={name} tabKey={href} key={href}>
             <Suspense fallback="Loading Settings LAyout">
-              <Container padding={10}>{children}</Container></Suspense>
+              <Container p={10}>{children}</Container>
+            </Suspense>
           </Tabs.Tab>
         ))}
       </Tabs>

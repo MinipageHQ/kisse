@@ -64,16 +64,6 @@ function CreateANewLinkButton() {
       </Group>
     </>
   )
-  return (
-    <Popover
-      opened={opened}
-      onClose={() => setOpened(false)}
-      target={<Button onClick={() => setOpened((o) => !o)}>Create a new link</Button>}
-      width={300}
-      position="bottom"
-      withArrow
-    ></Popover>
-  )
 }
 const DashboardLinksLayout: BlitzLayout<{
   subHeader?: React.ReactNode

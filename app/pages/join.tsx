@@ -28,7 +28,7 @@ export const CreateAnOrganization = () => {
   const [createOrganizationMutation] = useMutation(createOrganization)
 
   return (
-    <Paper padding="md" shadow="xs">
+    <Paper p="md" shadow="xs">
       <Group position="center" direction="column" grow spacing={15}>
         <Title order={2}>Create your space on Saltana ✨</Title>
 

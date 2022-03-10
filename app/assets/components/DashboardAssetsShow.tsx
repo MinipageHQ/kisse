@@ -93,7 +93,7 @@ function Demo() {
           <Button onClick={() => handlers.toggle(2)}>Next step</Button>
         </Group>
       </Accordion.Item>
-      <Accordion.Item label="Confirmation" icon={<CircleCheck color={theme.colors.teal[6]} />}>
+      <Accordion.Item label="Confirmation" icon={<CircleCheck color={theme.colors.cyan[6]} />}>
         <Text>All done!</Text>
         <Text color="dimmed" size="sm">
           We will start processing your order soon

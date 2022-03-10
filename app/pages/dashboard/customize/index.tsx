@@ -25,15 +25,19 @@ import updateOrganization from "app/organizations/mutations/updateOrganization"
 import { FORM_ERROR } from "app/organizations/components/OrganizationCustomizeForm"
 import { OrganizationUpdateSchema } from "app/organizations/validations"
 import { useForm, zodResolver } from "@mantine/form"
+import { Organization } from "@prisma/client"
+import { z } from "zod"
 
 enum CreatorUpdateFields {
   NAME,
   LOCATION,
   DESCRIPTION,
 }
+
+type OrganizationUpdateSchemaType = z.infer<typeof OrganizationUpdateSchema>
 interface UserEditFormProps {
-  initialValues: typeof OrganizationUpdateSchema
-  onSubmit(values: { name: string; email: string }): void
+  initialValues: OrganizationUpdateSchemaType
+  onSubmit(values: OrganizationUpdateSchemaType): void
   onCancel(): void
   fields: CreatorUpdateFields[]
 }
@@ -67,7 +71,7 @@ function UserEditForm({ initialValues, onSubmit, onCancel, fields = [] }: UserEd
           {...form.getInputProps("description")}
         />
       )}
-      {fields.includes(CreatorUpdateFields.LOCATION) && (
+      {/* {fields.includes(CreatorUpdateFields.LOCATION) && (
         <TextInput
           required
           label="Location"
@@ -75,7 +79,7 @@ function UserEditForm({ initialValues, onSubmit, onCancel, fields = [] }: UserEd
           mt="sm"
           {...form.getInputProps("metadata.location")}
         />
-      )}
+      )} */}
 
       {/* <TextInput
         required
@@ -106,7 +110,7 @@ function EditDisplayNamePopover({ fields }: { fields: CreatorUpdateFields[] }) {
   const notifications = useNotifications()
   const [updateOrganizationMutation] = useMutation(updateOrganization)
   const [organization] = useCurrentOrganization()
-  const { name = "", description = "", metadata = {} } = organization || {}
+
   return (
     <Popover
       opened={opened}
@@ -126,7 +130,9 @@ function EditDisplayNamePopover({ fields }: { fields: CreatorUpdateFields[] }) {
       }
     >
       <UserEditForm
-        initialValues={{ name, description, metadata }}
+        initialValues={
+          { ...organization, metadata: { location: "t " } } as OrganizationUpdateSchemaType
+        }
         fields={fields}
         onCancel={() => setOpened(false)}
         onSubmit={async (values) => {
@@ -145,7 +151,8 @@ function EditDisplayNamePopover({ fields }: { fields: CreatorUpdateFields[] }) {
               name: values.name,
               description: values.description,
               metadata: {
-                location: values.location,
+                location: "te",
+                // location: values.location,
               },
             })
 
@@ -242,7 +249,7 @@ const DashboardSettingsProfilePage: BlitzPage = () => {
               <dt className="text-sm font-medium text-gray-500">Location</dt>
               <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <span className="flex-grow">
-                  {organization?.metadata?.location || "not yet set"}
+                  {(organization?.metadata as any).location || "not yet set"}
                 </span>
                 <span className="ml-4 flex-shrink-0">
                   <EditDisplayNamePopover fields={[CreatorUpdateFields.LOCATION]} />

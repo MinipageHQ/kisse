@@ -29,6 +29,7 @@ export async function organizationUpdated(job: Job<OrganizationUpdatedEvent>) {
       description: true,
       stripeCustomerId: true,
       stripeSellerId: true,
+      metadata: true,
       memberships: {
         select: {
           user: {

@@ -17,7 +17,7 @@ const DashboardLinkPage: BlitzPage = (props) => {
 
   const [link, { isFetched }] = useQuery(
     getLink,
-    { id: linkId },
+    { id: "dsf" },
     {
       enabled: linkId && linkId.length && linkId.length > 0 ? true : false,
       initialData: {
@@ -30,7 +30,7 @@ const DashboardLinkPage: BlitzPage = (props) => {
   return (
     <>
       <Head>
-        <title>link {link.id}</title>
+        <title>link {link?.id}</title>
       </Head>
       <Modal
         opened={typeof linkId === "string"}
@@ -39,14 +39,14 @@ const DashboardLinkPage: BlitzPage = (props) => {
       >
         <Suspense fallback={<Skeleton visible />}>
           <div>
-            <h1>link {link.id}</h1>
+            <h1>link {link?.id}</h1>
             <pre>{JSON.stringify(link, null, 2)}</pre>
 
             <button
               type="button"
               onClick={async () => {
                 if (window.confirm("This will be deleted")) {
-                  await deleteLinkMutation({ id: link.id })
+                  await deleteLinkMutation({ id: link?.id! })
                   push(Routes.LinksPage({}))
                 }
               }}
