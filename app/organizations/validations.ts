@@ -43,3 +43,5 @@ export const OnboardedOrganizationSchema = OrganizationModel.pick({
   .partial({
     profileMedia: true,
   })
+
+export const OrganizationUpdateSchema = OrganizationModel.partial()

@@ -6,7 +6,7 @@ import logout from "../mutations/logout"
 import WrappedAuthProvider from "./AuthProvider"
 
 const UserInfo = () => {
-  const currentUser = useCurrentUser()
+  const [currentUser] = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
 
   if (currentUser) {

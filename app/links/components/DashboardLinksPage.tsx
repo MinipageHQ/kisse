@@ -74,7 +74,7 @@ export const LinksList = () => {
         <ul role="list" className="mt-3 border-t border-gray-200 divide-y divide-gray-100">
           {links.map((link) => (
             <li key={link.id}>
-              <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+              <Link href={Routes.LinksPage({ linkId: link.id })} passHref>
                 <a className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
                   <span className="flex items-center truncate space-x-3">
                     <span
@@ -121,7 +121,7 @@ export const LinksList = () => {
                         className={classNames("flex-shrink-0 w-2.5 h-2.5 rounded-full")}
                         aria-hidden="true"
                       />
-                      <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+                      <Link href={Routes.DashboardLinkPage({ linkId: link.id })} passHref>
                         <a href="#" className="truncate hover:text-gray-600">
                           <span className="text-gray-500 font-normal">{link.domain.domain}</span>/
                           {link.slug}

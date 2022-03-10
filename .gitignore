@@ -60,4 +60,4 @@ public/.vitrodist
 
 
 .npmrc
-./db/zod
+db/zod

@@ -1,18 +1,13 @@
 import { resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
-
-const UpdateOrganization = z.object({
-  id: z.string().cuid(),
-  name: z.string(),
-})
+import { OrganizationUpdateSchema } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(UpdateOrganization),
+  resolver.zod(OrganizationUpdateSchema),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const space = await db.organization.update({ where: { id }, data })
+  async ({ ...data }, { session: { defaultOrgId } }) => {
+    const space = await db.organization.update({ where: { id: defaultOrgId }, data })
 
     return space
   }

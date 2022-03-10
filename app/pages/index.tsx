@@ -5,11 +5,9 @@ import logoDark from "public/marketing-images/logo-dark.png"
 import productive from "public/marketing-images/productive.png"
 import socialMedia from "public/marketing-images/social-media.png"
 import logout from "app/auth/mutations/logout"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { Suspense } from "react"
 import Layout from "app/core/layouts/Layout"
 import UserInfo from "app/auth/components/UserBox"
-
 
 const MarketingHome: BlitzPage = () => {
   return (

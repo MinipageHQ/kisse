@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense, useState } from "react"
+import React, { Fragment, Suspense, useEffect, useState } from "react"
 import { Dialog, Menu, Transition, Popover, Listbox } from "@headlessui/react"
 import {
   ClockIcon,
@@ -23,7 +23,7 @@ import {
 } from "@heroicons/react/solid"
 
 import { Logo } from "app/core/components/Logo"
-import { BlitzLayout, useRouter, Image, Link, Head } from "blitz"
+import { BlitzLayout, useRouter, Image, Link, Head, Router } from "blitz"
 import classNames from "../utils/classnames"
 import ShowForRoleWrapped from "app/auth/components/ShowForRole"
 import RedirectToOnboarding from "app/organizations/components/RedirectToOnboarding"
@@ -132,7 +132,17 @@ const DashboardLayout: BlitzLayout<{
 
   const [opened, setOpened] = useState(false)
   const theme = useMantineTheme()
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // setOpened(false)
+      // console.log("App is changing to: ", url)
+    }
 
+    Router.events.on("routeChangeStart", handleRouteChange)
+    return () => {
+      Router.events.off("routeChangeStart", handleRouteChange)
+    }
+  }, [])
   return (
     <>
       <Head>
