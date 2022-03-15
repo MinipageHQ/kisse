@@ -1,6 +1,6 @@
 import { Queues } from "./queues"
 import { Worker } from "bullmq"
-import { organizationCreated, organizationUpdated } from "./workers/organization"
+import { organizationCreatedOrUpdated } from "./workers/organization"
 import { userCreated, userSync } from "./workers/user"
 import { sendEmail } from "./workers/email"
 import { handleClerkEvent } from "./workers/clerk"
@@ -10,8 +10,10 @@ export const workers = {
   [Queues.USER_SYNC]: new Worker(Queues.USER_SYNC, userSync),
   [Queues.USER_CREATED]: new Worker(Queues.USER_CREATED, userCreated),
 
-  [Queues.ORGANIZATION_CREATED]: new Worker(Queues.ORGANIZATION_CREATED, organizationCreated),
-  [Queues.ORGANIZATION_UPDATED]: new Worker(Queues.ORGANIZATION_UPDATED, organizationUpdated),
+  [Queues.ORGANIZATION_CREATED_OR_UPDATED]: new Worker(
+    Queues.ORGANIZATION_CREATED_OR_UPDATED,
+    organizationCreatedOrUpdated
+  ),
 
   [Queues.SEND_EMAIL]: new Worker(Queues.SEND_EMAIL, sendEmail),
 

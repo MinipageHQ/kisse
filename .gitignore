@@ -61,3 +61,4 @@ public/.vitrodist
 
 .npmrc
 db/zod
+db/schema.prisma

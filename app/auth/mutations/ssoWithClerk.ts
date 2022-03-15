@@ -1,3 +1,4 @@
+import { organizationCreatedOrUpdatedQueue } from "bull/queues"
 import { defaultUserSelect } from "./../defaults"
 import safeEmail from "app/auth/utils/safeEmail"
 import { isPasswordSafe } from "../utils/checkPassword"
@@ -32,8 +33,15 @@ export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId
         }
       : null
 
-  if (defaultOrganization && defaultOrganization.role) {
-    roles.push(defaultOrganization.role)
+  if (defaultOrganization) {
+    if (defaultOrganization.role) {
+      roles.push(defaultOrganization.role)
+    }
+
+    organizationCreatedOrUpdatedQueue.add("organization-sync-" + defaultOrganization?.id, {
+      organizationId: defaultOrganization.id,
+      action: "updated",
+    })
   }
 
   await ctx.session.$create({
