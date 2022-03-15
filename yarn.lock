@@ -1722,7 +1722,7 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.2.tgz#830beaec4b4091a9e9398ac50f865ddea52186b9"
   integrity sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==
 
-"@prisma/client@3.10.0", "@prisma/client@^3.9.1":
+"@prisma/client@3.10.0", "@prisma/client@^3.10.0":
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-3.10.0.tgz#4782fe6f1b0e43c2a11a75ad4bb1098599d1dfb1"
   integrity sha512-6P4sV7WFuODSfSoSEzCH1qfmWMrCUBk1LIIuTbQf6m1LI/IOpLN4lnqGDmgiBGprEzuWobnGLfe9YsXLn0inrg==
@@ -1988,14 +1988,14 @@
     debug "^3.2.6"
     tslib "^1.10.0"
 
-"@saltanahq/database@*":
-  version "0.0.15"
-  resolved "https://npm.pkg.github.com/download/@saltanahq/database/0.0.15/370087eb829739176a601cca4e28a1e70a71bd06e8596bbf14c9322d6ba6f105#aa1cbed849ecc2d6c6253b04c63b995a346d91a3"
-  integrity sha512-2PeJmB0RJz9hcmqpKC4BJDuDjTNuDUnhbUrLiMQ6VaJIOMjjUdxpU/qIpI7yvuTayGIAG5HZyWEfCtGJeSEtuQ==
+"@saltanahq/database@0.1.1":
+  version "0.1.1"
+  resolved "https://npm.pkg.github.com/download/@saltanahq/database/0.1.1/cf3a93d4a5fc270da5755b9e6cc9cef1f06b6f05657f0c5f1ac3c7b4d801dadc#fb7067d8e0273ee082966062acc6019e4a9bceb1"
+  integrity sha512-KqkcO+TwaLqedFcEEAhEKTr40O0xwb4NI0EmU8tccFgIcvUydkGnHPrhjM/Qt63Vv9rjDh2mu4tlGJHmc3BUBA==
   dependencies:
-    "@prisma/client" "^3.9.1"
-    typescript "^4.5.5"
-    zod "^3.12.0"
+    "@prisma/client" "^3.10.0"
+    typescript "^4.6.2"
+    zod "^3.13.4"
     zod-prisma "0.5.4"
 
 "@selderee/plugin-htmlparser2@^0.6.0":
@@ -15872,15 +15872,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@4.6.2:
+typescript@4.6.2, typescript@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.2.tgz#fe12d2727b708f4eef40f51598b3398baa9611d4"
   integrity sha512-HM/hFigTBHZhLXshn9sN37H085+hQGeJHJ/X7LpBWLID/fbc2acUMfU+lGD98X81sKP+pFa9f0DZmCwB9GnbAg==
-
-typescript@^4.5.5:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
-  integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
 
 ua-parser-js@^0.7.18, ua-parser-js@^0.7.30:
   version "0.7.31"
@@ -17506,12 +17501,7 @@ zod-prisma@0.5.4:
     parenthesis "^3.1.8"
     ts-morph "^13.0.2"
 
-zod@3.13.4:
+zod@3.13.4, zod@^3.13.4:
   version "3.13.4"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.13.4.tgz#5d6fe03ef4824a637d7ef50b5441cf6ab3acede0"
   integrity sha512-LZRucWt4j/ru5azOkJxCfpR87IyFDn8h2UODdqvXzZLb3K7bb9chUrUIGTy3BPsr8XnbQYfQ5Md5Hu2OYIo1mg==
-
-zod@^3.12.0:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.12.0.tgz#84ba9f6bdb7835e2483982d5f52cfffcb6a00346"
-  integrity sha512-w+mmntgEL4hDDL5NLFdN6Fq2DSzxfmlSoJqiYE1/CApO8EkOCxvJvRYEVf8Vr/lRs3i6gqoiyFM6KRcWqqdBzQ==

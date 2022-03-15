@@ -18,7 +18,7 @@ const LoginPage: BlitzPage = () => {
   return (
     <div>
       <SignedOut>
-        <SignIn />
+        <SignIn routing="path" path="/login" />
       </SignedOut>
       <SignedIn>
         <RedirectToSSO />
