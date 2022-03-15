@@ -1,7 +1,13 @@
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51IpyZzCzDOw5R4whxk0jrB3j2tDCr4OHHrbjsz4L2bRI05G0Ku3m3k264fL5GmMKQQIa2PROW9UDZn8ptmIKTXRu00kcmgys8T', {
-  apiVersion: '2020-08-27',
+import Stripe from "stripe"
 
-});
+const stripeApiKey = process.env.STRIPE_API_KEY
+
+if (!stripeApiKey) {
+  throw new Error("STRIPE_API_KEY is not set")
+}
+
+const stripe = new Stripe(stripeApiKey, {
+  apiVersion: "2020-08-27",
+})
 
 export default stripe

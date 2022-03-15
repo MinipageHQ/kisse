@@ -5,8 +5,7 @@ export enum Queues {
   USER_SYNC = "user-sync",
   USER_CREATED = "user-created",
 
-  ORGANIZATION_CREATED = "organization-created",
-  ORGANIZATION_UPDATED = "organization-updated",
+  ORGANIZATION_CREATED_OR_UPDATED = "organization-created-or-updated",
 
   SEND_EMAIL = "send-email",
 
@@ -25,8 +24,7 @@ export const userSyncQueue = new Queue(Queues.USER_SYNC)
 export const userCreatedQueue = new Queue(Queues.USER_CREATED)
 
 // Organizations
-export const organizationCreatedQueue = new Queue(Queues.ORGANIZATION_CREATED)
-export const organizationUpdatedQueue = new Queue(Queues.ORGANIZATION_UPDATED)
+export const organizationCreatedOrUpdatedQueue = new Queue(Queues.ORGANIZATION_CREATED_OR_UPDATED)
 
 // Emails
 export const sendEmailQueue = new Queue(Queues.SEND_EMAIL)
