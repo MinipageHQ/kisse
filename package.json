@@ -22,7 +22,7 @@
     "start:worker": "node ./dist/worker.js",
     "start:worker:dev": "node -r dotenv/config ./dist/worker.js",
     "build:npmrc": "node ./deploy/create_npmrc_before_install.js",
-    "postinstall": "rimraf ./db/zod && rimraf ./db/schema.prisma && cp ./node_modules/@saltanahq/database/prisma/schema.prisma ./db/schema.prisma && blitz prisma generate"
+    "postinstall": "rimraf ./db/zod && rimraf ./db/schema.prisma && cp ./node_modules/@saltanahq/database/schema.prisma ./db/schema.prisma && blitz prisma generate"
   },
   "prisma": {
     "schema": "db/schema.prisma",
@@ -53,7 +53,7 @@
     "@modulz/radix-icons": "4.0.0",
     "@prisma/client": "3.10.0",
     "@radix-ui/react-icons": "1.1.0",
-    "@saltanahq/database": "*",
+    "@saltanahq/database": "0.1.1",
     "@tailwindcss/aspect-ratio": "0.4.0",
     "@tailwindcss/forms": "0.5.0",
     "@tailwindcss/line-clamp": "0.3.1",
