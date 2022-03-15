@@ -8,3 +8,10 @@ export const CreateLinkInput = LinkModel.pick({
   metadata: true,
   domainId: true,
 }).partial({ metadata: true })
+
+export const UpdateLinkInput = LinkModel.pick({
+  id: true,
+  slug: true,
+  target: true,
+  domainId: true,
+})

@@ -16,6 +16,7 @@ import {
   TrashIcon,
   PinRightIcon,
 } from "@modulz/radix-icons"
+import DashboardLinkTitle from "./DashboardLinkTitle"
 
 function ContextMenu() {
   return (
@@ -72,7 +73,7 @@ export const LinksList = () => {
           <h2 className="text-gray-500 text-xs font-medium uppercase tracking-wide">Links</h2>
         </div>
         <ul role="list" className="mt-3 border-t border-gray-200 divide-y divide-gray-100">
-          {links.map((link) => (
+          {links?.map((link) => (
             <li key={link.id}>
               <Link href={Routes.LinksPage({ linkId: link.id })} passHref>
                 <a className="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
@@ -123,8 +124,7 @@ export const LinksList = () => {
                       />
                       <Link href={Routes.DashboardLinkPage({ linkId: link.id })} passHref>
                         <a href="#" className="truncate hover:text-gray-600">
-                          <span className="text-gray-500 font-normal">{link.domain.domain}</span>/
-                          {link.slug}
+                          <DashboardLinkTitle link={link} />
                           {/* <span>
                           {link.slug}
                           {link.target} <span className="text-gray-500 font-normal">in {link.type}</span>

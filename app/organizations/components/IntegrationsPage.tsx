@@ -1,3 +1,4 @@
+import { Link, Routes } from "blitz"
 import React from "react"
 
 function IntegrationsPage() {
@@ -53,7 +54,8 @@ function IntegrationsPage() {
                     <h3 className="text-lg text-slate-800 font-semibold">Webhooks</h3>
                   </header>
                   <div className="text-sm">
-                    Lorem ipsum dolor sit amet eiusmod sed do eiusmod tempor.
+                    Recieve real-time programmatic notifications to integrate custom logic to your
+                    Saltana space.
                   </div>
                 </div>
                 {/* Card footer */}
@@ -74,10 +76,12 @@ function IntegrationsPage() {
                         <div className="text-sm text-amber-600">4.7</div>
                       </div>
                     </div>
-                    {/* Right side */}
-                    <button className="btn-sm border-slate-200 hover:border-slate-300 shadow-sm flex items-center">
-                      <span>Connect</span>
-                    </button>
+                    {/* Right side */}{" "}
+                    <Link href={Routes.DashboardWebhooksPage()} passHref>
+                      <a className="btn-sm border-slate-200 hover:border-slate-300 shadow-sm flex items-center">
+                        <span>Connect</span>
+                      </a>
+                    </Link>
                   </div>
                 </footer>
               </div>

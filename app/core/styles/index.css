@@ -17,3 +17,11 @@
 .description {
   @apply text-center;
 }
+
+.svix__container {
+  min-height: 100%;
+}
+
+.svix__container > div {
+  height: 80vh;
+}
