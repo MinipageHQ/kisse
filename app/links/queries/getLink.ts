@@ -7,11 +7,34 @@ const GetLink = z.object({
   id: z.string().cuid().optional().refine(Boolean, "Required"),
 })
 
-export default resolver.pipe(resolver.zod(GetLink), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const link = await db.link.findFirst({ where: { id } })
+export default resolver.pipe(
+  resolver.zod(GetLink),
+  resolver.authorize(),
+  async ({ id }, { session: { defaultOrgId } }) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const link = await db.link.findFirst({
+      where: { id, organizationId: defaultOrgId },
+      select: {
+        id: true,
+        slug: true,
+        target: true,
+        provider: true,
+        domainId: true,
+        createdAt: true,
+        metadata: true,
+        privateMetadata: true,
+        updatedAt: true,
+        domain: {
+          select: {
+            id: true,
+            domain: true,
+          },
+        },
+      },
+    })
 
-  if (!link) throw new NotFoundError()
+    if (!link) throw new NotFoundError()
 
-  return link
-})
+    return link
+  }
+)

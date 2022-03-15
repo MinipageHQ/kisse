@@ -336,7 +336,7 @@ const DashboardLayout: BlitzLayout<{
           </Header>
         }
       >
-        {children}
+        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
       </AppShell>
     </>
   )

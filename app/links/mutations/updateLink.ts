@@ -1,18 +1,13 @@
 import { resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
-
-const UpdateLink = z.object({
-  id: z.string().cuid(),
-  name: z.string(),
-})
+import { UpdateLinkInput } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(UpdateLink),
+  resolver.zod(UpdateLinkInput),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    // const link = await db.link.update({ where: { id }, data })
-    // return link
+  async ({ id, ...data }, { session: { defaultOrgId } }) => {
+    const link = await db.link.update({ where: { id }, data })
+    return link
   }
 )
