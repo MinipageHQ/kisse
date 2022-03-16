@@ -1,8 +1,8 @@
 import { defaultUserSelect } from "app/auth/defaults"
-import { Job } from "bullmq"
 import db from "db"
 import stripe from "integrations/stripe"
 import { Stripe } from "stripe"
+import { Queue } from "quirrel/next"
 
 export interface UserEvent {
   userId: string
@@ -11,28 +11,8 @@ export interface UserEvent {
 export interface UserSyncEvent extends UserEvent {}
 export interface UserCreatedEvent extends UserEvent {}
 
-export async function userUpdated(job: Job) {}
-export async function userCreated(job: Job<UserCreatedEvent>) {
-  const { userId } = job.data
-
-  console.log("recieved a user", userId)
-  const user = await db.user.findFirst({
-    where: {
-      id: userId,
-    },
-    select: {
-      ...defaultUserSelect,
-      prefersEmail: true,
-    },
-  })
-
-  console.log("got user", user)
-
-  return userSync(job)
-  // // create stripe user
-}
-export async function userSync(job: Job<UserSyncEvent>) {
-  const { userId } = job.data
+export default Queue<UserSyncEvent>("api/queues/user-sync", async (job) => {
+  const { userId } = job
   console.log("recieved a user", userId)
   const user = await db.user.findFirst({
     where: {
@@ -99,4 +79,4 @@ export async function userSync(job: Job<UserSyncEvent>) {
 
   await Promise.all(promises)
   // // create stripe user
-}
+})

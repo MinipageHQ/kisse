@@ -1,6 +1,7 @@
-import { Alert, Container } from "@mantine/core"
+import { Alert, Button, Container, Group, Skeleton, Tabs } from "@mantine/core"
 import DashboardLayout from "app/core/layouts/DashboardLayout"
 import { BlitzLayout, Link, Routes } from "blitz"
+import { Suspense } from "react"
 
 const DashboardAssetsLayout: BlitzLayout<{
   subHeader?: React.ReactNode
@@ -9,7 +10,26 @@ const DashboardAssetsLayout: BlitzLayout<{
 }> = ({ subHeader, title, children, container }) => {
   return (
     <DashboardLayout title={title}>
-      <Container>
+      <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 mb-4">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl font-medium text-gray-900 sm:truncate">{title || "Assets"}</h1>
+        </div>
+        <div className="mt-4 flex sm:mt-0 sm:ml-4">
+          <Group grow spacing={10}>
+            <Link href={Routes.OrdersPage()}>
+              <Button variant="default">Orders</Button>
+            </Link>
+            <Link href={Routes.DashboardPayoutsPage()}>
+              <Button variant="default">Payouts</Button>
+            </Link>
+            <Link href={Routes.AssetsPage({ assetQueries: ["new"] })}>
+              <Button variant="filled">Create an asset</Button>
+            </Link>
+          </Group>
+        </div>
+      </div>
+
+      <Container pb={15}>
         <Alert
           title="You need to verify your identity before you can sell items."
           variant="outline"
@@ -18,26 +38,8 @@ const DashboardAssetsLayout: BlitzLayout<{
           partner, Stripe, before you can sell items on Saltana.
         </Alert>
       </Container>
-      <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">{title}</h1>
-        </div>
-        <div className="mt-4 flex sm:mt-0 sm:ml-4">
-          <button
-            type="button"
-            className="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0"
-          >
-            Share
-          </button>
-          <Link href={Routes.AssetsPage({ assetQueries: ["new"] })} passHref>
-            <a className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3">
-              Create
-            </a>
-          </Link>
-        </div>
-      </div>
 
-      {children}
+      <Suspense fallback={<Skeleton visible />}>{children}</Suspense>
     </DashboardLayout>
   )
 }

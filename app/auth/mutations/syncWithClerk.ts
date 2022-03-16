@@ -1,11 +1,10 @@
 import { Middleware, resolver, SecurePassword } from "blitz"
 import db, { Membership, Prisma } from "db"
 import { Signup, SyncWithClerkInput } from "app/auth/validations"
-import { z } from "zod"
 import clerk, { User } from "@clerk/clerk-sdk-node"
 import { defaultUserSelect } from "../defaults"
-import { useReducer } from "react"
-import { userCreatedQueue, userSyncQueue } from "bull/queues"
+import userCreatedQueue from "app/api/queues/user-created"
+import userSyncQueue from "app/api/queues/user-sync"
 
 function getClerkUser(userId: string) {
   return clerk.users.getUser(userId)
@@ -103,11 +102,11 @@ export default resolver.pipe(resolver.zod(SyncWithClerkInput), async ({ clerkUse
 
   if (doesExists === false) {
     // it's a new user
-    await userCreatedQueue.add(`user-created-${user.id}`, {
+    await userCreatedQueue.enqueue({
       userId: user.id,
     })
   } else {
-    await userSyncQueue.add(`user-sync-${user.id}`, {
+    await userSyncQueue.enqueue({
       userId: user.id,
     })
   }

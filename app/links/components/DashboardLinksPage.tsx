@@ -4,7 +4,7 @@ import getLinks from "app/links/queries/getLinks"
 import classNames from "app/core/utils/classnames"
 import { ChevronRightIcon } from "@heroicons/react/outline"
 import DashboardLinksEmpty from "app/links/components/DashboardLinksEmpty"
-import { Badge, Group, Menu, Divider, Text } from "@mantine/core"
+import { Badge, Group, Menu, Divider, Text, ActionIcon, Tooltip } from "@mantine/core"
 import getCurrentOrganization from "app/organizations/queries/getCurrentOrganization"
 
 const ITEMS_PER_PAGE = 100
@@ -14,8 +14,9 @@ import {
   ImageIcon,
   MagnifyingGlassIcon,
   TrashIcon,
+  ClipboardCopyIcon,
   PinRightIcon,
-} from "@modulz/radix-icons"
+} from "@radix-ui/react-icons"
 import DashboardLinkTitle from "./DashboardLinkTitle"
 
 function ContextMenu() {
@@ -107,10 +108,7 @@ export const LinksList = () => {
                 <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   <span className="lg:pl-2">Link</span>
                 </th>
-                <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Members
-                </th>
-                <th className="pr-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" />
+                <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" />
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
@@ -133,20 +131,25 @@ export const LinksList = () => {
                       </Link>
                     </div>
                   </td>
-                  <td className="px-6 py-3 text-sm text-gray-500 font-medium">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex flex-shrink-0 -space-x-1">dcdcd</div>
-                      {/* {project.totalMembers > project.members.length ? (
-                        <span className="flex-shrink-0 text-xs leading-5 font-medium">
-                          +{project.totalMembers - project.members.length}
-                        </span>
-                      ) : null} */}
-                    </div>
-                  </td>
                   <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center space-x-2">
-                      <div className="flex flex-shrink-0 -space-x-1">
-                        <ContextMenu />
+                      <div className="flex flex-shrink-0 space-x-1">
+                        {/* <ContextMenu /> */}
+                        <Tooltip label="Copy">
+                          <ActionIcon color="dark">
+                            <ClipboardCopyIcon />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label="Visit">
+                          <ActionIcon color="dark">
+                            <ClipboardCopyIcon />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label="Edit">
+                          <ActionIcon color="dark">
+                            <ClipboardCopyIcon />
+                          </ActionIcon>
+                        </Tooltip>
                         {/* <Group position="center" direction="column" grow>
                           <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
 

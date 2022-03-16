@@ -18,7 +18,7 @@ import {
   Select,
 } from "@mantine/core"
 import { useMediaQuery } from "@mantine/hooks"
-import { Pencil2Icon } from "@modulz/radix-icons"
+import { Pencil2Icon } from "@radix-ui/react-icons"
 import { useState } from "react"
 import { useNotifications } from "@mantine/notifications"
 import updateOrganization from "app/organizations/mutations/updateOrganization"

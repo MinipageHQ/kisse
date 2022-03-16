@@ -18,7 +18,6 @@ import {
   Select,
 } from "@mantine/core"
 import { useForm, useMediaQuery } from "@mantine/hooks"
-import { Pencil2Icon } from "@modulz/radix-icons"
 import { useState } from "react"
 import { useNotifications } from "@mantine/notifications"
 import IntegrationsPage from "app/organizations/components/IntegrationsPage"
