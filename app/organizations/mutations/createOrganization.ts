@@ -1,7 +1,7 @@
 import { resolver } from "blitz"
 import db, { Membership } from "db"
 import { CreateOrganizationWithInviteCodeSchema } from "app/organizations/validations"
-import { organizationCreatedOrUpdatedQueue } from "bull/queues"
+import organizationCreatedOrUpdatedQueue from "app/api/queues/organization-created-or-updated"
 
 async function resolveDomain(domainId: string) {
   const domain = await db.domain.findFirst({ where: { id: domainId }, select: { domain: true } })
@@ -90,13 +90,10 @@ export default resolver.pipe(
         roles: [...user.roles, createdMembership.role],
         defaultOrgId: createdMembership.organizationId,
       }),
-      organizationCreatedOrUpdatedQueue.add(
-        `organization-created-${createdMembership.organizationId}`,
-        {
-          organizationId: createdMembership.organizationId,
-          action: "created",
-        }
-      ),
+      organizationCreatedOrUpdatedQueue.enqueue({
+        organizationId: createdMembership.organizationId,
+        action: "created",
+      }),
     ])
     return user
   }

@@ -9,7 +9,7 @@ interface AssetShowProps {
   setModalTitle: (title: string) => void
 }
 
-import { User, MapPin, CircleCheck } from "tabler-icons-react"
+import { CardStackPlusIcon, CircleIcon } from "@radix-ui/react-icons"
 import {
   TextInput,
   Textarea,
@@ -30,7 +30,7 @@ function Demo() {
 
   return (
     <Accordion state={state} onChange={handlers.setState} disableIconRotation multiple>
-      <Accordion.Item label="Overview" icon={<User color={theme.colors.blue[6]} />}>
+      <Accordion.Item label="Overview" icon={<CardStackPlusIcon color={theme.colors.blue[6]} />}>
         <SimpleGrid cols={2} breakpoints={breakpoints}>
           <TextInput label="Email" placeholder="Email" required />
           <TextInput label="Full name" placeholder="Full name" required />
@@ -46,7 +46,7 @@ function Demo() {
           <Button onClick={() => handlers.toggle(1)}>Next step</Button>
         </Group>
       </Accordion.Item>
-      <Accordion.Item label="Deliverables" icon={<MapPin color={theme.colors.red[6]} />}>
+      <Accordion.Item label="Deliverables" icon={<CircleIcon color={theme.colors.red[6]} />}>
         {/* <RicosEditor placeholder={'Type here!'} />; */}
 
         <SimpleGrid cols={3} breakpoints={breakpoints}>
@@ -71,7 +71,7 @@ function Demo() {
         </Group>
       </Accordion.Item>
 
-      <Accordion.Item label="Pricing & Stock" icon={<MapPin color={theme.colors.red[6]} />}>
+      <Accordion.Item label="Pricing & Stock" icon={<CircleIcon color={theme.colors.red[6]} />}>
         <SimpleGrid cols={3} breakpoints={breakpoints}>
           <TextInput label="City" placeholder="City" />
           <TextInput label="State" placeholder="State" />
@@ -93,7 +93,7 @@ function Demo() {
           <Button onClick={() => handlers.toggle(2)}>Next step</Button>
         </Group>
       </Accordion.Item>
-      <Accordion.Item label="Confirmation" icon={<CircleCheck color={theme.colors.cyan[6]} />}>
+      <Accordion.Item label="Confirmation" icon={<CircleIcon color={theme.colors.cyan[6]} />}>
         <Text>All done!</Text>
         <Text color="dimmed" size="sm">
           We will start processing your order soon

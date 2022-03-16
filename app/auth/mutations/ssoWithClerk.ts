@@ -1,13 +1,9 @@
-import { organizationCreatedOrUpdatedQueue } from "bull/queues"
-import { defaultUserSelect } from "./../defaults"
-import safeEmail from "app/auth/utils/safeEmail"
-import { isPasswordSafe } from "../utils/checkPassword"
-import { invokeWithMiddleware, Middleware, PublicData, resolver, SecurePassword } from "blitz"
-import db, { Membership } from "db"
+import { resolver } from "blitz"
 import { Signup, SsoWithClerkInput } from "app/auth/validations"
 import { sessions } from "@clerk/nextjs/api"
 import syncWithClerk from "./syncWithClerk"
 import { Role } from "types"
+import organizationCreatedOrUpdatedQueue from "app/api/queues/organization-created-or-updated"
 
 export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId }, ctx) => {
   if (!ctx.clerkSessionToken) {
@@ -38,8 +34,8 @@ export default resolver.pipe(resolver.zod(SsoWithClerkInput), async ({ sessionId
       roles.push(defaultOrganization.role)
     }
 
-    organizationCreatedOrUpdatedQueue.add("organization-sync-" + defaultOrganization?.id, {
-      organizationId: defaultOrganization.id,
+    organizationCreatedOrUpdatedQueue.enqueue({
+      organizationId: defaultOrganization.id!,
       action: "updated",
     })
   }

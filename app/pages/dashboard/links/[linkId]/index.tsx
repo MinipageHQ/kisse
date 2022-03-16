@@ -1,8 +1,6 @@
 import { Head, BlitzPage, useQuery, Routes, useMutation, useParam } from "blitz"
 import DashboardLinksLayout from "app/links/components/DashboardLinksLayout"
-import LinksList from "app/links/components/DashboardLinksPage"
 import { Fragment, Suspense, useState } from "react"
-import { Dialog, Transition } from "@headlessui/react"
 import { CheckIcon, XIcon } from "@heroicons/react/outline"
 import { useRouter } from "blitz"
 import { useForm, zodResolver } from "@mantine/form"
@@ -10,9 +8,7 @@ import { useForm, zodResolver } from "@mantine/form"
 import { Alert, Drawer, Modal, Paper, Skeleton, Tabs, Title } from "@mantine/core"
 import getLink from "app/links/queries/getLink"
 import deleteLink from "app/links/mutations/deleteLink"
-import DashboardExternalUrlPreview from "app/links/components/DashboardExternalUrlPreview"
 import { TextInput, Checkbox, Button, Group, Box } from "@mantine/core"
-import { Photo, MessageCircle, Settings, Container } from "tabler-icons-react"
 
 import { UpdateLinkInput } from "app/links/validations"
 import { Link } from "db"
@@ -47,7 +43,7 @@ function LinkEditForm({ linkId, linkData }: { linkId: string; linkData: Partial<
           })
 
           try {
-            await updateLinkMutation({ ...values, id: linkId })
+            await updateLinkMutation({ ...values, id: linkId } as any)
             notifications.updateNotification(id, {
               id,
               color: "teal",
@@ -106,7 +102,7 @@ function LinkEditForm({ linkId, linkData }: { linkId: string; linkData: Partial<
               color={"red"}
               onClick={async () => {
                 if (window.confirm("This will be deleted")) {
-                  await deleteLinkMutation({ id: link?.id! })
+                  await deleteLinkMutation({ id: linkId! })
                   push(Routes.LinksPage({}))
                 }
               }}
