@@ -6,7 +6,9 @@ export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(CreateLinkInput),
   async (input, { session: { defaultOrgId } }) => {
-    const link = await db.link.create({ data: { ...input, organizationId: defaultOrgId as string } })
+    const link = await db.link.create({
+      data: { ...(input as any), organizationId: defaultOrgId as string },
+    })
 
     return link
   }
