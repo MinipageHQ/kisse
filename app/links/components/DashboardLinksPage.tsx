@@ -19,33 +19,6 @@ import {
 } from "@radix-ui/react-icons"
 import DashboardLinkTitle from "./DashboardLinkTitle"
 
-function ContextMenu() {
-  return (
-    <Menu>
-      <Menu.Label>Application</Menu.Label>
-      <Menu.Item icon={<GearIcon />}>Settings</Menu.Item>
-      <Menu.Item icon={<ChatBubbleIcon />}>Messages</Menu.Item>
-      <Menu.Item icon={<ImageIcon />}>Gallery</Menu.Item>
-      <Menu.Item
-        icon={<MagnifyingGlassIcon />}
-        rightSection={
-          <Text size="xs" color="dimmed">
-            ⌘K
-          </Text>
-        }
-      >
-        Search
-      </Menu.Item>
-      <Divider />
-      <Menu.Label>Danger zone</Menu.Label>
-      <Menu.Item icon={<PinRightIcon />}>Transfer my data</Menu.Item>,
-      <Menu.Item color="red" icon={<TrashIcon />}>
-        Delete my account
-      </Menu.Item>
-    </Menu>
-  )
-}
-
 export const LinksList = () => {
   const router = useRouter()
 
@@ -105,6 +78,8 @@ export const LinksList = () => {
           <table className="min-w-full">
             <thead>
               <tr className="border-t border-gray-200">
+                <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" />
+
                 <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   <span className="lg:pl-2">Link</span>
                 </th>
@@ -114,6 +89,38 @@ export const LinksList = () => {
             <tbody className="bg-white divide-y divide-gray-100">
               {links.map((link) => (
                 <tr key={link.id}>
+                  <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center">
+                      <div className="flex flex-shrink-0 space-x-1">
+                        {/* <ContextMenu /> */}
+                        <Tooltip label="Copy">
+                          <ActionIcon color="dark">
+                            <ClipboardCopyIcon />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label="Visit">
+                          <ActionIcon color="dark">
+                            <ClipboardCopyIcon />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Badge>{link.type}</Badge>
+                        {/* <Group position="center" direction="column" grow>
+                          <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+
+                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                              Edit
+                            </a>
+                          </Link>
+                          <Link href={Routes.LinksPage({ linkQueries: [link.id] })} passHref>
+
+                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                              Edit
+                            </a>
+                          </Link>
+                        </Group> */}
+                      </div>
+                    </div>
+                  </td>
                   <td className=" py-3 max-w-0 w-full whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex items-center space-x-3 lg:pl-2">
                       <div

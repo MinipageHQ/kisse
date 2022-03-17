@@ -10,7 +10,7 @@ import linkTypes from "app/links/link-types"
 
 const DashboardLinksNewPage: BlitzPage = (props) => {
   const {
-    query: { linkType },
+    query: { linkType, provider },
     back,
     push,
   } = useRouter()
@@ -29,7 +29,7 @@ const DashboardLinksNewPage: BlitzPage = (props) => {
         title={typeData?.createTitle || "Create a new link..."}
       >
         <Suspense fallback={<Skeleton visible />}>
-          <DashboardLinksNew linkType={linkType! as string} />
+          <DashboardLinksNew linkType={linkType! as string} provider={provider! as string} />
         </Suspense>
       </Modal>
     </>

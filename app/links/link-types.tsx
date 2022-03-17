@@ -6,13 +6,13 @@ import {
   ViewBoardsIcon,
   ViewListIcon,
 } from "@heroicons/react/outline"
-import { LinkType, LinkProvider } from "db";
+import { LinkType, LinkProvider } from "db"
 import { ReactChild } from "react"
-import { z } from "zod";
+import { z } from "zod"
 
 // new link page is dynamic and the fields appear if they are selected
-export const LinkCreateField = z.enum(["linkList", "slug", "asset", "target", "name"]);
-export type LinkCreateField = z.infer<typeof LinkCreateField>;
+export const LinkCreateField = z.enum(["linkList", "slug", "asset", "target", "name"])
+export type LinkCreateField = z.infer<typeof LinkCreateField>
 
 export type LinkTypeData = {
   name: string
@@ -24,7 +24,6 @@ export type LinkTypeData = {
   background: string
   createFields: LinkCreateField[]
 }
-
 
 const linkTypes: LinkTypeData[] = [
   {
@@ -48,6 +47,7 @@ const linkTypes: LinkTypeData[] = [
   {
     name: "Notion page",
     description: "Natively embed Notion content on your Saltana space",
+
     createTitle: "Create a new Notion page",
     type: LinkType.embed,
     provider: LinkProvider.notion,
@@ -67,6 +67,36 @@ const linkTypes: LinkTypeData[] = [
   {
     name: "NFT Gallery",
     description: "Create a link where you can list your NFTs across platfomrms",
+    createTitle: "Create a new NFT gallery",
+    type: LinkType.redirect,
+    icon: ({ className }) => <ViewBoardsIcon className={className} />,
+    createFields: ["target", "slug"],
+    background: "bg-purple-500",
+  },
+  {
+    name: "Typeform",
+    description: "Create a link where you can list your NFTs across platfomrms",
+    createTitle: "Create a new NFT gallery",
+    type: LinkType.redirect,
+    icon: ({ className }) => <ViewBoardsIcon className={className} />,
+    createFields: ["target", "slug"],
+    background: "bg-purple-500",
+  },
+
+  {
+    name: "Music page",
+    description: "Create a smart link where you can list your music across platforms",
+    createTitle: "Create a new music page",
+    type: LinkType.redirect,
+    icon: ({ className }) => <ViewBoardsIcon className={className} />,
+    createFields: ["target", "slug"],
+    background: "bg-purple-500",
+  },
+
+  {
+    name: "Mobile app page",
+    description:
+      "Create a smart link where you can list and redirect to your mobile app across app stores",
     createTitle: "Create a new NFT gallery",
     type: LinkType.redirect,
     icon: ({ className }) => <ViewBoardsIcon className={className} />,

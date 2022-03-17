@@ -1,5 +1,5 @@
-import { PlusIcon } from '@heroicons/react/solid'
-import { Router, Routes, useRouter } from 'blitz'
+import { PlusIcon } from "@heroicons/react/solid"
+import { Router, Routes, useRouter } from "blitz"
 
 export default function DashboardAssetsListEmpty() {
   const { push } = useRouter()
@@ -24,9 +24,7 @@ export default function DashboardAssetsListEmpty() {
       <p className="mt-1 text-sm text-gray-500">Get started by creating a new asset.</p>
       <div className="mt-6">
         <button
-          onClick={() => push(Routes.AssetsPage({
-            assetQueries: ["new"]
-          }))}
+          onClick={() => push(Routes.DashboardAssetsNewPage())}
           type="button"
           className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
