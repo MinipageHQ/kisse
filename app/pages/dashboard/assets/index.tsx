@@ -1,11 +1,7 @@
-import { Suspense, useState } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import DashboardAssetsLayout from "app/assets/components/DashboardAssetsLayout"
-import { Modal, Skeleton } from "@mantine/core"
-import DashboardAssetsNew from "app/assets/components/DashboardAssetsNew"
-import DashboardAssetsShow from "app/assets/components/DashboardAssetsShow"
 
-const DashboardAssetPage: BlitzPage = (props) => {
+const DashboardAssetsPage: BlitzPage = (props) => {
   return (
     <>
       <Head>
@@ -15,7 +11,7 @@ const DashboardAssetPage: BlitzPage = (props) => {
   )
 }
 
-DashboardAssetPage.authenticate = true
-DashboardAssetPage.getLayout = (page) => <DashboardAssetsLayout>{page}</DashboardAssetsLayout>
+DashboardAssetsPage.authenticate = true
+DashboardAssetsPage.getLayout = (page) => <DashboardAssetsLayout>{page}</DashboardAssetsLayout>
 
-export default DashboardAssetPage
+export default DashboardAssetsPage
