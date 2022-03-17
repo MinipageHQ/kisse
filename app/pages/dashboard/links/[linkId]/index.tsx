@@ -26,6 +26,11 @@ function LinkEditForm({ linkId, linkData }: { linkId: string; linkData: Partial<
   const notifications = useNotifications()
 
   console.log("from", form)
+
+  const disableSeoTab = linkData.type === "redirect"
+  const disableAccessTab = linkData.type === "redirect"
+
+  console.log(linkData)
   return (
     <>
       <Head>
@@ -74,10 +79,10 @@ function LinkEditForm({ linkId, linkData }: { linkId: string; linkData: Partial<
               {...form.getInputProps("target")}
             />
           </Tabs.Tab>
-          <Tabs.Tab label="SEO" disabled>
+          <Tabs.Tab label="SEO" disabled={disableSeoTab}>
             Redirections are always public.
           </Tabs.Tab>
-          <Tabs.Tab label="Access" disabled>
+          <Tabs.Tab label="Access" disabled={disableAccessTab}>
             Redirections are always public.
           </Tabs.Tab>
           <Tabs.Tab label="Danger zone">

@@ -21,7 +21,10 @@ import {
   Accordion,
   useAccordionState,
   useMantineTheme,
+  Skeleton,
+  Tabs,
 } from "@mantine/core"
+import { Tab } from "@headlessui/react"
 
 function Demo() {
   const [state, handlers] = useAccordionState({ total: 3, initialItem: 0 })
@@ -29,8 +32,8 @@ function Demo() {
   const breakpoints = [{ maxWidth: "sm" as const, cols: 1 }]
 
   return (
-    <Accordion state={state} onChange={handlers.setState} disableIconRotation multiple>
-      <Accordion.Item label="Overview" icon={<CardStackPlusIcon color={theme.colors.blue[6]} />}>
+    <Tabs state={state} onTapChange={handlers.setState} disableIconRotation multiple>
+      <Tabs.Tab label="Overview" icon={<CardStackPlusIcon color={theme.colors.blue[6]} />}>
         <SimpleGrid cols={2} breakpoints={breakpoints}>
           <TextInput label="Email" placeholder="Email" required />
           <TextInput label="Full name" placeholder="Full name" required />
@@ -45,8 +48,8 @@ function Demo() {
         <Group position="right" mt="xl">
           <Button onClick={() => handlers.toggle(1)}>Next step</Button>
         </Group>
-      </Accordion.Item>
-      <Accordion.Item label="Deliverables" icon={<CircleIcon color={theme.colors.red[6]} />}>
+      </Tabs.Tab>
+      <Tabs.Tab label="Deliverables" icon={<CircleIcon color={theme.colors.red[6]} />}>
         {/* <RicosEditor placeholder={'Type here!'} />; */}
 
         <SimpleGrid cols={3} breakpoints={breakpoints}>
@@ -69,9 +72,9 @@ function Demo() {
           </Button>
           <Button onClick={() => handlers.toggle(2)}>Next step</Button>
         </Group>
-      </Accordion.Item>
+      </Tabs.Tab>
 
-      <Accordion.Item label="Pricing & Stock" icon={<CircleIcon color={theme.colors.red[6]} />}>
+      <Tabs.Tab label="Pricing & Stock" icon={<CircleIcon color={theme.colors.red[6]} />}>
         <SimpleGrid cols={3} breakpoints={breakpoints}>
           <TextInput label="City" placeholder="City" />
           <TextInput label="State" placeholder="State" />
@@ -92,8 +95,8 @@ function Demo() {
           </Button>
           <Button onClick={() => handlers.toggle(2)}>Next step</Button>
         </Group>
-      </Accordion.Item>
-      <Accordion.Item label="Confirmation" icon={<CircleIcon color={theme.colors.cyan[6]} />}>
+      </Tabs.Tab>
+      <Tabs.Tab label="Danger Zone" icon={<CircleIcon color={theme.colors.cyan[6]} />}>
         <Text>All done!</Text>
         <Text color="dimmed" size="sm">
           We will start processing your order soon
@@ -103,8 +106,8 @@ function Demo() {
             Previous step
           </Button>
         </Group>
-      </Accordion.Item>
-    </Accordion>
+      </Tabs.Tab>
+    </Tabs>
   )
 }
 export const AssetShow = ({ assetId, setModalTitle }: AssetShowProps) => {
@@ -132,7 +135,7 @@ export const AssetShow = ({ assetId, setModalTitle }: AssetShowProps) => {
   return (
     <>
       <Head>
-        <title>asset {asset?.id}</title>
+        <title>Asset {asset?.id}</title>
       </Head>
 
       <Demo />
@@ -148,7 +151,7 @@ export const AssetShow = ({ assetId, setModalTitle }: AssetShowProps) => {
             }
             if (window.confirm("This will be deleted")) {
               await deleteAssetMutation({ id: asset?.id })
-              router.push(Routes.AssetsPage({}))
+              router.push(Routes.DashboardAssetsPage({}))
             }
           }}
           style={{ marginLeft: "0.5rem" }}
@@ -162,11 +165,9 @@ export const AssetShow = ({ assetId, setModalTitle }: AssetShowProps) => {
 
 const DashboardAssetShow: BlitzPage<AssetShowProps> = ({ assetId, setModalTitle }) => {
   return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <AssetShow assetId={assetId} setModalTitle={setModalTitle} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<Skeleton visible />}>
+      <AssetShow assetId={assetId} setModalTitle={setModalTitle} />
+    </Suspense>
   )
 }
 export default DashboardAssetShow

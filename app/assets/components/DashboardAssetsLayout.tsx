@@ -2,6 +2,7 @@ import { Alert, Button, Container, Group, Skeleton, Tabs } from "@mantine/core"
 import DashboardLayout from "app/core/layouts/DashboardLayout"
 import { BlitzLayout, Link, Routes } from "blitz"
 import { Suspense } from "react"
+import DashboardAssetsList from "app/assets/components/DashboardAssetsList"
 
 const DashboardAssetsLayout: BlitzLayout<{
   subHeader?: React.ReactNode
@@ -22,7 +23,7 @@ const DashboardAssetsLayout: BlitzLayout<{
             <Link href={Routes.DashboardPayoutsPage()}>
               <Button variant="default">Payouts</Button>
             </Link>
-            <Link href={Routes.AssetsPage({ assetQueries: ["new"] })}>
+            <Link href={Routes.DashboardAssetsNewPage()}>
               <Button variant="filled">Create an asset</Button>
             </Link>
           </Group>
@@ -39,6 +40,7 @@ const DashboardAssetsLayout: BlitzLayout<{
         </Alert>
       </Container>
 
+      <DashboardAssetsList />
       <Suspense fallback={<Skeleton visible />}>{children}</Suspense>
     </DashboardLayout>
   )

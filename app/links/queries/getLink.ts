@@ -24,6 +24,8 @@ export default resolver.pipe(
         metadata: true,
         privateMetadata: true,
         updatedAt: true,
+        type: true,
+
         domain: {
           select: {
             id: true,

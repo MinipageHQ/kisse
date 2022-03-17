@@ -30,7 +30,7 @@ const DashboardAssetsNew = () => {
           const asset = await createAssetMutation(values)
 
           if (asset?.id) {
-            router.push(Routes.AssetsPage({ assetQueries: [asset?.id] }))
+            router.push(Routes.DashboardAssetsEditPage({ assetId: asset?.id }))
           }
         } catch (error: any) {
           console.error(error)

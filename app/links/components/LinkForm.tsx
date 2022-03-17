@@ -2,7 +2,7 @@ import { Form, FormProps } from "app/core/components/Form"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { z } from "zod"
 export { FORM_ERROR } from "app/core/components/Form"
-import linkTypes from 'app/links/link-types'
+import linkTypes from "app/links/link-types"
 
 import { useMemo } from "react"
 import { useRouter, useQuery, useRouterQuery } from "blitz"
@@ -15,27 +15,24 @@ export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   const query = useRouterQuery()
 
   const {
-    query: { linkQueries },
+    query: { provider, linkType },
     push,
   } = useRouter()
 
-  const type = linkQueries && linkQueries[1] || 'redirect'
+  const typeData = linkTypes.find(({ type }) => type === linkType)
 
-  const typeData = linkTypes.find((linkType) => linkType.type === type)
   return (
-    <Form<S> {...props} initialValues={{ type }}>
+    <Form<S> {...props} initialValues={{ type: linkType, provider }}>
       <p className="mt-1 text-sm text-gray-500">
-        Let’s get started by filling in the information below to create
-        your new link.
+        Let’s get started by filling in the information below to create your new link.
       </p>
 
-      <Container >
+      {typeData?.type === "embed" && provider === "notion" && <>test</>}
+      <Container>
         <pre className=" text-ellipsis">{JSON.stringify(currentOrganization)}</pre>
       </Container>
-      <p className="mt-1 text-sm text-gray-500">
-
-      </p>
-      {typeData?.createFields.includes('target') && (
+      <p className="mt-1 text-sm text-gray-500"></p>
+      {typeData?.createFields.includes("target") && (
         <LabeledTextField name="target" label="Target" placeholder="target" type="url" />
       )}
       {/*
@@ -73,12 +70,20 @@ export function LinkForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
 
             </>
           )} */}
-      {typeData?.createFields.includes('slug') && (
-        <LabeledLinkSlugField label={"Slug"} domains={currentOrganization.domains} outerProps={{ className: "mt-6" }} />
+      {typeData?.createFields.includes("slug") && (
+        <LabeledLinkSlugField
+          label={"Slug"}
+          domains={currentOrganization.domains}
+          outerProps={{ className: "mt-6" }}
+        />
       )}
 
-      {typeData?.createFields.includes('name') && (
-        <LabeledLinkSlugField label={"Slug"} domains={currentOrganization.domains} outerProps={{ className: "mt-6" }} />
+      {typeData?.createFields.includes("name") && (
+        <LabeledLinkSlugField
+          label={"Slug"}
+          domains={currentOrganization.domains}
+          outerProps={{ className: "mt-6" }}
+        />
       )}
       <div className="flex justify-end bg-black">
         {/* <button
