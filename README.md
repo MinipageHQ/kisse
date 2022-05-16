@@ -1,3 +1,7 @@
+# Archived project.
+
+This is another go at an MVP for Minipage (then Saltana). Blitz was too buggy so we migrated to Remix.
+
 [![Blitz.js](https://raw.githubusercontent.com/blitz-js/art/master/github-cover-photo.png)](https://blitzjs.com)
 
 This is a [Blitz.js](https://github.com/blitz-js/blitz) app.
